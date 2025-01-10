@@ -8,6 +8,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 .vite
+.vite-temp/
+.vite-cache/
 node_modules
 dist
 dist-ssr
