@@ -1,9 +1,10 @@
 import express from 'express';
-import authRoutes from './routes/auth_routes.js';
-import noteRoutes from './routes/notes_routes.js';
 import cors from 'cors';
+
+import authRoutes from './routes/auth_routes.js';
+import bookmarkRoutes from './routes/bookmarks_routes.js';
 import sessionMiddleware from './middleware/sessionMiddleware.js';
-import passport from "./passport/passport_config.js"
+import passport from "./passport/twitter_strategy.js"
 
 const app = express();
 
@@ -13,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Enable CORS to allow requests from the frontend
 app.use(cors({
-  origin: 'http://localhost:3000',  // Frontend origin (React app)
+  origin: 'http://localhost:5173', // Frontend origin (React app)
   credentials: true,  // Allow session cookies to be sent with requests
 }));
 
@@ -26,6 +27,6 @@ app.use(passport.session())
 
 // Routes
 app.use('/api/auth', authRoutes);  // Authentication routes
-app.use('/api/notes', noteRoutes); // Notes routes
+app.use('/api/bookmarks', bookmarkRoutes); // Notes routes
 
 export default app;

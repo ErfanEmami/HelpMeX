@@ -1,5 +1,5 @@
 const authMiddleware = (req, res, next) => {
-    if (!req.session?.passport?.user) {
+    if (!req.isAuthenticated()) {
       return res.status(401).send('Not authenticated');
     }
     next();

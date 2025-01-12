@@ -1,18 +1,20 @@
 import mongoose from 'mongoose';
-import { hashPassword } from '../lib/utils.js';
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  twitterId: { type: String, required: true, unique: true },
+  displayName: { type: String, required: true },
+  username: { type: String, required: true },
+  photos: [{ type: String }],
+  createdAt: { type: Date, default: Date.now },
 });
 
-// Hash password before saving the user
-userSchema.pre('save', async function (next) {
-  // Only hash if password is new or changed
-  if (!this.isModified('password')) return next(); 
-  this.password = await hashPassword(this.password)
-  next();
-});
+// Add token and tokenSecret as virtual fields (won't be stored in DB)
+userSchema.virtual('accessToken');
+userSchema.virtual('refreshToken');
+
+// Ensure virtuals are included in console.log
+userSchema.set('toObject', { virtuals: true });
+userSchema.set('toJSON', { virtuals: true });
 
 const User = mongoose.model('User', userSchema);
 export default User;
