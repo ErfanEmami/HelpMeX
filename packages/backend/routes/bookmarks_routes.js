@@ -14,8 +14,7 @@ router.get("/", async (req, res) => {
   try {
     const twitterClient = new TwitterApi(accessToken);
    
-    const res = await twitterClient.v2.bookmarks();
-    const bookmarks = res
+    const bookmarks = await twitterClient.v2.bookmarks();
     
     // const bookmarks = res.bookmarks._realData.data
 
