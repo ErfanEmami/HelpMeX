@@ -8,8 +8,8 @@ const MAX_WIDTH = "1400px";
 const App = () => {
   return (
     <div className="h-screen flex flex-col">
-      <nav className="p-4 border-b">
-        <div className={`m-auto max-w-[${MAX_WIDTH}]`}>
+      <nav className="border-b">
+        <div className={`p-4 m-auto max-w-[${MAX_WIDTH}]`}>
           <a href="/">Home</a> | <a href="/summary">Summary</a>
         </div>
       </nav>
