@@ -1,9 +1,9 @@
-import { Page } from "../components/page"
+import { Page } from "../components/Page";
 
 export const Summary = () => {
   return (
     <Page>
-      <div >Summary</div>
+      <div>Summary</div>
     </Page>
-  ) 
-}
+  );
+};

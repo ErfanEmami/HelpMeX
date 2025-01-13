@@ -1,9 +1,9 @@
 import { Page } from "../components/Page";
 
-export const Home = () => {
+export const NotFound = () => {
   return (
     <Page>
-      <div>home</div>
+      <div>404 Not Found</div>
     </Page>
   );
 };

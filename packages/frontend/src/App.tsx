@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
-import { Home } from "./pages/home";
-import { Summary } from "./pages/summary";
-import { NotFound } from "./pages/not_found";
+import { Home } from "./pages/Home";
+import { Summary } from "./pages/Summary";
+import { NotFound } from "./pages/NotFound";
 
 const MAX_WIDTH = "1400px";
 
