@@ -1,3 +1,9 @@
+import { Page } from "../components/page"
+
 export const Home = () => {
-  return <div className="bg-black">home</div>
+  return (
+    <Page>
+      <div >home</div>
+    </Page>
+  ) 
 }
