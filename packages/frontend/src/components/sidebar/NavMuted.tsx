@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from 'react-router-dom';
 
 import {
   SidebarGroup,
@@ -22,7 +22,7 @@ export function NavMuted({
         {def.items.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <Link href={item.url}>
+              <Link to={item.url}>
                 {item.icon && <item.icon />}
                 <span className="text-xs font-medium text-muted-foreground">
                   {item.name}

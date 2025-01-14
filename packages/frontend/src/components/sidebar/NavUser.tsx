@@ -25,13 +25,12 @@ import {
   SidebarMenuItem,
   useSidebarContext,
 } from "@/components/ui/sidebar";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
+import { Link } from 'react-router-dom';
+import { useAppContext } from "@/context/app_context/AppContext";
 
 export function NavUser() {
   const { isMobile } = useSidebarContext();
-  const { data: session } = useSession();
-  const user = session?.user;
+  const {appState: { user }} = useAppContext()
 
   if (!user) {
     return;
@@ -48,14 +47,14 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg border">
                 <AvatarImage
-                  src={user.image ?? undefined}
-                  alt={user.name ?? undefined}
+                  src={user.photos[0] ?? undefined}
+                  alt={user.username ?? undefined}
                 />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-semibold">{user.displayName}</span>
+                <span className="truncate text-xs">@{user.username}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -70,14 +69,14 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
-                    src={user.image ?? undefined}
-                    alt={user.name ?? undefined}
+                    src={user.photos[0] ?? undefined}
+                    alt={user.username ?? undefined}
                   />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-semibold">{user.displayName}</span>
+                  <span className="truncate text-xs">@{user.username}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -104,7 +103,7 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <Link href="/api/auth/signout">
+            <Link to="/api/auth/signout">
               <DropdownMenuItem>
                 <LogOut />
                 Log out

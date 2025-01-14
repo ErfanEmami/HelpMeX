@@ -17,7 +17,8 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
+import { Link } from 'react-router-dom';
+
 import { type NavMainDef } from "./NavItems";
 
 export function NavMain({ def }: { def: NavMainDef }) {
@@ -35,7 +36,7 @@ export function NavMain({ def }: { def: NavMainDef }) {
             >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <Link href={item.url}>
+                  <Link to={item.url}>
                     <SidebarMenuButton tooltip={item.name}>
                       {item.icon && <item.icon />}
                       <span>{item.name}</span>
@@ -49,7 +50,7 @@ export function NavMain({ def }: { def: NavMainDef }) {
                       {item.subItems.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.name}>
                           <SidebarMenuSubButton asChild>
-                            <Link href={subItem.url}>
+                            <Link to={subItem.url}>
                               <span>{subItem.name}</span>
                             </Link>
                           </SidebarMenuSubButton>
@@ -62,7 +63,7 @@ export function NavMain({ def }: { def: NavMainDef }) {
             </Collapsible>
           ) : (
             <SidebarMenuItem key={item.name}>
-              <Link href={item.url}>
+              <Link to={item.url}>
                 <SidebarMenuButton tooltip={item.name}>
                   {item.icon && <item.icon />}
                   <span>{item.name}</span>

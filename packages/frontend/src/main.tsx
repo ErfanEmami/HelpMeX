@@ -1,20 +1,21 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
 
-import './index.css'
-import App from './App.tsx'
-import { AppProvider } from './context/app_context/AppContext.tsx';
-import { SidebarProvider } from './components/ui/sidebar.tsx';
+import App from "./App.tsx";
+import { AppProvider } from "./context/app_context/AppContext.tsx";
+import { AppSidebar } from "./components/sidebar/AppSidebar.tsx";
 
-createRoot(document.getElementById('root')!).render(
+import "./index.css";
+
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <AppProvider>
-        <SidebarProvider defaultOpen={true}>
+        <AppSidebar>
           <App />
-        </SidebarProvider>
+        </AppSidebar>
       </AppProvider>
     </BrowserRouter>
-  </StrictMode>,
-)
+  </StrictMode>
+);
