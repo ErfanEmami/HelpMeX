@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { useAppContext } from "../context/app_context/AppContext";
 import { AUTH_STATUS_ENDPOINT, LOGIN_ENDPOINT, LOGOUT_ENDPOINT } from "../lib/endpoints";
 
@@ -11,17 +13,14 @@ export const useAuth = () => {
     })
 
     try {
-      const res = await fetch(AUTH_STATUS_ENDPOINT, {
-        method: 'GET',
-        credentials: 'include',
-      });
-      
-      const data = await res.json();
+      const { data: { user } } = await axios.get(AUTH_STATUS_ENDPOINT, { 
+        withCredentials: true 
+      })
 
-      if (data.user) {
+      if (user) {
         appDispatch({
           type: "SET_USER",
-          payload: data.user
+          payload: user
         })
       }       
     } catch (error) {
@@ -46,15 +45,14 @@ export const useAuth = () => {
     })
 
     try {
-      await fetch(LOGOUT_ENDPOINT, {
-        method: 'GET',
-        credentials: 'include',
+      await axios.get(LOGOUT_ENDPOINT, { 
+        withCredentials: true 
       });
+
       appDispatch({
         type: "SET_USER",
         payload: null
       })
-
     } catch (error) {
       console.error(error)
     } finally {
