@@ -1,12 +1,15 @@
 import { Page } from "../components/Page";
-import { useAppContext } from "../context/app_context/AppContext";
+import { useAuth } from "../hooks/useAuth";
 
 export const Home = () => {
-  const context = useAppContext()
+  const { logout } = useAuth()
 
   return (
     <Page>
       <div>home</div>
+      <button onClick={logout}>
+        logout
+      </button>
     </Page>
   );
 };
