@@ -25,12 +25,13 @@ import {
   SidebarMenuItem,
   useSidebarContext,
 } from "@/components/ui/sidebar";
-import { Link } from 'react-router-dom';
 import { useAppContext } from "@/context/app_context/AppContext";
+import { useAuth } from "@/hooks/useAuth";
 
 export function NavUser() {
   const { isMobile } = useSidebarContext();
   const {appState: { user }} = useAppContext()
+  const { logout } = useAuth()
 
   if (!user) {
     return;
@@ -103,12 +104,10 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <Link to="/api/auth/signout">
-              <DropdownMenuItem>
-                <LogOut />
-                Log out
-              </DropdownMenuItem>
-            </Link>
+            <DropdownMenuItem onClick={logout}>
+              <LogOut />
+              Log out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
