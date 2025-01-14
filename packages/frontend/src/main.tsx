@@ -4,7 +4,6 @@ import { BrowserRouter } from "react-router-dom";
 
 import App from "./App.tsx";
 import { AppProvider } from "./context/app_context/AppContext.tsx";
-import { AppSidebar } from "./components/sidebar/AppSidebar.tsx";
 
 import "./index.css";
 
@@ -12,9 +11,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <AppProvider>
-        <AppSidebar>
-          <App />
-        </AppSidebar>
+        <App />
       </AppProvider>
     </BrowserRouter>
   </StrictMode>

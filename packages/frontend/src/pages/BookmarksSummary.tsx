@@ -1,9 +1,9 @@
 import { Page } from "../components/Page";
 
-export const Summary = () => {
+export const BookmarksSummary = () => {
   return (
     <Page>
-      <div>Summary</div>
+      <div>Bookmarks Summary</div>
     </Page>
   );
 };

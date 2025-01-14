@@ -1,15 +1,14 @@
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
-import { Home } from "./pages/Home";
-import { Summary } from "./pages/Summary";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { HelpMeX } from "./pages/HelpMeX";
+import { BookmarksSummary } from "./pages/BookmarksSummary";
 import { NotFound } from "./pages/NotFound";
 import { useAppContext } from "./context/app_context/AppContext";
 import { Auth } from "./pages/Auth";
 import { useApp } from "./hooks/useApp";
 import { Loading } from "./components/Loading";
+import { AppSidebar } from "./components/sidebar/AppSidebar";
 
-const ProtectedRoute = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
-  return isAuthenticated ? <Outlet /> : <Navigate to="/auth" />;
-};
+const DEFAULT_ROUTE = "/bookmarks-summary"
 
 const App = () => {
   useApp();
@@ -21,31 +20,27 @@ const App = () => {
     },
   } = useAppContext();
 
+  if (!user) {
+    return <Auth />;
+  }
+
   if (appLoading) {
     return <Loading />;
   }
 
   return (
-    <div className="w-full h-screen flex flex-col">
-      <nav className="border-b">
-        <div className={`p-4 m-auto max-w-[1400px]`}>
-          <a href="/">Home</a> | <a href="/summary">Summary</a>
+    <AppSidebar>
+      <div className="w-full h-screen flex flex-col">
+        <div className={`flex-grow m-auto w-full max-w-[1400px]`}>
+          <Routes>
+            <Route path="/" element={<Navigate to={DEFAULT_ROUTE} replace />} />
+            <Route path="/bookmarks-summary" element={<BookmarksSummary />} />
+            <Route path="/help-me-x" element={<HelpMeX />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </div>
-      </nav>
-      <div className={`flex-grow m-auto w-full max-w-[1400px]`}>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/auth" element={<Auth />} />
-          <Route path="*" element={<NotFound />} />
-
-          {/* Protected routes */}
-          <Route element={<ProtectedRoute isAuthenticated={!!user} />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/summary" element={<Summary />} />
-          </Route>
-        </Routes>
       </div>
-    </div>
+    </AppSidebar>
   );
 };
 

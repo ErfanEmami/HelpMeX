@@ -1,19 +1,18 @@
 import {
   BookA,
-  ChartBar,
-  ChartNoAxesColumn,
   LifeBuoy,
   type LucideIcon,
-  Proportions,
   Send,
 } from "lucide-react";
+
+import XLogo from "@/assets/logo-black.png"
 
 export type NavMainDef = {
   name: string;
   items: {
     name: string;
     url: string;
-    icon?: LucideIcon;
+    icon?: LucideIcon | (() => React.ReactNode);
     isActive?: boolean;
     subItems?: {
       name: string;
@@ -32,35 +31,18 @@ export type NavMutedDef = {
 };
 
 export const MARKET_ANALYSIS_DEF: NavMainDef = {
-  name: "Market Analysis",
+  name: "X Tools",
 
   items: [
     {
-      name: "Idea Definiton",
-      url: "/app/idea-definition",
+      name: "Bookmarks Summary",
+      url: "/bookmarks-summary",
       icon: BookA,
     },
     {
-      name: "Market Report",
-      url: "/app/market-report",
-      icon: ChartBar,
-    },
-    {
-      name: "Competitor Analysis",
-      url: "/app/competitor-analysis",
-      icon: Proportions,
-    },
-  ],
-};
-
-export const CRM_DEF: NavMainDef = {
-  name: "CRM",
-
-  items: [
-    {
-      name: "Lead Gen",
-      url: "/app/lead-gen",
-      icon: ChartNoAxesColumn,
+      name: "HelpMeX™",
+      url: "/help-me-x",
+      icon: () => <img src={XLogo} alt="X Logo" className="w-3 h-3" />,
     },
   ],
 };
