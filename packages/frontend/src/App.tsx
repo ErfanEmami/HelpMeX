@@ -7,8 +7,6 @@ import { Auth } from "./pages/Auth";
 import { useApp } from "./hooks/useApp";
 import { Loading } from "./components/Loading";
 
-const MAX_WIDTH = "1400px";
-
 const ProtectedRoute = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   return isAuthenticated ? <Outlet /> : <Navigate to="/auth" />;
 };
@@ -28,13 +26,13 @@ const App = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="w-full h-screen flex flex-col">
       <nav className="border-b">
-        <div className={`p-4 m-auto max-w-[${MAX_WIDTH}]`}>
+        <div className={`p-4 m-auto max-w-[1400px]`}>
           <a href="/">Home</a> | <a href="/summary">Summary</a>
         </div>
       </nav>
-      <div className={`flex-grow m-auto w-full max-w-[${MAX_WIDTH}]`}>
+      <div className={`flex-grow m-auto w-full max-w-[1400px]`}>
         <Routes>
           {/* Public routes */}
           <Route path="/auth" element={<Auth />} />
