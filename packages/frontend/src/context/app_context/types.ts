@@ -5,14 +5,20 @@ export type User = {
   photos: string[],
 }
 
-export interface AppState {
+type Loading = {
+  appLoading?: boolean,
+  requestLoading?: boolean,
+}
+
+export type AppState = {
   user: User | null,
-  isLoading: boolean;
+  loadingState: Loading;
 }
 
 export type Action =
-  | { type: "SET_USER"; payload: User }
-  | { type: "SET_LOADING"; payload: boolean }
+  | { type: "SET_USER"; payload: User | null }
+  | { type: "SET_LOADING"; payload: Loading }
+
 
 export type AppReducer = {
   appState: AppState;

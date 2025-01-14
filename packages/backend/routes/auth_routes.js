@@ -12,9 +12,10 @@ router.get(
 );
 
 // Handle Twitter callback
-router.get("/twitter/return", passport.authenticate("twitter"), (req, res) => {
-  res.redirect("/api/auth/user");
-});
+router.get("/twitter/return", passport.authenticate("twitter", {
+  successRedirect: process.env.CLIENT_URL,
+  failureRedirect: "/api/auth/login/failed"
+}));
 
 // Logout route
 router.get("/logout", (req, res) => {
@@ -28,18 +29,22 @@ router.get("/logout", (req, res) => {
         return res.status(500).json({ error: 'Error logging out' });
       } 
       res.clearCookie('connect.sid');
-      res.redirect("/");
+      res.json({message: "Successfully logged out"})
     });
 
   });
 });
 
+router.get("/login/failed", (req, res) => {
+  res.status(401).json({message: "Authentication failed."});
+});
+
 // get oath'd user
 router.get("/user", (req, res) => {
   if (!req.isAuthenticated()) {
-    return res.status(401).json({ message: "Not authenticated" });
+    return res.json({user: null});
   }
-  res.json(req.user);
+  res.json({user: req.user});
 });
 
 export default router;

@@ -7,7 +7,6 @@ import React, {
 
 import { initialState, reducer } from "./reducer";
 import type { AppContextProps } from "./types";
-import { Loading } from "../../components/Loading";
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
 
@@ -23,17 +22,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [appState, appDispatch] = useReducer(reducer, initialState);
-  // const appHook = useApp({ appState, appDispatch });
 
   const context = {
-    // ...appHook,
     appState,
     appDispatch,
   };
-
-  if (appState.isLoading) {
-    return <Loading />;
-  }
 
   return <AppContext.Provider value={context}>{children}</AppContext.Provider>;
 };
