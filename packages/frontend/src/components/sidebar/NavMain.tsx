@@ -17,7 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from "react-router-dom";
 
 import { type NavMainDef } from "./NavItems";
 
@@ -39,7 +39,7 @@ export function NavMain({ def }: { def: NavMainDef }) {
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
                   <Link to={item.url}>
-                    <SidebarMenuButton 
+                    <SidebarMenuButton
                       tooltip={item.name}
                       isActive={location.pathname === item.url}
                     >
@@ -69,7 +69,10 @@ export function NavMain({ def }: { def: NavMainDef }) {
           ) : (
             <SidebarMenuItem key={item.name}>
               <Link to={item.url}>
-                <SidebarMenuButton tooltip={item.name}>
+                <SidebarMenuButton
+                  tooltip={item.name}
+                  isActive={location.pathname === item.url}
+                >
                   {item.icon && <item.icon />}
                   <span>{item.name}</span>
                 </SidebarMenuButton>
