@@ -26,16 +26,16 @@ const App = () => {
     },
   } = useAppContext();
 
+  if (appLoading) {
+    return <Loading />;
+  }
+
   if (!user) {
     return (
       <AppSkeleton>
         <Auth />
       </AppSkeleton>
     );
-  }
-
-  if (appLoading) {
-    return <Loading />;
   }
 
   return (

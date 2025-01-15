@@ -1,6 +1,7 @@
 import express from "express";
 import { TwitterApi } from "twitter-api-v2";
 import authMiddleware from "../middleware/authMiddleware.js";
+import { GPTClient } from "../lib/openai.js";
 
 const router = express.Router();
 
@@ -13,18 +14,13 @@ router.get("/", async (req, res) => {
 
   try {
     const twitterClient = new TwitterApi(accessToken);
-   
-    const bookmarks = await twitterClient.v2.bookmarks();
-    
-    // const bookmarks = res.bookmarks._realData.data
+    const res = await twitterClient.v2.bookmarks({
+      expansions: ["author_id", "attachments.media_keys"],
+      "tweet.fields": ["created_at", "text", "entities"],
+      "user.fields": ["username", "name", "profile_image_url"],
+    });
 
-    // const bookmarks = await twitterClient.v2.bookmarks({
-    //   expansions: ["author_id", "attachments.media_keys"],
-    //   "tweet.fields": ["created_at", "text", "entities"],
-    //   "user.fields": ["username", "name"],
-    // });
-
-    res.json({ user: req.user, bookmarks: bookmarks });
+    res.json(res);
     // res.json(bookmarks.data);
   } catch (error) {
     console.error("Error fetching bookmarks:", error);
@@ -32,11 +28,17 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/test", async (req, res) => {
+// analyze bookmarks
+router.post("/analyze-bookmarks", async (req, res) => {
+  const { bookmarks } = req.body
   try {
-    res.json({ user: req.user });
+    const gptClient = new GPTClient();
+    const res = await gptClient.analyzeBookmarks(bookmarks);
+
+    res.json(res);
+    // res.json(bookmarks.data);
   } catch (error) {
-    console.error("Error fetching test:", error);
+    console.error("Error fetching bookmarks:", error);
     res.status(500).json({ message: error.message });
   }
 });
