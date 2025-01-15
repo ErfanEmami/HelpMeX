@@ -8,7 +8,13 @@ import { useApp } from "./hooks/useApp";
 import { Loading } from "./components/Loading";
 import { AppSidebar } from "./components/sidebar/AppSidebar";
 
-const DEFAULT_ROUTE = "/bookmarks-summary"
+const DEFAULT_ROUTE = "/bookmarks-summary";
+
+const AppSkeleton = ({ children }: { children: React.ReactNode }) => (
+  <div className="w-full h-screen flex flex-col">
+    <div className={`flex-grow m-auto w-full max-w-[1400px]`}>{children}</div>
+  </div>
+);
 
 const App = () => {
   useApp();
@@ -21,7 +27,11 @@ const App = () => {
   } = useAppContext();
 
   if (!user) {
-    return <Auth />;
+    return (
+      <AppSkeleton>
+        <Auth />
+      </AppSkeleton>
+    );
   }
 
   if (appLoading) {
@@ -30,16 +40,14 @@ const App = () => {
 
   return (
     <AppSidebar>
-      <div className="w-full h-screen flex flex-col">
-        <div className={`flex-grow m-auto w-full max-w-[1400px]`}>
-          <Routes>
-            <Route path="/" element={<Navigate to={DEFAULT_ROUTE} replace />} />
-            <Route path="/bookmarks-summary" element={<BookmarksSummary />} />
-            <Route path="/help-me-x" element={<HelpMeX />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
-      </div>
+      <AppSkeleton>
+        <Routes>
+          <Route path="/" element={<Navigate to={DEFAULT_ROUTE} replace />} />
+          <Route path="/bookmarks-summary" element={<BookmarksSummary />} />
+          <Route path="/help-me-x" element={<HelpMeX />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AppSkeleton>
     </AppSidebar>
   );
 };
