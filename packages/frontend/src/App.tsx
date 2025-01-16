@@ -12,7 +12,7 @@ const DEFAULT_ROUTE = "/bookmarks-summary";
 
 const AppSkeleton = ({ children }: { children: React.ReactNode }) => (
   <div className="w-full h-screen flex flex-col">
-    <div className={`flex-grow m-auto w-full max-w-[1400px]`}>{children}</div>
+    <div className={`flex-grow m-auto w-full`}>{children}</div>
   </div>
 );
 
