@@ -33,7 +33,7 @@ export const AuthorPill = ({
       <div className="font-medium text-sm text-ellipsis whitespace-nowrap overflow-hidden w-20">
         {name}
       </div>
-      <div className="text-xs text-gray-500">@{username}</div>
+      <div className="text-sm text-gray-500">@{username}</div>
     </div>
   </div>
 );

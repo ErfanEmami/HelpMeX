@@ -1,3 +1,5 @@
+import { Separator } from "./separator";
+
 export const BookmarkCard = ({
   name,
   username,
@@ -10,7 +12,7 @@ export const BookmarkCard = ({
   text: string;
 }) => (
   <div className="bg-slate-50 p-3 border border-gray-200 rounded-lg">
-    <div className="flex gap-2">
+    <div className="flex gap-2 items-center mb-2">
       <img
         className="w-8 h-8 rounded-full object-cover"
         src={profileImage}
@@ -21,6 +23,7 @@ export const BookmarkCard = ({
         <div className="text-sm text-gray-500">@{username}</div>
       </div>
     </div>
+    <Separator/>
     <div className="mt-2 text-sm whitespace-pre-wrap">{text}</div>
   </div>
 );
