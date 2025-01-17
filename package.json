@@ -11,5 +11,9 @@
   ],
   "devDependencies": {
     "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "shared": "^1.0.0",
+    "zod": "^3.24.1"
   }
 }

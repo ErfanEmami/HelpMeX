@@ -348,3 +348,49 @@ export const BOOKMARKS = {
     _endpoint: "users/:id/bookmarks",
   },
 };
+
+export const BOOKMARKS_SUMMARY = {
+  themes: [
+    {
+      themeTitle: "Delegation and Growth",
+      keyInsights: [
+        "Delegating the right tasks to the right people is crucial for business growth.",
+        "Failure to delegate can hinder organizational growth and scalability.",
+        "Identifying when to delegate is a critical skill for effective leadership.",
+      ],
+      actionableItems: [
+        "Develop clear criteria for task delegation within the organization.",
+        "Provide training and support for employees to enhance their delegation skills.",
+      ],
+      bookmarkRefs: ["1875779457589395591"],
+    },
+    {
+      themeTitle: "Personal Branding on Twitter",
+      keyInsights: [
+        "Assisting established brands can accelerate personal brand growth on Twitter.",
+        "Leveraging AI tools can enhance personal branding strategies on Twitter.",
+        "Overcoming resistance to starting a personal brand on Twitter involves understanding the algorithm and creating engaging content.",
+      ],
+      actionableItems: [
+        "Explore collaboration opportunities with established brands on Twitter.",
+        "Investigate and utilize AI tools for optimizing personal branding efforts on Twitter.",
+      ],
+      bookmarkRefs: [
+        "1878126456846389478",
+        "1878548723380158957",
+        "1878744043166859689",
+      ],
+    },
+    {
+      themeTitle: "Direct Communication",
+      keyInsights: [
+        "Directness in communication can lead to clarity and decisive outcomes.",
+        "Seeking clear and direct responses can enhance decision-making processes.",
+      ],
+      actionableItems: [
+        "Encourage and practice direct communication within professional and personal interactions.",
+      ],
+      bookmarkRefs: ["1878953173857313067"],
+    },
+  ],
+};
