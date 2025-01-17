@@ -1,15 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-import { BOOKMARKS_ENDPOINT } from "../lib/endpoints";
-import { Author, Bookmark } from "@/lib/types";
+import { BOOKMARKS_ENDPOINT, BOOKMARKS_SUMMARY_ENDPOINT } from "../lib/endpoints";
+import { Author, Bookmark, BookmarksSummary } from "@/lib/types";
 
 export const useBookmarks = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoadingBookmarks, setIsLoadingBookmarks] = useState<boolean>(true);
+  const [isLoadingSummary, setIsLoadingSummary] = useState<boolean>(false);
+
   const [authors, setAuthors] = useState<Author[]>([]);
-  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [filteredAuthors, setFilteredAuthors] = useState<Author["id"][]>([]);
+
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [filteredBookmarks, setFilteredBookmarks] = useState<Bookmark[]>([]);
+  
+  const [bookmarksSummary, setBookmarksSummary] = useState<BookmarksSummary | null>(null);
 
   useEffect(() => {
     fetchBookmarks();
@@ -29,7 +34,7 @@ export const useBookmarks = () => {
   }, [filteredAuthors]);
 
   const fetchBookmarks = async () => {
-    setIsLoading(true);
+    setIsLoadingBookmarks(true);
 
     try {
       const res = await axios.get(BOOKMARKS_ENDPOINT, {
@@ -44,16 +49,37 @@ export const useBookmarks = () => {
     } catch (error) {
       console.error("getBookmarks error:", error);
     } finally {
-      setIsLoading(false);
+      setIsLoadingBookmarks(false);
     }
   };
 
+  const fetchBookmarksSummary = async () => {
+    setIsLoadingSummary(true);
+
+    try {
+      const { data }: { data: BookmarksSummary } = await axios.post(
+        BOOKMARKS_SUMMARY_ENDPOINT,
+        { bookmarks: filteredBookmarks },
+        { withCredentials: true }
+      );
+      
+      setBookmarksSummary(data)
+    } catch (error) {
+      console.error("fetchBookmarksSummary error:", error);
+    } finally {
+      setIsLoadingSummary(false);
+    }
+  }
+
   return {
-    isLoading,
-    bookmarks: filteredBookmarks,
+    isLoadingBookmarks,
+    isLoadingSummary,
     authors,
     filteredAuthors,
-    fetchBookmarks,
+    bookmarks: filteredBookmarks,
+    bookmarksSummary,
     setFilteredAuthors,
+    fetchBookmarks,
+    fetchBookmarksSummary,
   };
 };
