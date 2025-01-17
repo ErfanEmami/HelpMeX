@@ -42,7 +42,7 @@ router.get("/login/failed", (req, res) => {
 // get oath'd user
 router.get("/user", (req, res) => {
   if (!req.isAuthenticated()) {
-    return res.json({user: null});
+    return res.status(401).json({user: null, message: "Not authenticated."});
   }
   res.json({user: req.user});
 });
