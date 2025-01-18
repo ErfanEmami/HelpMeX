@@ -30,7 +30,7 @@ export const BookmarksSummary = () => {
   };
 
   const BookmarksPanel = () => (
-    <ControlPanel title="Bookmarks" half>
+    <ControlPanel title="Bookmarks" half isLoading={isLoadingBookmarks}>
       <Control>
         <div className="flex pb-2 gap-2 overflow-x-auto">
           {authors.map((author) => (
@@ -44,13 +44,9 @@ export const BookmarksSummary = () => {
         </div>
       </Control>
       <Content>
-        {isLoadingBookmarks ? (
-          <Loading />
-        ) : (
-          bookmarks.map((bookmark) => (
-            <BookmarkCard key={bookmark.id} {...bookmark} />
-          ))
-        )}
+        {bookmarks.map((bookmark) => (
+          <BookmarkCard key={bookmark.id} {...bookmark} />
+        ))}
       </Content>
     </ControlPanel>
   );
