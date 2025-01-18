@@ -10,12 +10,6 @@ import { AppSidebar } from "./components/sidebar/AppSidebar";
 
 const DEFAULT_ROUTE = "/bookmarks-summary";
 
-const AppSkeleton = ({ children }: { children: React.ReactNode }) => (
-  <div className="w-full h-screen flex flex-col">
-    <div className={`flex-grow m-auto w-full`}>{children}</div>
-  </div>
-);
-
 const App = () => {
   useApp();
 
@@ -32,22 +26,20 @@ const App = () => {
 
   if (!user) {
     return (
-      <AppSkeleton>
+      <div className="flex flex-col h-screen">
         <Auth />
-      </AppSkeleton>
+      </div>
     );
   }
 
   return (
     <AppSidebar>
-      <AppSkeleton>
-        <Routes>
-          <Route path="/" element={<Navigate to={DEFAULT_ROUTE} replace />} />
-          <Route path="/bookmarks-summary" element={<BookmarksSummary />} />
-          <Route path="/help-me-x" element={<HelpMeX />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </AppSkeleton>
+      <Routes>
+        <Route path="/" element={<Navigate to={DEFAULT_ROUTE} replace />} />
+        <Route path="/bookmarks-summary" element={<BookmarksSummary />} />
+        <Route path="/help-me-x" element={<HelpMeX />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </AppSidebar>
   );
 };

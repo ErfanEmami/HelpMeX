@@ -11,19 +11,19 @@ export const BookmarkCard = ({
   profileImage: string;
   text: string;
 }) => (
-  <div className="bg-slate-50 p-3 border border-gray-200 rounded-lg">
+  <div className="flex flex-col w-full p-4 bg-white rounded-lg shadow-sm border border-gray-200">
     <div className="flex gap-2 items-center mb-2">
       <img
-        className="w-8 h-8 rounded-full object-cover"
+        className="w-10 h-10 rounded-full object-cover"
         src={profileImage}
         alt="User profile"
       />
       <div>
-        <div className="font-medium text-sm">{name}</div>
+        <div className="font-medium">{name}</div>
         <div className="text-sm text-gray-500">@{username}</div>
       </div>
     </div>
-    <Separator/>
-    <div className="mt-2 text-sm whitespace-pre-wrap">{text}</div>
+    <Separator />
+    <div className="mt-2 whitespace-pre-wrap">{text}</div>
   </div>
 );

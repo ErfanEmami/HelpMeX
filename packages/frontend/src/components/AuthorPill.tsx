@@ -18,9 +18,9 @@ export const AuthorPill = ({
       inline-flex flex-shrink-0 gap-3 
       items-center justify-between 
       p-1 px-2 pr-4 
-      bg-slate-50 border border-gray-200 rounded-full shadow-sm hover:bg-slate-100 cursor-pointer
+      bg-white border border-gray-200 rounded-full shadow-sm hover:bg-gray-100 cursor-pointer
       `,
-      selected && "bg-slate-200 border-gray-300 hover:bg-slate-200 "
+      selected && "bg-gray-200 border-gray-300 hover:bg-gray-200 "
     )}
     onClick={onClick}
   >
