@@ -4,6 +4,7 @@ import cors from 'cors';
 import authRoutes from './routes/auth_routes.js';
 import bookmarkRoutes from './routes/bookmarks_routes.js';
 import sessionMiddleware from './middleware/sessionMiddleware.js';
+import testMiddleware from './middleware/testMiddleware.js';
 import passport from "./passport/twitter_strategy.js"
 
 const app = express();
@@ -20,6 +21,11 @@ app.use(cors({
 
 // Session configuration with MongoStore
 app.use(sessionMiddleware);
+
+// simulates API speed delay
+if (process.env.NODE_ENV === 'development') {
+  app.use(testMiddleware);
+}
 
 //initialize passport middleware after session middleware
 app.use(passport.initialize())

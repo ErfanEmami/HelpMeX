@@ -11,12 +11,12 @@ export const Page = ({
   center?: boolean;
   hcenter?: boolean;
   vcenter?: boolean;
-  title?: {text: string, isTyped?: boolean};
+  title?: { text: string; isTyped?: boolean };
   children: React.ReactNode;
 }) => (
   <div
     className={cn(
-      "flex h-screen w-full flex-col  max-h-screen ",
+      "flex flex-1 w-full flex-col  max-h-screen overflow-hidden py-4",
       hcenter && "items-center",
       vcenter && "justify-center",
       center && "items-center justify-center"

@@ -27,8 +27,8 @@ export function AppSidebar({ children, ...props }: React.ComponentProps<typeof S
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
-      <SidebarInset>
-        <div className="-mb-2 p-2">
+      <SidebarInset className="h-screen">
+        <div className="p-2">
           <SidebarTrigger />
         </div>
         {children}
