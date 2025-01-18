@@ -1,14 +1,17 @@
 import { cn } from "@/lib/utils";
 import Title from "./Title";
 import { ReactElement } from "react";
+import { Loading } from "./Loading";
 
 const ControlPanel = ({
   title,
   half,
+  isLoading,
   children,
 }: {
   title: string;
   half?: boolean;
+  isLoading?: boolean;
   children: [ReactElement<typeof Content>, ReactElement<typeof Control>];
 }) => (
   <div 
@@ -18,7 +21,7 @@ const ControlPanel = ({
     )}
   >
     <Title>{title}</Title>
-    {children}
+    {isLoading ? <Loading/> : children}
   </div>
 );
 
@@ -29,7 +32,7 @@ const Content = ({ children }: { children: React.ReactNode }) => (
 );
 
 const Control = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex flex-col overflow-hidden">
+  <div>
     {children}
   </div>
 );
