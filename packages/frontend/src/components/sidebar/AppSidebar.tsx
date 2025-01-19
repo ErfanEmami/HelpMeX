@@ -27,7 +27,7 @@ export function AppSidebar({ children, ...props }: React.ComponentProps<typeof S
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
-      <SidebarInset className="h-screen">
+      <SidebarInset className="h-screen overflow-auto">
         <div className="p-2">
           <SidebarTrigger />
         </div>
