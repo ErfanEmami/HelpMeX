@@ -3,6 +3,7 @@ import cors from 'cors';
 
 import authRoutes from './routes/auth_routes.js';
 import bookmarkRoutes from './routes/bookmarks_routes.js';
+import xerRoutes from './routes/xer_routes.js';
 import sessionMiddleware from './middleware/sessionMiddleware.js';
 import testMiddleware from './middleware/testMiddleware.js';
 import passport from "./passport/twitter_strategy.js"
@@ -32,7 +33,8 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 // Routes
-app.use('/api/auth', authRoutes);  // Authentication routes
-app.use('/api/bookmarks', bookmarkRoutes); // Notes routes
+app.use('/api/auth', authRoutes);
+app.use('/api/bookmarks', bookmarkRoutes);
+app.use('/api/xer', xerRoutes);
 
 export default app;
