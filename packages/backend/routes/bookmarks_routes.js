@@ -59,10 +59,10 @@ router.get("/", async (req, res) => {
 
 // analyze bookmarks
 router.post("/analyze-bookmarks", async (req, res) => {
-  const { bookmarks } = req.body
 
   try {
-    const gptClient = new GPTClient();
+    // const { bookmarks } = req.body
+    // const gptClient = new GPTClient();
     // const { response } = await gptClient.analyzeBookmarks(bookmarks);
     // const gptResponse = JSON.parse(response.choices[0].message.content)
 
