@@ -1,8 +1,8 @@
-import { OpenAI } from "openai";
+import { OpenAIClient } from "./openai";
 
-export class GPTClient {
+export class BookmarksAnalyzer extends OpenAIClient {
   constructor() {
-    this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    super();
   }
 
   analyzeBookmarks = async (bookmarks) => {

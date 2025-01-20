@@ -1,9 +1,7 @@
 import express from "express";
 import { TwitterApi } from "twitter-api-v2";
 import authMiddleware from "../middleware/authMiddleware.js";
-import { GPTClient } from "../lib/openai.js";
 import { USER_POSTS } from "../test/test_data.js";
-import { SystemResponseSchema } from "shared";
 
 const router = express.Router();
 
@@ -33,7 +31,7 @@ router.get("/:username", async (req, res) => {
     //   exclude: ["retweets", "replies"], // Exclude retweets and replies
     // });
 
-    const posts = USER_POSTS
+    const posts = USER_POSTS;
 
     res.json(posts);
   } catch (error) {
@@ -43,5 +41,3 @@ router.get("/:username", async (req, res) => {
 });
 
 export default router;
-
-

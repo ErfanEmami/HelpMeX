@@ -1,7 +1,7 @@
 import express from "express";
 import { TwitterApi } from "twitter-api-v2";
 import authMiddleware from "../middleware/authMiddleware.js";
-import { GPTClient } from "../lib/openai.js";
+import { BookmarksAnalyzer } from "../lib/openai/bookmarks_analyzer.js";
 import { BOOKMARKS, BOOKMARKS_SUMMARY } from "../test/test_data.js";
 import { SystemResponseSchema } from "shared";
 
@@ -62,8 +62,8 @@ router.post("/analyze-bookmarks", async (req, res) => {
 
   try {
     // const { bookmarks } = req.body
-    // const gptClient = new GPTClient();
-    // const { response } = await gptClient.analyzeBookmarks(bookmarks);
+    // const bookmarksAnalyzer = new BookmarksAnalyzer();
+    // const { response } = await bookmarksAnalyzer.analyzeBookmarks(bookmarks);
     // const gptResponse = JSON.parse(response.choices[0].message.content)
 
     /*** Not making real API call due to rate limits ***/
