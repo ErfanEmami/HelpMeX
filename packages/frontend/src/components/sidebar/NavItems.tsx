@@ -40,8 +40,8 @@ export const MARKET_ANALYSIS_DEF: NavMainDef = {
       icon: BookA,
     },
     {
-      name: "HelpMeX™",
-      url: "/help-me-x",
+      name: "Xer™",
+      url: "/xer",
       icon: () => <img src={XLogo} alt="X Logo" className="w-3 h-3" />,
     },
   ],
