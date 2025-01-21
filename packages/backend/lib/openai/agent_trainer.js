@@ -32,8 +32,8 @@ export class AgentTrainer extends OpenAIClient {
     return jsonlString;
   };
 
-  getFineTunedState = async (agentId) => {
-    const response = await this.openai.fineTuning.jobs.retrieve(agentId);
+  getFineTunedState = async (jobId) => {
+    const response = await this.openai.fineTuning.jobs.retrieve(jobId);
 
     console.log("Fine-tune status:", response.status);
     return response;
@@ -80,9 +80,9 @@ export class AgentTrainer extends OpenAIClient {
   };
 
   // use agent to create a post
-  promptFineTunedModel = async (agentId, prompt) => {
+  promptFineTunedModel = async (modelId, prompt) => {
     const response = await this.openai.completions.create({
-      model: agentId, // Use the fine-tuned model ID
+      model: modelId, // fine-tuned model ID
       prompt: prompt,
       max_tokens: 280, // Ensure tweet-length outputs
       temperature: 0.7, // Adjust for creativity

@@ -49,10 +49,10 @@ router.get("/train/:author", async (req, res) => {
     const trainingFileId = await agentTrainer.uploadTrainingData(jsonlString);
 
     // start training process
-    const agentId = await agentTrainer.createFineTune(trainingFileId);
+    const jobId = await agentTrainer.createFineTune(trainingFileId);
 
     const agent = await createAgent({
-      agentId,
+      jobId,
       trainingFileId,
       userId,
       author,
@@ -77,10 +77,10 @@ router.get("/train/:author/status", async (req, res) => {
       return res.status(400).json({ message: `Agent doesn't exist for ${author}` });
     }
 
-    const { agentId } = await getAgentByAuthor(userId, author);
+    const { jobId } = await getAgentByAuthor(userId, author);
 
     const agentTrainer = new AgentTrainer();
-    const status = await agentTrainer.getFineTunedState(agentId);
+    const { status } = await agentTrainer.getFineTunedState(jobId);
 
     res.json(status);
   } catch (error) {
@@ -106,8 +106,8 @@ router.get("/train/:author/create-post", async (req, res) => {
     const agentTrainer = new AgentTrainer();
 
     // check fine-tune status
-    const ftState = await agentTrainer.getFineTunedState(agent.agentId);
-    console.log(ftState)
+    const ftState = await agentTrainer.getFineTunedState(agent.jobId);
+
     if (ftState.status !== "succeeded") {
       return res.status(400).json({ message: `Fine-tuned Model is not ready.` });
     }

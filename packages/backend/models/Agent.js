@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const agent = new mongoose.Schema({
-  agentId: { type: String, required: true, unique: true }, // fine-tune id
+  jobId: { type: String, required: true, unique: true }, // fine-tune id
   trainingFileId: { type: String, required: true, unique: true },
   userId: { type: String, required: true }, // user._id
   author: { type: String, required: true, unique: true }, // twitter/x user the agent is trained on
@@ -11,8 +11,8 @@ const agent = new mongoose.Schema({
 const Agent = mongoose.model('Agent', agent);
 export default Agent;
 
-export const createAgent = async ({ agentId, userId, trainingFileId, author }) => {
-  const newAgent = new Agent({ agentId, userId, trainingFileId, author });
+export const createAgent = async ({ jobId, userId, trainingFileId, author }) => {
+  const newAgent = new Agent({ jobId, userId, trainingFileId, author });
   return await newAgent.save();
 }
 
