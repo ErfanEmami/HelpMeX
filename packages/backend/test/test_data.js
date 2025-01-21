@@ -1858,3 +1858,39 @@ export const USER_POSTS = {
   },
   _endpoint: "users/:id/tweets",
 };
+
+// await this.openai.fineTuning.jobs.retrieve(agentId)
+export const FINE_TUNED_STATE = {
+  object: "fine_tuning.job",
+  id: "ftjob-UJKwWVHvxhHZ8XwRIr0oCJoJ",
+  model: "gpt-3.5-turbo-1106",
+  created_at: 1737430474,
+  finished_at: 1737430982,
+  fine_tuned_model: "ft:gpt-3.5-turbo-1106:personal::ArzSJGY6",
+  organization_id: "org-S3GfKGM5oVYVdLprGY0eq4bg",
+  result_files: ["file-178wvX8pGi1Ekk4BWyTcNX"],
+  status: "succeeded",
+  validation_file: null,
+  training_file: "file-ScBkN1yLJBF1GANrF3xFkK",
+  hyperparameters: {
+    n_epochs: 10,
+    batch_size: 1,
+    learning_rate_multiplier: 2,
+  },
+  trained_tokens: 7040,
+  error: {},
+  user_provided_suffix: null,
+  seed: 237865487,
+  estimated_finish: null,
+  integrations: [],
+  method: {
+    type: "supervised",
+    supervised: {
+      hyperparameters: {
+        n_epochs: 10,
+        batch_size: 1,
+        learning_rate_multiplier: 2,
+      },
+    },
+  },
+};

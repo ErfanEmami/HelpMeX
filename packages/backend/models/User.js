@@ -19,11 +19,6 @@ userSchema.set('toJSON', { virtuals: true });
 const User = mongoose.model('User', userSchema);
 export default User;
 
-export const createUser = async ({ username, password }) => {
-  const newUser = new User({ username, password });
-  return await newUser.save();
-}
-
 export const getUserByUsername = async (username) => {
   const user = await User.findOne({ username });
   return user

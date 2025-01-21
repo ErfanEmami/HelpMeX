@@ -1,4 +1,4 @@
-import { OpenAIClient } from "./openai";
+import { OpenAIClient } from "./openai_client.js";
 
 export class BookmarksAnalyzer extends OpenAIClient {
   constructor() {
@@ -52,7 +52,7 @@ export class BookmarksAnalyzer extends OpenAIClient {
       - Do not include any markdown formatting (e.g., "'''json").
       - Ensure the output is a valid JSON object, I am going to do JSON.parse(yourResponse) so make the response directly parsable.
       - Do not include any extra text outside of the JSON object.
-    `
+    `;
 
     const systemMessage = `
       You are an expert analyst that creates insightful reports from collections of tweets.
@@ -73,7 +73,7 @@ export class BookmarksAnalyzer extends OpenAIClient {
 
     const response = await this.openai.chat.completions.create({
       // Using GPT-3.5-turbo for better cost efficiency while maintaining quality
-      model: "gpt-3.5-turbo-1106",
+      model: this.chatModel,
       messages: [
         {
           role: "system",
