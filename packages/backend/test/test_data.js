@@ -1859,7 +1859,7 @@ export const USER_POSTS = {
   _endpoint: "users/:id/tweets",
 };
 
-// await this.openai.fineTuning.jobs.retrieve(agentId)
+// await this.openai.fineTuning.jobs.retrieve(jobId)
 export const FINE_TUNED_STATE = {
   object: "fine_tuning.job",
   id: "ftjob-UJKwWVHvxhHZ8XwRIr0oCJoJ",
