@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { HelpMeX } from "./pages/HelpMeX";
+import { Xer } from "./pages/Xer";
 import { BookmarksSummary } from "./pages/BookmarksSummary/BookmarksSummary";
 import { NotFound } from "./pages/NotFound";
 import { useAppContext } from "./context/app_context/AppContext";
@@ -37,7 +37,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Navigate to={DEFAULT_ROUTE} replace />} />
         <Route path="/bookmarks-summary" element={<BookmarksSummary />} />
-        <Route path="/help-me-x" element={<HelpMeX />} />
+        <Route path="/xer" element={<Xer />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AppSidebar>
