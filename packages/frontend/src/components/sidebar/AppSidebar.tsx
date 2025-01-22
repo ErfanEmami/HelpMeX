@@ -11,15 +11,20 @@ import {
   SidebarRail,
   SidebarTrigger,
   SidebarInset,
+  SidebarHeader,
 } from "@/components/ui/sidebar";
-import { HELP_DEF, MARKET_ANALYSIS_DEF } from "./NavItems";
+import { HELP_DEF, TOOLS_DEF } from "./NavItems";
+import { ToolSwitcher } from "./toolSwitcher";
 
 export function AppSidebar({ children, ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <SidebarProvider defaultOpen={true}>
       <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader>
+        <ToolSwitcher def={TOOLS_DEF} />
+      </SidebarHeader>
         <SidebarContent>
-          <NavMain def={MARKET_ANALYSIS_DEF} />
+          {/* <NavMain def={MARKET_ANALYSIS_DEF} /> */}
           <NavMuted def={HELP_DEF} className="mt-auto" />
         </SidebarContent>
         <SidebarFooter>
