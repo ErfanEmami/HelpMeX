@@ -19,10 +19,6 @@ export const BookmarksSummary = () => {
     bookmarksSummary,
   } = useBookmarks();
 
-  const isSelected = (id: string) => {
-    return filteredAuthors.includes(id);
-  };
-
   const handlePillClick = (id: string) => {
     setFilteredAuthors((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
@@ -39,7 +35,7 @@ export const BookmarksSummary = () => {
                 <AuthorPill
                   {...author}
                   key={author.id}
-                  selected={isSelected(author.id)}
+                  selected={filteredAuthors.includes(author.id)}
                   onClick={() => handlePillClick(author.id)}
                 />
               ))}

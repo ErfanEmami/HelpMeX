@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -16,9 +17,10 @@ import {
 import { ChevronsUpDown } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { type NavToolDef } from "./NavItems";
+import { cn } from "@/lib/utils";
 
 export function ToolSwitcher({ def }: { def: NavToolDef }) {
-  const { isMobile } = useSidebarContext();
+  const { isMobile, state } = useSidebarContext();
 
   const location = useLocation();
   const selectedTool = def.find((tool) => tool.url === location.pathname);
@@ -27,9 +29,11 @@ export function ToolSwitcher({ def }: { def: NavToolDef }) {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuLabel className="text-xs text-muted-foreground">
+          <SidebarGroupLabel
+            className={cn(state === "collapsed" ? "hidden" : null)}
+          >
             X Tools
-          </DropdownMenuLabel>
+          </SidebarGroupLabel>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"

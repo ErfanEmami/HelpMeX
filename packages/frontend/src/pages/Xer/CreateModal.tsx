@@ -39,7 +39,11 @@ export const CreateModal = ({ onClose }: { onClose?: (() => void) | null }) => {
           </form>
         </CardContent>
         <CardFooter className="flex justify-end gap-2">
-          {onClose ? <Button variant="outline">close</Button> : null}
+          {onClose && (
+            <Button onClick={onClose} variant="outline">
+              close
+            </Button>
+          )}
           <Button>Create</Button>
         </CardFooter>
       </Card>

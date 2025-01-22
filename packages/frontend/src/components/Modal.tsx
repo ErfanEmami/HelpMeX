@@ -1,5 +1,4 @@
 import ReactDOM from "react-dom";
-import { Button } from "./ui/button";
 
 const Modal = ({ children }: { children: React.ReactNode }) => {
   return ReactDOM.createPortal(
