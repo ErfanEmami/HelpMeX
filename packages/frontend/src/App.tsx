@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Xer } from "./pages/Xer";
+import { Xer } from "./pages/Xer/Xer";
 import { BookmarksSummary } from "./pages/BookmarksSummary/BookmarksSummary";
 import { NotFound } from "./pages/NotFound";
 import { useAppContext } from "./context/app_context/AppContext";

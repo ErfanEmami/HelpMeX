@@ -2,13 +2,25 @@ import express from "express";
 import { TwitterApi } from "twitter-api-v2";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { USER_POSTS } from "../test/test_data.js";
-import { createAgent, getAgentByAuthor } from "../models/Agent.js";
+import { createAgent, getAgentByAuthor, getAgents } from "../models/Agent.js";
 import { AgentTrainer } from "../lib/openai/agent_trainer.js";
 
 const router = express.Router();
 
 // Apply the authMiddleware to all routes in this router
 router.use(authMiddleware);
+
+// get all of user's assistants
+router.get("/", async (req, res) => {
+  try {
+    const { id: userId } = req.user;
+    const agents = await getAgents(userId);
+    res.json(agents);
+  } catch (error) {
+    console.error("Error getting agent status:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
 
 // create fine-tuned model
 router.get("/train/:author", async (req, res) => {

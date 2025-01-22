@@ -16,7 +16,7 @@ export const Page = ({
 }) => (
   <div
     className={cn(
-      "flex flex-1 w-full flex-col  max-h-screen overflow-y-hidden py-4",
+      "flex flex-1 w-full flex-col overflow-auto max-h-screen py-4",
       hcenter && "items-center",
       vcenter && "justify-center",
       center && "items-center justify-center"

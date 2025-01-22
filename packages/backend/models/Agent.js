@@ -20,3 +20,8 @@ export const getAgentByAuthor = async (userId, author) => {
   const agent = await Agent.findOne({ userId, author });
   return agent
 } 
+
+export const getAgents = async (userId) => {
+  const agents = await Agent.find({ userId });
+  return agents;
+}
