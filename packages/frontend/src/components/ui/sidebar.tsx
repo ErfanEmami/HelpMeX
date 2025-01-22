@@ -33,6 +33,8 @@ type SidebarContext = {
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
   toggleSidebar: () => void;
+  navBody: React.ReactNode | null;
+  setNavBody: (body: React.ReactNode) => void;
 };
 
 const SidebarContext = React.createContext<SidebarContext | null>(null);
@@ -68,6 +70,7 @@ const SidebarProvider = React.forwardRef<
   ) => {
     const isMobile = useIsMobile();
     const [openMobile, setOpenMobile] = React.useState(false);
+    const [navBody, setNavBody] = React.useState<React.ReactNode | null>(null);
 
     // This is the internal state of the sidebar.
     // We use openProp and setOpenProp for control from outside the component.
@@ -124,6 +127,8 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
+        navBody,
+        setNavBody,
       }),
       [
         state,
@@ -133,6 +138,8 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
+        navBody,
+        setNavBody,
       ],
     );
 
