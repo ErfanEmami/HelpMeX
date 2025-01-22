@@ -14,7 +14,7 @@ export const Xer = () => {
   }
 
   const renderModal = () => {
-    const hasAssistants = assistants.length > 10;
+    const hasAssistants = assistants.length > 0;
     if (!showModal && hasAssistants) {
       return;
     }

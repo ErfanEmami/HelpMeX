@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { NavMain } from "@/components/sidebar/NavMain";
 import { NavMuted } from "@/components/sidebar/NavMuted";
 import { NavUser } from "@/components/sidebar/NavUser";
 import {
@@ -15,6 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { HELP_DEF, TOOLS_DEF } from "./NavItems";
 import { ToolSwitcher } from "./toolSwitcher";
+import { ToolBody } from "./ToolBody";
 
 export function AppSidebar({ children, ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -24,7 +24,7 @@ export function AppSidebar({ children, ...props }: React.ComponentProps<typeof S
         <ToolSwitcher def={TOOLS_DEF} />
       </SidebarHeader>
         <SidebarContent>
-          {/* <NavMain def={MARKET_ANALYSIS_DEF} /> */}
+          <ToolBody />
           <NavMuted def={HELP_DEF} className="mt-auto" />
         </SidebarContent>
         <SidebarFooter>
