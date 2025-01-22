@@ -5,7 +5,14 @@ import {
   Send,
 } from "lucide-react";
 
-import XLogo from "@/assets/logo-black.png"
+import XLogo from "@/assets/logo-white.png"
+
+export type NavToolDef = {
+  name: string;
+  url: string;
+  description: string,
+  icon: LucideIcon | (() => React.ReactNode);
+}[];
 
 export type NavMainDef = {
   name: string;
@@ -30,22 +37,20 @@ export type NavMutedDef = {
   }[];
 };
 
-export const MARKET_ANALYSIS_DEF: NavMainDef = {
-  name: "X Tools",
-
-  items: [
-    {
-      name: "Bookmarks Summary",
-      url: "/bookmarks-summary",
-      icon: BookA,
-    },
-    {
-      name: "Xer™",
-      url: "/xer",
-      icon: () => <img src={XLogo} alt="X Logo" className="w-3 h-3" />,
-    },
-  ],
-};
+export const TOOLS_DEF: NavToolDef = [
+  {
+    name: "Xer™",
+    url: "/xer",
+    description: "Your Posting Assistant",
+    icon: () => <img src={XLogo} alt="X Logo" className="w-5 h-5" />,
+  },
+  {
+    name: "Bookmarks Summary",
+    url: "/bookmarks-summary",
+    description: "Summary of Your Bookmarks",
+    icon: BookA,
+  },
+];
 
 export const HELP_DEF: NavMutedDef = {
   name: "Help",
