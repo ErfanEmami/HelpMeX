@@ -1,1 +1,1 @@
-export * from "./schemas/bookmarksSummary.js"
+export * from "./schemas/index.js"

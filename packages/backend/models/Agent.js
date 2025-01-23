@@ -5,14 +5,15 @@ const agent = new mongoose.Schema({
   trainingFileId: { type: String, required: true, unique: true },
   userId: { type: String, required: true }, // user._id
   author: { type: String, required: true, unique: true }, // twitter/x user the agent is trained on
+  name: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
 
 const Agent = mongoose.model('Agent', agent);
 export default Agent;
 
-export const createAgent = async ({ jobId, userId, trainingFileId, author }) => {
-  const newAgent = new Agent({ jobId, userId, trainingFileId, author });
+export const createAgent = async ({ jobId, userId, trainingFileId, author, name }) => {
+  const newAgent = new Agent({ jobId, userId, trainingFileId, author, name });
   return await newAgent.save();
 }
 
