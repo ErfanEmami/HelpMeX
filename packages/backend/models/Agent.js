@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const agent = new mongoose.Schema({
+const agentSchema = new mongoose.Schema({
   jobId: { type: String, required: true, unique: true }, // fine-tune id
   trainingFileId: { type: String, required: true, unique: true },
   userId: { type: String, required: true }, // user._id
@@ -9,7 +9,11 @@ const agent = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-const Agent = mongoose.model('Agent', agent);
+// Ensure virtuals (like .id) are included when logged or in API response
+agentSchema.set('toObject', { virtuals: true });
+agentSchema.set('toJSON', { virtuals: true });
+
+const Agent = mongoose.model('Agent', agentSchema);
 export default Agent;
 
 export const createAgent = async ({ jobId, userId, trainingFileId, author, name }) => {
