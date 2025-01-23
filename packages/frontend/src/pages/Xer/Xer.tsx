@@ -1,28 +1,31 @@
-import { Loading } from "@/components/Loading";
-import { useXer } from "@/hooks/useXer";
-import { useEffect, useState } from "react";
-import { CreateAssistantModal } from "./CreateAssistantModal";
+import { useEffect } from "react";
 import { Page } from "@/components/page";
 import { useSidebarContext } from "@/components/ui/sidebar";
 import { NavAssistants } from "./NavAssistants";
+import { useXerContext } from "@/context/xer_context/XerContext";
+import { useXer } from "@/hooks/useXer";
+import { Loading } from "@/components/Loading";
 
 export const Xer = () => {
-  const { isLoadingAssistants, assistants, createAssistant } = useXer();
+  const { fetchAssistants } = useXer();
   const { setNavBody } = useSidebarContext();
+  const { xerState } = useXerContext();
 
-  const [showModal, setShowModal] = useState(false);
-
+  const {
+    assistants,
+    selectedAssistant,
+    loadingState: { isLoadingAssistants },
+  } = xerState;
   const hasAssistants = assistants.length > 0;
 
+  // load assistants
   useEffect(() => {
-    if (hasAssistants) {
-      setNavBody(
-        <NavAssistants
-          onNewAssistant={() => setShowModal(true)}
-          assistants={assistants}
-        />
-      );
-    }
+    fetchAssistants();
+  }, []);
+
+  // set sidebar
+  useEffect(() => {
+    setNavBody(<NavAssistants />);
 
     return () => setNavBody(null);
   }, [hasAssistants, assistants]);
@@ -33,16 +36,14 @@ export const Xer = () => {
 
   return (
     <Page>
-      {showModal || !hasAssistants ? (
-        <CreateAssistantModal
-          onClose={hasAssistants ? () => setShowModal(false) : null}
-          onCreate={createAssistant}
-        />
-      ) : null}
       <div className="p-2">
-        {assistants.map((assistant) => (
-          <div key={assistant.id}>{JSON.stringify(assistant)}</div>
-        ))}
+        {selectedAssistant ? (
+          <div key={selectedAssistant.id}>
+            {JSON.stringify(selectedAssistant)}
+          </div>
+        ) : (
+          <div>Select an assistant</div>
+        )}
       </div>
     </Page>
   );

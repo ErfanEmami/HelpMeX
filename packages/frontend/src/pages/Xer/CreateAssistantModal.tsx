@@ -21,18 +21,39 @@ import { CreateAssistantSchema } from "shared";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useXer } from "@/hooks/useXer";
+import { useState } from "react";
+import { useXerContext } from "@/context/xer_context/XerContext";
 
-export type CreateAssistantProps = {
-  onClose?: (() => void) | null;
-  onCreate: (values: CreateAssistant) => void;
-};
+export const CreateAssistantModal = ({ onClose }: { onClose: () => void }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-export const CreateAssistantModal = ({
-  onClose,
-  onCreate,
-}: CreateAssistantProps) => {
+  const { createAssistant } = useXer();
+
+  const {
+    xerState: { assistants },
+    xerDispatch,
+  } = useXerContext();
+
+  const handleCreateAssistant = async (values: CreateAssistant) => {
+    setIsLoading(true);
+    const res = await createAssistant(values);
+    setIsLoading(false);
+
+    if (res.error) {
+      setError(res.error);
+    } else {
+      xerDispatch({
+        type: "SELECT_ASSISTANT",
+        payload: res.assistant!,
+      });
+      onClose();
+    }
+  };
+
   return (
-    <Modal>
+    <Modal isLoading={isLoading} error={error}>
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Create Assistant</CardTitle>
@@ -41,14 +62,23 @@ export const CreateAssistantModal = ({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <CreateAssistantForm onClose={onClose} onCreate={onCreate} />
+          <CreateAssistantForm
+            onClose={assistants.length ? onClose : null}
+            onCreate={handleCreateAssistant}
+          />
         </CardContent>
       </Card>
     </Modal>
   );
 };
 
-const CreateAssistantForm = ({ onClose, onCreate }: CreateAssistantProps) => {
+const CreateAssistantForm = ({
+  onClose,
+  onCreate,
+}: {
+  onClose: (() => void) | null;
+  onCreate: (values: CreateAssistant) => void;
+}) => {
   const form = useForm<CreateAssistant>({
     resolver: zodResolver(CreateAssistantSchema),
     defaultValues: {
