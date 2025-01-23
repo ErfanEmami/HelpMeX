@@ -1,7 +1,7 @@
 import { Loading } from "@/components/Loading";
 import { useXer } from "@/hooks/useXer";
 import { useEffect, useState } from "react";
-import { CreateModal } from "./CreateModal";
+import { CreateAssistantModal } from "./CreateAssistantModal";
 import { Page } from "@/components/page";
 import { useSidebarContext } from "@/components/ui/sidebar";
 import { NavAssistants } from "./NavAssistants";
@@ -34,7 +34,7 @@ export const Xer = () => {
   return (
     <Page>
       {showModal || !hasAssistants ? (
-        <CreateModal
+        <CreateAssistantModal
           onClose={hasAssistants ? () => setShowModal(false) : null}
           onCreate={createAssistant}
         />

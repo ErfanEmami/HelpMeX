@@ -1,5 +1,5 @@
-import { useForm } from "react-hook-form"
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   Form,
@@ -7,32 +7,60 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form"
-import { CreateAssistantSchema  } from "shared";
-import { CreateAssistant } from "@/lib/types"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/form";
+import Modal from "@/components/Modal";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { CreateAssistant } from "@/lib/types";
+import { CreateAssistantSchema } from "shared";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
-export function CreateAssistantForm ({
-  onClose,
-  onSubmit,
-}: {
+export type CreateAssistantProps = {
   onClose?: (() => void) | null;
-  onSubmit:(values: CreateAssistant) => void;
-}) {
+  onCreate: (values: CreateAssistant) => void;
+};
+
+export const CreateAssistantModal = ({
+  onClose,
+  onCreate,
+}: CreateAssistantProps) => {
+  return (
+    <Modal>
+      <Card className="w-[350px]">
+        <CardHeader>
+          <CardTitle>Create Assistant</CardTitle>
+          <CardDescription>
+            Have an assistant help with your posts.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <CreateAssistantForm onClose={onClose} onCreate={onCreate} />
+        </CardContent>
+      </Card>
+    </Modal>
+  );
+};
+
+const CreateAssistantForm = ({ onClose, onCreate }: CreateAssistantProps) => {
   const form = useForm<CreateAssistant>({
     resolver: zodResolver(CreateAssistantSchema),
     defaultValues: {
       name: "",
-      username: ""
+      username: "",
     },
-  })
+  });
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onCreate)}
         className="flex gap-6 flex-col"
       >
         {form.formState.errors.root && (
@@ -69,22 +97,19 @@ export function CreateAssistantForm ({
 
         <div className="flex gap-2 justify-end">
           {onClose && (
-            <Button 
+            <Button
               disabled={form.formState.isSubmitting}
-              onClick={onClose} 
+              onClick={onClose}
               variant="outline"
             >
               close
             </Button>
           )}
-          <Button 
-            disabled={form.formState.isSubmitting} 
-            type="submit"
-          >
+          <Button disabled={form.formState.isSubmitting} type="submit">
             Create
           </Button>
         </div>
       </form>
     </Form>
-  )
-}
+  );
+};
