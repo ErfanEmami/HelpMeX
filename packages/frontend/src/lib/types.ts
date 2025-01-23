@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { SystemResponseSchema, SummaryThemeSchema } from "shared";
+import { SystemResponseSchema, SummaryThemeSchema,CreateAssistantSchema  } from "shared";
 
 export type Author = {
   id: string;
@@ -28,5 +28,8 @@ export type Assistant = {
   trainingFileId: string
   userId: string
   author: string
+  name: string
   createdAt: string
 };
+
+export type CreateAssistant = z.infer<typeof CreateAssistantSchema>;

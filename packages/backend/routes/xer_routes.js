@@ -23,9 +23,10 @@ router.get("/", async (req, res) => {
 });
 
 // create fine-tuned model
-router.get("/train/:author", async (req, res) => {
+router.post("/create/:author", async (req, res) => {
   try {
     const { author } = req.params;
+    const { name } = req.body
     const { accessToken, id: userId } = req.user;
 
     // check if there already is an agent for this author
@@ -68,6 +69,7 @@ router.get("/train/:author", async (req, res) => {
       trainingFileId,
       userId,
       author,
+      name,
     });
 
     res.json(agent);
@@ -78,7 +80,7 @@ router.get("/train/:author", async (req, res) => {
 });
 
 // get agent training status
-router.get("/train/:author/status", async (req, res) => {
+router.get("/create/:author/status", async (req, res) => {
   try {
     const { author } = req.params;
     const { id: userId } = req.user;
@@ -102,7 +104,7 @@ router.get("/train/:author/status", async (req, res) => {
 });
 
 // get agent training status
-router.get("/train/:author/create-post", async (req, res) => {
+router.get("/:author/create-post", async (req, res) => {
   try {
     const { author } = req.params;
     const { id: userId } = req.user;

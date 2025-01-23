@@ -7,7 +7,7 @@ import { useSidebarContext } from "@/components/ui/sidebar";
 import { NavAssistants } from "./NavAssistants";
 
 export const Xer = () => {
-  const { isLoadingAssistants, assistants } = useXer();
+  const { isLoadingAssistants, assistants, createAssistant } = useXer();
   const { setNavBody } = useSidebarContext();
 
   const [showModal, setShowModal] = useState(false);
@@ -36,6 +36,7 @@ export const Xer = () => {
       {showModal || !hasAssistants ? (
         <CreateModal
           onClose={hasAssistants ? () => setShowModal(false) : null}
+          onCreate={createAssistant}
         />
       ) : null}
       <div className="p-2">
