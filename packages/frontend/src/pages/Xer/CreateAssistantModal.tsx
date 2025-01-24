@@ -21,7 +21,7 @@ import { CreateAssistantSchema } from "shared";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useXer } from "@/hooks/useXer";
+import { useAssistants } from "@/hooks/useAssistants";
 import { useState } from "react";
 import { useXerContext } from "@/context/xer_context/XerContext";
 
@@ -29,7 +29,7 @@ export const CreateAssistantModal = ({ onClose }: { onClose: () => void }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { createAssistant } = useXer();
+  const { createAssistant } = useAssistants();
 
   const {
     xerState: { assistants },

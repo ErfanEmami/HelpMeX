@@ -4,6 +4,8 @@ import authMiddleware from "../middleware/authMiddleware.js";
 import { USER_POSTS } from "../test/test_data.js";
 import { createAgent, getAgentByAuthor, getAgents } from "../models/Agent.js";
 import { AgentTrainer } from "../lib/openai/agent_trainer.js";
+import { SaveGeneratedPostSchema, GeneratePostSchema } from "shared";
+import { createGeneratedPost } from "../models/GeneratedPost.js";
 
 const router = express.Router();
 
@@ -103,14 +105,27 @@ router.get("/create/:author/status", async (req, res) => {
   }
 });
 
-// get agent training status
-router.get("/:author/create-post", async (req, res) => {
+// generate post
+router.post("/:author/generate-post", async (req, res) => {
   try {
     const { author } = req.params;
     const { id: userId } = req.user;
+    const { prompt } = req.body
+
+    // Validate the input using Zod
+    const validationResult = GeneratePostSchema.safeParse({ author, prompt });
+    
+    if (!validationResult.success) {
+      return res.status(400).json({
+        message: "Invalid input",
+        errors: validationResult.error.errors,
+      });
+    }
+
+    const { author: validatedAuthor, prompt: validatedPrompt } = validationResult.data;
 
     // check if there already is an agent for this author
-    const agent = await getAgentByAuthor(userId, author);
+    const agent = await getAgentByAuthor(userId, validatedAuthor);
     if (!agent) {
       return res
         .status(400)
@@ -128,7 +143,7 @@ router.get("/:author/create-post", async (req, res) => {
 
     const resp = await agentTrainer.promptFineTunedModel(
       ftState.fine_tuned_model,
-      "make a post about ecommerce and how to succeed within 3-4 months."
+      validatedPrompt,
     );
 
     res.json(resp.choices[0].text);
@@ -138,4 +153,42 @@ router.get("/:author/create-post", async (req, res) => {
   }
 });
 
+// store post
+router.post("/:author/generate-post/save", async (req, res) => {
+  try {
+    const { author } = req.params;
+    const { id: userId } = req.user;
+
+    // Validate the input using Zod
+    const validationResult = SaveGeneratedPostSchema.safeParse(req.body);
+    
+    if (!validationResult.success) {
+      return res.status(400).json({
+        message: "Invalid input",
+        errors: validationResult.error.errors,
+      });
+    }
+
+    const validatedGeneratedPost = validationResult.data;
+
+    // check if there already is an agent for this author
+    const agent = await getAgentByAuthor(userId, validatedGeneratedPost.author);
+    if (!agent) {
+      return res
+        .status(400)
+        .json({ message: `Agent doesn't exist for ${author}` });
+    }
+
+    const generatedPost = await createGeneratedPost(validatedGeneratedPost);
+
+    res.json(generatedPost);
+  } catch (error) {
+    console.error("Error getting agent status:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 export default router;
+
+
+// TODO: add middleware for checking if agent for author exists

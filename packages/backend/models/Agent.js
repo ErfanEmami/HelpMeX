@@ -3,8 +3,8 @@ import mongoose from 'mongoose';
 const agentSchema = new mongoose.Schema({
   jobId: { type: String, required: true, unique: true }, // fine-tune id
   trainingFileId: { type: String, required: true, unique: true },
-  userId: { type: String, required: true }, // user._id
   author: { type: String, required: true, unique: true }, // twitter/x user the agent is trained on
+  userId: { type: String, required: true }, // user._id
   name: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });

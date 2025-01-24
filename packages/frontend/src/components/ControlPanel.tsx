@@ -12,7 +12,7 @@ const ControlPanel = ({
   title: string;
   half?: boolean;
   isLoading?: boolean;
-  children: [ReactElement<typeof Content>, ReactElement<typeof Control>];
+  children: React.ReactNode;
 }) => (
   <div 
     className={cn(
