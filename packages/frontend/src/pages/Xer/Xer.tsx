@@ -3,11 +3,12 @@ import { Page } from "@/components/page";
 import { useSidebarContext } from "@/components/ui/sidebar";
 import { NavAssistants } from "./NavAssistants";
 import { useXerContext } from "@/context/xer_context/XerContext";
-import { useXer } from "@/hooks/useXer";
+import { useAssistants } from "@/hooks/useAssistants";
 import { Loading } from "@/components/Loading";
+import { GeneratePost } from "./GeneratePost/GeneratePost";
 
 export const Xer = () => {
-  const { fetchAssistants } = useXer();
+  const { fetchAssistants } = useAssistants();
   const { setNavBody } = useSidebarContext();
   const { xerState } = useXerContext();
 
@@ -16,7 +17,6 @@ export const Xer = () => {
     selectedAssistant,
     loadingState: { isLoadingAssistants },
   } = xerState;
-  const hasAssistants = assistants.length > 0;
 
   // load assistants
   useEffect(() => {
@@ -26,25 +26,20 @@ export const Xer = () => {
   // set sidebar
   useEffect(() => {
     setNavBody(<NavAssistants />);
-
     return () => setNavBody(null);
-  }, [hasAssistants, assistants]);
+  }, [assistants]);
 
   if (isLoadingAssistants) {
     return <Loading />;
   }
 
+  if (!selectedAssistant) {
+    return <div>select assistant</div>
+  }
+
   return (
     <Page>
-      <div className="p-2">
-        {selectedAssistant ? (
-          <div key={selectedAssistant.id}>
-            {JSON.stringify(selectedAssistant)}
-          </div>
-        ) : (
-          <div>Select an assistant</div>
-        )}
-      </div>
+      <GeneratePost selectedAssistant={selectedAssistant} />
     </Page>
   );
 };

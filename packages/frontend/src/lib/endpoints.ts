@@ -13,4 +13,7 @@ export const BOOKMARKS_SUMMARY_ENDPOINT = `${basePath}/bookmarks/analyze-bookmar
 export const ASSISTANTS_ENDPOINT = `${basePath}/xer`
 export const getCreateAssistantEP = (author: string) => 
   `${basePath}/xer/create/${author}`
-
+export const generatePostEP = (author: string) => 
+  `${basePath}/xer/${author}/generate-post`
+export const saveGeneratedPostEP = (author: string) => 
+  `${basePath}/xer/${author}/generate-post/save`
