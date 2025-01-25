@@ -82,6 +82,9 @@
   }
 }
 
+body {
+  overflow-wrap: break-word;
+}
 
 /* For Webkit-based browsers (Chrome, Edge, Safari) */
 ::-webkit-scrollbar {

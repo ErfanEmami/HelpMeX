@@ -124,7 +124,7 @@ export const GeneratePost = ({
       </ControlPanel>
       <ControlPanel half title="History" isLoading={isLoadingPosts}>
         <Content>
-          <div>
+          <div className="w-full">
             {generatedPosts.map(o => (
               <div className="p-2 text-wrap">{JSON.stringify(o)}</div>
             ))}
