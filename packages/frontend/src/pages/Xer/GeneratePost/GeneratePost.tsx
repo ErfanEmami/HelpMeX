@@ -4,6 +4,7 @@ import { Content, Control, ControlPanel } from "@/components/ControlPanel";
 import ChatInput from "@/components/ChatInput";
 import { Button } from "@/components/ui/button";
 import { Assistant, GeneratedPost } from "@/lib/types";
+import { GeneratedPostCard } from "@/components/GeneratedPostCard";
 
 export const GeneratePost = ({
   selectedAssistant,
@@ -25,7 +26,7 @@ export const GeneratePost = ({
 
   const resetState = () => {
     setPrompt("");
-    setGeneratedPost("");
+    setGeneratedPost(null);
     setIsLoading(false);
     setAwaitingAccept(false);
   }
@@ -100,7 +101,7 @@ export const GeneratePost = ({
         </Content>
         <Control>
           {awaitingAccept ? (
-            <div className="flex w-full   gap-2">
+            <div className="flex w-full gap-2">
               <Button
                 onClick={() => setAwaitingAccept(false)}
                 size="full"
@@ -124,9 +125,13 @@ export const GeneratePost = ({
       </ControlPanel>
       <ControlPanel half title="History" isLoading={isLoadingPosts}>
         <Content>
-          <div className="w-full">
+          <div className="w-full flex flex-col gap-2">
             {generatedPosts.map(o => (
-              <div className="p-2 text-wrap">{JSON.stringify(o)}</div>
+              <GeneratedPostCard 
+                createdAt={o.createdAt}
+                prompt={o.prompt}
+                text={o.text}
+              />
             ))}
           </div>
         </Content>
