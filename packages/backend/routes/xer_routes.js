@@ -5,7 +5,7 @@ import { USER_POSTS } from "../test/test_data.js";
 import { createAgent, getAgentByAuthor, getAgents } from "../models/Agent.js";
 import { AgentTrainer } from "../lib/openai/agent_trainer.js";
 import { SaveGeneratedPostSchema, GeneratePostSchema } from "shared";
-import { createGeneratedPost } from "../models/GeneratedPost.js";
+import { createGeneratedPost, getGeneratedPosts } from "../models/GeneratedPost.js";
 
 const router = express.Router();
 
@@ -182,6 +182,19 @@ router.post("/:author/generate-post/save", async (req, res) => {
     const generatedPost = await createGeneratedPost(validatedGeneratedPost);
 
     res.json(generatedPost);
+  } catch (error) {
+    console.error("Error getting agent status:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// get all of generated posts created by assistant
+router.get("/:author/generate-post/all", async (req, res) => {
+  try {
+    const { id: userId } = req.user;
+    const { author } = req.params;
+    const generatedPosts = await getGeneratedPosts(userId, author);
+    res.json(generatedPosts);
   } catch (error) {
     console.error("Error getting agent status:", error);
     res.status(500).json({ message: error.message });
