@@ -21,12 +21,12 @@ export const createGeneratedPost = async ({ jobId, userId, text, author, prompt 
   return await newGeneratedPost.save();
 };
 
-export const getGeneratedPost = async (userId, jobId) => {
-  const generatedPost = await GeneratedPost.findOne({ userId, jobId });
+export const getGeneratedPost = async (id) => {
+  const generatedPost = await GeneratedPost.findOne({ id });
   return generatedPost;
 };
 
-export const getGeneratedPosts = async (userId) => {
-  const generatedPosts = await GeneratedPost.find({ userId });
+export const getGeneratedPosts = async (userId, author) => {
+  const generatedPosts = await GeneratedPost.find({ userId, author });
   return generatedPosts;
 };

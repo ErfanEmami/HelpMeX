@@ -2,6 +2,7 @@ import axios from "axios";
 import { useCallback } from "react";
 import {
   ASSISTANTS_ENDPOINT,
+  generatedPostsEP,
   generatePostEP,
   getCreateAssistantEP,
   saveGeneratedPostEP,
@@ -27,9 +28,7 @@ export const useAssistants = () => {
     try {
       const { data }: { data: Assistant[] } = await axios.get(
         ASSISTANTS_ENDPOINT,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
 
       xerDispatch({
@@ -40,7 +39,10 @@ export const useAssistants = () => {
       return { assistants: data, error: null };
     } catch (err) {
       console.error("getBookmarks error:", err);
-      return { assistants: null, error: "Unable to fetch assistants." };
+      return {
+        assistants: null,
+        error: "Unable to fetch assistants.",
+      };
     } finally {
       xerDispatch({
         type: "SET_LOADING",
@@ -71,7 +73,10 @@ export const useAssistants = () => {
         return { assistant: data, error: null };
       } catch (err) {
         console.error("createAssistant error:", err);
-        return { assistant: null, error: "Unable to create assistant." };
+        return {
+          assistant: null,
+          error: "Unable to create assistant.",
+        };
       } finally {
         xerDispatch({
           type: "SET_LOADING",
@@ -93,7 +98,10 @@ export const useAssistants = () => {
       return { generatedPost: data, error: null };
     } catch (err) {
       console.error("generatePost error:", err);
-      return { generatedPost: null, error: "Unable to generate post." };
+      return {
+        generatedPost: null,
+        error: "Unable to generate post.",
+      };
     }
   }, []);
 
@@ -109,16 +117,37 @@ export const useAssistants = () => {
         return { generatedPost: data, error: null };
       } catch (err) {
         console.error("saveGeneratedPost error:", err);
-        return { generatedPost: null, error: "Unable to save generated post." };
+        return {
+          generatedPost: null,
+          error: "Unable to save generated post.",
+        };
       }
     },
     []
   );
+
+  const fetchGeneratedPosts = useCallback(async (author: string) => {
+    try {
+      const { data }: { data: GeneratedPost[] } = await axios.get(
+        generatedPostsEP(author),
+        { withCredentials: true }
+      );
+
+      return { generatedPosts: data, error: null };
+    } catch (err) {
+      console.error("fetchGeneratedPosts error:", err);
+      return {
+        generatedPosts: null,
+        error: "Unable to fetch generated posts.",
+      };
+    }
+  }, []);
 
   return {
     createAssistant,
     fetchAssistants,
     generatePost,
     saveGeneratedPost,
+    fetchGeneratedPosts,
   };
 };

@@ -17,3 +17,5 @@ export const generatePostEP = (author: string) =>
   `${basePath}/xer/${author}/generate-post`
 export const saveGeneratedPostEP = (author: string) => 
   `${basePath}/xer/${author}/generate-post/save`
+export const generatedPostsEP = (author: string) => 
+  `${basePath}/xer/${author}/generate-post/all`

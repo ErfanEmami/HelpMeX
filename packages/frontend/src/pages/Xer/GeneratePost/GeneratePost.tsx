@@ -1,31 +1,51 @@
-import { useCallback, useEffect, useState } from "react";
-import { useSidebarContext } from "@/components/ui/sidebar";
-import { useXerContext } from "@/context/xer_context/XerContext";
+import { useEffect, useState } from "react";
 import { useAssistants } from "@/hooks/useAssistants";
-import { Loading } from "@/components/Loading";
 import { Content, Control, ControlPanel } from "@/components/ControlPanel";
 import ChatInput from "@/components/ChatInput";
 import { Button } from "@/components/ui/button";
-import { Assistant } from "@/lib/types";
+import { Assistant, GeneratedPost } from "@/lib/types";
 
 export const GeneratePost = ({
   selectedAssistant,
 }: {
   selectedAssistant: Assistant;
 }) => {
-  const { generatePost, saveGeneratedPost } = useAssistants();
+  const { 
+    generatePost, 
+    saveGeneratedPost, 
+    fetchGeneratedPosts 
+  } = useAssistants();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingPosts, setIsLoadingPosts] = useState(false);
   const [awaitingAccept, setAwaitingAccept] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [generatedPost, setGeneratedPost] = useState<string | null>(null);
+  const [generatedPosts, setGeneratedPosts] = useState<GeneratedPost[]>([]);
 
-  // reset state if selectedAssistant changes
-  useEffect(() => {
+  const resetState = () => {
     setPrompt("");
     setGeneratedPost("");
     setIsLoading(false);
     setAwaitingAccept(false);
+  }
+
+  // reset state if selectedAssistant changes
+  useEffect(() => {
+    const _fetchGeneratedPosts = async () => {
+      setIsLoadingPosts(true)
+      const res = await fetchGeneratedPosts(selectedAssistant.author)
+      setIsLoadingPosts(false)
+      
+      if (res.error) {
+        // TODO: handle error
+      } else {
+        setGeneratedPosts(res.generatedPosts!)
+      }
+    }
+
+    _fetchGeneratedPosts()
+    resetState()
   }, [selectedAssistant]);
 
   const handleGeneratePost = async () => {
@@ -63,7 +83,8 @@ export const GeneratePost = ({
     if (res.error || !res.generatedPost) {
       // TODO: handle error
     } else {
-      // setGeneratedPost(res.generatedPost);
+      // doesn't do another API call, optimistically updates list
+      setGeneratedPosts(prev => [...prev, res.generatedPost]);
     }
     setAwaitingAccept(false);
     setIsLoading(false);
@@ -71,7 +92,7 @@ export const GeneratePost = ({
 
   return (
     <div className="flex flex-1 overflow-y-hidden">
-      <ControlPanel title="Generate Post" isLoading={isLoading}>
+      <ControlPanel half title="Generate Post" isLoading={isLoading}>
         <Content>
           <div className="w-full font-mono text-gray-700">
             {generatedPost ?? "What is your post idea?"}
@@ -101,9 +122,13 @@ export const GeneratePost = ({
           )}
         </Control>
       </ControlPanel>
-      <ControlPanel title="History">
+      <ControlPanel half title="History" isLoading={isLoadingPosts}>
         <Content>
-          <div>asd</div>
+          <div>
+            {generatedPosts.map(o => (
+              <div className="p-2 text-wrap">{JSON.stringify(o)}</div>
+            ))}
+          </div>
         </Content>
       </ControlPanel>
     </div>
