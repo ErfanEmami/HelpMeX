@@ -26,7 +26,7 @@ export function NavMain({ def }: { def: NavMainDef }) {
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>{def.name}</SidebarGroupLabel>
+      {def.name && <SidebarGroupLabel>{def.name}</SidebarGroupLabel>}
       <SidebarMenu>
         {def.items.map((item) =>
           item.subItems ? (

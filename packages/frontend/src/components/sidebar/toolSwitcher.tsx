@@ -15,15 +15,14 @@ import {
   useSidebarContext,
 } from "@/components/ui/sidebar";
 import { ChevronsUpDown } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { type NavToolDef } from "./NavItems";
-import { cn } from "@/lib/utils";
+import { cn, getSelectedTool } from "@/lib/utils";
 
 export function ToolSwitcher({ def }: { def: NavToolDef }) {
   const { isMobile, state } = useSidebarContext();
 
-  const location = useLocation();
-  const selectedTool = def.find((tool) => tool.url === location.pathname);
+  const selectedTool = getSelectedTool()
 
   return (
     <SidebarMenu>
