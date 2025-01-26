@@ -8,7 +8,7 @@ import { useApp } from "./hooks/useApp";
 import { Loading } from "./components/Loading";
 import { AppSidebar } from "./components/sidebar/AppSidebar";
 
-const DEFAULT_ROUTE = "/bookmarks-summary";
+const DEFAULT_ROUTE = "/xer";
 
 const App = () => {
   useApp();
