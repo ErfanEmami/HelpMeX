@@ -23,6 +23,7 @@ export const GeneratedPostCard = ({
           {formatDate(createdAt)}
         </div>
         <ChevronRight
+          size={16}
           className={`ml-auto transition-transform duration-200 ${
             open ? "rotate-90" : "rotate-0"
           }`}
