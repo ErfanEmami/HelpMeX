@@ -9,7 +9,7 @@ import { GeneratedPostCard } from "@/components/GeneratedPostCard";
 export const GeneratePost = ({
   selectedAssistant,
 }: {
-  selectedAssistant: Assistant;
+  selectedAssistant: Assistant | null;
 }) => {
   const { 
     generatePost, 
@@ -33,6 +33,10 @@ export const GeneratePost = ({
 
   // reset state if selectedAssistant changes
   useEffect(() => {
+    if(!selectedAssistant) {
+      return
+    } 
+
     const _fetchGeneratedPosts = async () => {
       setIsLoadingPosts(true)
       const res = await fetchGeneratedPosts(selectedAssistant.author)
@@ -50,7 +54,7 @@ export const GeneratePost = ({
   }, [selectedAssistant]);
 
   const handleGeneratePost = async () => {
-    if (!prompt.length) {
+    if (!prompt.length || !selectedAssistant) {
       return;
     }
 
@@ -69,7 +73,7 @@ export const GeneratePost = ({
   };
 
   const handleSavePost = async () => {
-    if (!generatedPost) {
+    if (!generatedPost || !selectedAssistant) {
       return;
     }
 

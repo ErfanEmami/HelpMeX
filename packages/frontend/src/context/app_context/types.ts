@@ -19,7 +19,6 @@ export type Action =
   | { type: "SET_USER"; payload: User | null }
   | { type: "SET_LOADING"; payload: Loading }
 
-
 export type AppReducer = {
   appState: AppState;
   appDispatch: React.Dispatch<Action>;

@@ -80,6 +80,14 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  h1 {
+    @apply mb-2 text-3xl text-gray-900
+  }
+
+  h2 {
+    @apply mb-1 text-2xl text-gray-900
+  }
 }
 
 body {
