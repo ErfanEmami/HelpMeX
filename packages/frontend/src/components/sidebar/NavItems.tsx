@@ -1,21 +1,17 @@
-import {
-  BookA,
-  LifeBuoy,
-  type LucideIcon,
-  Send,
-} from "lucide-react";
+import { BookA, LifeBuoy, type LucideIcon, Send } from "lucide-react";
 
-import XLogo from "@/assets/logo-white.png"
+import XLogo from "@/assets/logo-white.png";
 
 export type NavToolDef = {
   name: string;
   url: string;
-  description: string,
+  description: string;
   icon: LucideIcon | (() => React.ReactNode);
+  navItems?: NavMainDef[];
 }[];
 
 export type NavMainDef = {
-  name: string;
+  name?: string;
   items: {
     name: string;
     url: string;
@@ -49,6 +45,16 @@ export const TOOLS_DEF: NavToolDef = [
     url: "/bookmarks-summary",
     description: "Summary of Your Bookmarks",
     icon: BookA,
+    navItems: [
+      {
+        items: [
+          {
+            name: "Generated Summaries",
+            url: "/bookmarks-summary/generated-summaries",
+          },
+        ],
+      },
+    ],
   },
 ];
 
