@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { ChevronRight, Plus } from "lucide-react";
 
 import { Assistant } from "@/lib/types";
 import {
@@ -11,6 +11,11 @@ import {
 import { useXerContext } from "@/context/xer_context/XerContext";
 import { useCallback, useState } from "react";
 import { CreateAssistantModal } from "./CreateAssistantModal";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 export const NavAssistants = () => {
   const [showModal, setShowModal] = useState(false);
@@ -40,20 +45,32 @@ export const NavAssistants = () => {
   return (
     <SidebarGroup collapse_hide>
       {renderModal()}
-      <SidebarGroupLabel>Assistants</SidebarGroupLabel>
-      <SidebarMenu className="gap-0.2 grid max-h-96 overflow-y-auto">
-        {assistants.map((o) => (
-          <SidebarMenuItem key={o.author}>
-            <SidebarMenuButton
-              asChild
-              isActive={o.id === selectedAssistant?.id}
-              onClick={() => handleAssistantClick(o)}
-            >
-              <div className="font-medium font-">{o.author}</div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
-      </SidebarMenu>
+      <Collapsible className="group/collapsible" defaultOpen>
+        <CollapsibleTrigger asChild>
+          <div className="flex items-center w-full justify-between">
+            <SidebarGroupLabel>Assistants</SidebarGroupLabel>
+            <ChevronRight
+              size={16}
+              className="transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+            />
+          </div>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <SidebarMenu className="gap-0.2 grid max-h-96 overflow-y-auto">
+            {assistants.map((o) => (
+              <SidebarMenuItem key={o.author}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={o.id === selectedAssistant?.id}
+                  onClick={() => handleAssistantClick(o)}
+                >
+                  <div className="font-medium font-">{o.author}</div>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </CollapsibleContent>
+      </Collapsible>
       <SidebarMenuButton
         onClick={() => setShowModal(true)}
         className="text-sidebar-foreground/70"
