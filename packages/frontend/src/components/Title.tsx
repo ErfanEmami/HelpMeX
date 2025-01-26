@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
-const TYPING_SPEED = 30;
+const TYPING_SPEED = 25;
 
 export default function Title({
   isTyped,
   children,
+  white,
 }: {
   isTyped?: boolean;
   children: string;
+  white?: boolean;
 }) {
   const [displayedText, setDisplayedText] = useState(isTyped ? "" : children);
   const currentIndex = useRef(0);
@@ -30,8 +33,11 @@ export default function Title({
 
   return (
     <h1
-      className="mb-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 md:text-3xl"
-      style={{ visibility: displayedText ? "visible" : "hidden" }}
+      className={cn(
+        "text-center font-bold",
+        displayedText ? "visible" : "hidden",
+        white && "text-white"
+      )}
     >
       {displayedText || children}
     </h1>

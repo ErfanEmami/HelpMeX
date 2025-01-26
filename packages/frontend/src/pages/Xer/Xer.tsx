@@ -6,6 +6,7 @@ import { useXerContext } from "@/context/xer_context/XerContext";
 import { useAssistants } from "@/hooks/useAssistants";
 import { Loading } from "@/components/Loading";
 import { GeneratePost } from "./GeneratePost/GeneratePost";
+import Title from "@/components/Title";
 
 export const Xer = () => {
   const { fetchAssistants } = useAssistants();
@@ -33,12 +34,17 @@ export const Xer = () => {
     return <Loading />;
   }
 
-  if (!selectedAssistant) {
-    return <div>select assistant</div>
-  }
+  const renderOverlay = () => {
+    if (!selectedAssistant) return;
+    return (
+      <Title isTyped white>
+        Select or create an assistant.
+      </Title>
+    );
+  };
 
   return (
-    <Page>
+    <Page overlay={renderOverlay()}>
       <GeneratePost selectedAssistant={selectedAssistant} />
     </Page>
   );
