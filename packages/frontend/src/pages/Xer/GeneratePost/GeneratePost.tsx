@@ -88,7 +88,8 @@ export const GeneratePost = ({
     if (res.error || !res.generatedPost) {
       // TODO: handle error
     } else {
-      // doesn't do another API call, optimistically updates list
+      setPrompt("");
+      setGeneratedPost(null)
       setGeneratedPosts(prev => [...prev, res.generatedPost]);
     }
     setAwaitingAccept(false);
