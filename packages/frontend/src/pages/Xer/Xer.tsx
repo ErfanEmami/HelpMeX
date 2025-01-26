@@ -35,7 +35,8 @@ export const Xer = () => {
   }
 
   const renderOverlay = () => {
-    if (!selectedAssistant) return;
+    if (selectedAssistant) return;
+    
     return (
       <Title isTyped white>
         Select or create an assistant.
