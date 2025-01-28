@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 
 const modalVariants = cva(
-  "flex flex-col bg-white rounded-lg shadow-lg z-[1001] max-h-[80vh]", // Base styles
+  "flex flex-col bg-white rounded-lg shadow-lg z-[1001] max-h-[80vh] overflow-hidden", // Base styles
   {
     variants: {
       width: {
@@ -27,26 +27,40 @@ interface ModalProps extends VariantProps<typeof modalVariants> {
   error?: string | null;
   isLoading?: boolean;
   children: React.ReactNode;
+  title?: string;
   control?: {
     onCancel?: { text: string; onClick: () => void };
     onAccept?: { text: string; onClick: () => void };
   };
 }
 
-const Modal = ({ error, isLoading, children, width, control }: ModalProps) => {
+const Modal = ({
+  error,
+  isLoading,
+  children,
+  width,
+  control,
+  title,
+}: ModalProps) => {
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex justify-center items-center z-[1000] bg-black bg-opacity-50">
       <div
         className={cn(modalVariants({ width }))}
         onClick={(e) => e.stopPropagation()}
       >
+        {title && (
+          <div className="flex gap-2 items-center justify-center border-b p-3 bg-gray-50">
+            <h2 className="font-semibold">{title}</h2>
+          </div>
+        )}
+
         {isLoading && <Loading />}
         {error && <div className="text-red-700 text-center pb-2">{error}</div>}
 
-        <div className="flex-1 overflow-y-auto">{children}</div>
+        <div className="flex-1 overflow-auto">{children}</div>
 
         {control && (
-          <div className="flex gap-2 justify-end items-center border-t mt-2 p-2">
+          <div className="flex gap-2 justify-end items-center border-t p-3 bg-gray-50">
             {control.onCancel && (
               <Button
                 variant="outline"
