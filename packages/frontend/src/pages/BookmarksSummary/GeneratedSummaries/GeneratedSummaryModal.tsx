@@ -11,6 +11,7 @@ export const GeneratedSummaryModal = ({
 }) => {
   return (
     <Modal
+      title="Generated Summary"
       control={{
         onAccept: { text: "Close", onClick: onClose },
       }}
