@@ -1,5 +1,5 @@
 import { AuthorPill } from "@/components/AuthorPill";
-import { Page } from "../../components/Page";
+import { Page } from "../../components/page";
 import { BookmarkCard } from "@/components/BookmarkCard";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { Loading } from "@/components/Loading";
