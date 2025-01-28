@@ -1,5 +1,5 @@
 import Title from "@/components/Title";
-import { Page } from "../components/Page";
+import { Page } from "../components/page";
 import { useAuth } from "../hooks/useAuth";
 import { Button } from "@/components/ui/button";
 
