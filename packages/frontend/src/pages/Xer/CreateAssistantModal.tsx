@@ -57,7 +57,7 @@ export const CreateAssistantModal = ({ onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <Modal isLoading={isLoading} error={error}>
+    <Modal width="fit" isLoading={isLoading} error={error}>
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Create Assistant</CardTitle>

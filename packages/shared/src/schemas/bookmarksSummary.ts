@@ -37,9 +37,11 @@ export const SaveSummarySchema = z.object({
 
 // db record
 export const SavedSummarySchema = z.object({
+  id: z.string(),
   userId: z.string(),
   bookmarks: z.array(BookmarkSchema),
   summary: GeneratedSummarySchema,
   authors: z.array(AuthorSchema),
   createdAt: z.date(),
 })
+export const SavedSummariesSchema = z.array(SavedSummarySchema)

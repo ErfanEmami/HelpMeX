@@ -3,8 +3,8 @@ import { TwitterApi } from "twitter-api-v2";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { BookmarksAnalyzer } from "../lib/openai/bookmarks_analyzer.js";
 import { BOOKMARKS, BOOKMARKS_SUMMARY } from "../test/test_data.js";
-import { GeneratedSummarySchema, SavedSummarySchema, SaveSummarySchema, BookmarksAuthorsSchema } from "shared";
-import { createBookmarksSummary } from "../models/BookmarksSummary.js";
+import { GeneratedSummarySchema, SavedSummarySchema, SaveSummarySchema, BookmarksAuthorsSchema, SavedSummariesSchema } from "shared";
+import { createBookmarksSummary, getBookmarksSummaries } from "../models/BookmarksSummary.js";
 import { validateResponse } from "../lib/utils.js";
 
 const router = express.Router();
@@ -117,6 +117,22 @@ router.post("/save", async (req, res) => {
     res.json(validatedRes);
   } catch (error) {
     console.error("Error saving summary:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// get all of saved summaries
+router.get("/summaries", async (req, res) => {
+  try {
+    const { id: userId } = req.user;
+    const summaries = await getBookmarksSummaries(userId);
+
+    // validate response
+    const validatedRes = validateResponse(SavedSummariesSchema, summaries)
+    
+    res.json(validatedRes);    
+  } catch (error) {
+    console.error("Error getting summaries:", error);
     res.status(500).json({ message: error.message });
   }
 });
