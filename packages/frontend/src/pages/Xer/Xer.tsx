@@ -11,7 +11,7 @@ import Title from "@/components/Title";
 export const Xer = () => {
   const { fetchAssistants } = useAssistants();
   const { setNavBody } = useSidebarContext();
-  const { xerState } = useXerContext();
+  const { xerState, xerDispatch } = useXerContext();
 
   const {
     assistants,
@@ -21,7 +21,30 @@ export const Xer = () => {
 
   // load assistants
   useEffect(() => {
-    fetchAssistants();
+    const _fetchAssistants = async () => {
+      xerDispatch({
+        type: "SET_LOADING",
+        payload: { isLoadingAssistants: true },
+      });
+
+      const res = await fetchAssistants();
+
+      xerDispatch({
+        type: "SET_LOADING",
+        payload: { isLoadingAssistants: false },
+      });
+
+      if (res.error) {
+        // TODO handle error
+      } else {
+        xerDispatch({
+          type: "SET_ASSISTANTS",
+          payload: res.assistants!,
+        });
+      }
+    };
+
+    _fetchAssistants();
   }, []);
 
   // set sidebar
@@ -36,7 +59,7 @@ export const Xer = () => {
 
   const renderOverlay = () => {
     if (selectedAssistant) return;
-    
+
     return (
       <Title isTyped white>
         Select or create an assistant.

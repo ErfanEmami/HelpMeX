@@ -45,6 +45,10 @@ export const CreateAssistantModal = ({ onClose }: { onClose: () => void }) => {
       setError(res.error);
     } else {
       xerDispatch({
+        type: "ADD_ASSISTANT",
+        payload: res.assistant!,
+      });
+      xerDispatch({
         type: "SELECT_ASSISTANT",
         payload: res.assistant!,
       });

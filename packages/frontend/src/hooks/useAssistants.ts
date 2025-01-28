@@ -14,27 +14,14 @@ import {
   GeneratePost,
   GeneratedPost,
 } from "@/lib/types";
-import { useXerContext } from "@/context/xer_context/XerContext";
 
 export const useAssistants = () => {
-  const { xerDispatch } = useXerContext();
-
   const fetchAssistants = useCallback(async () => {
-    xerDispatch({
-      type: "SET_LOADING",
-      payload: { isLoadingAssistants: true },
-    });
-
     try {
       const { data }: { data: Assistant[] } = await axios.get(
         ASSISTANTS_ENDPOINT,
         { withCredentials: true }
       );
-
-      xerDispatch({
-        type: "SET_ASSISTANTS",
-        payload: data,
-      });
 
       return { assistants: data, error: null };
     } catch (err) {
@@ -43,32 +30,17 @@ export const useAssistants = () => {
         assistants: null,
         error: "Unable to fetch assistants.",
       };
-    } finally {
-      xerDispatch({
-        type: "SET_LOADING",
-        payload: { isLoadingAssistants: false },
-      });
     }
   }, []);
 
   const createAssistant = useCallback(
     async ({ username, name }: CreateAssistant) => {
-      xerDispatch({
-        type: "SET_LOADING",
-        payload: { isLoadingCreateAssistant: true },
-      });
-
       try {
         const { data }: { data: Assistant } = await axios.post(
           getCreateAssistantEP(username),
           { name },
           { withCredentials: true }
         );
-
-        xerDispatch({
-          type: "ADD_ASSISTANT",
-          payload: data,
-        });
 
         return { assistant: data, error: null };
       } catch (err) {
@@ -77,11 +49,6 @@ export const useAssistants = () => {
           assistant: null,
           error: "Unable to create assistant.",
         };
-      } finally {
-        xerDispatch({
-          type: "SET_LOADING",
-          payload: { isLoadingCreateAssistant: false },
-        });
       }
     },
     []
