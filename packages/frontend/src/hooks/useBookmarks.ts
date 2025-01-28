@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 import { BOOKMARKS_ENDPOINT, BOOKMARKS_SUMMARY_ENDPOINT, SAVE_BOOKMARKS_SUMMARY_ENDPOINT } from "../lib/endpoints";
-import { Author, Bookmark, BookmarksSummary, SavedSummary } from "@/lib/types";
+import { Author, Bookmark, BookmarksAuthors, BookmarksSummary, SavedSummary } from "@/lib/types";
 
 export const useBookmarks = () => {
   const [isLoadingBookmarks, setIsLoadingBookmarks] = useState<boolean>(true);
@@ -10,7 +10,7 @@ export const useBookmarks = () => {
   const [awaitingAccept, setAwaitingAccept] = useState<boolean>(false);
 
   const [authors, setAuthors] = useState<Author[]>([]);
-  const [filteredAuthors, setFilteredAuthors] = useState<Author["id"][]>([]);
+  const [filteredAuthors, setFilteredAuthors] = useState<Author["authorId"][]>([]);
 
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [filteredBookmarks, setFilteredBookmarks] = useState<Bookmark[]>([]);
@@ -29,7 +29,7 @@ export const useBookmarks = () => {
 
     setFilteredBookmarks(
       bookmarks.filter((bookmark) =>
-        filteredAuthors.includes(bookmark.authorId)
+        filteredAuthors.includes(bookmark.author.authorId)
       )
     );
   }, [filteredAuthors]);
@@ -42,7 +42,7 @@ export const useBookmarks = () => {
         withCredentials: true,
       });
 
-      const { bookmarks, authors } = res.data;
+      const { bookmarks, authors }: BookmarksAuthors = res.data;
 
       setAuthors(authors);
       setBookmarks(bookmarks);

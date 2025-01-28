@@ -3,8 +3,9 @@ import { TwitterApi } from "twitter-api-v2";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { BookmarksAnalyzer } from "../lib/openai/bookmarks_analyzer.js";
 import { BOOKMARKS, BOOKMARKS_SUMMARY } from "../test/test_data.js";
-import { GeneratedSummarySchema, SavedSummarySchema, SaveSummarySchema } from "shared";
+import { GeneratedSummarySchema, SavedSummarySchema, SaveSummarySchema, BookmarksAuthorsSchema } from "shared";
 import { createBookmarksSummary } from "../models/BookmarksSummary.js";
+import { validateResponse } from "../lib/utils.js";
 
 const router = express.Router();
 
@@ -32,26 +33,28 @@ router.get("/", async (req, res) => {
 
     const authors = BOOKMARKS.bookmarks._realData.includes.users.map(user => {
       authorsMap[user.id] = {
+        authorId: user.id,
         name: user.name,
         username: user.username,
         profileImage: user.profile_image_url,
       }
 
-      return {
-        ...authorsMap[user.id],
-        id: user.id,
-      }
+      return authorsMap[user.id]
     })
 
     const bookmarks = BOOKMARKS.bookmarks._realData.data.map(bookmark => ({
-      ...authorsMap[bookmark.author_id],
-      id: bookmark.id,
-      authorId: bookmark.author_id,
-      createdAt: bookmark.created_at,
+      author: authorsMap[bookmark.author_id],
+      bookmarkId: bookmark.id,
+      postedAt: bookmark.created_at,
       text: bookmark.text,
     }))
 
-    res.json({ authors, bookmarks });
+
+    // Validate the response
+    const response = { bookmarks, authors }
+    const validatedRes = validateResponse(BookmarksAuthorsSchema, response)
+
+    res.json(validatedRes);
   } catch (error) {
     console.error("Error fetching bookmarks:", error);
     res.status(500).json({ message: error.message });
@@ -71,16 +74,9 @@ router.post("/analyze-bookmarks", async (req, res) => {
     const gptResponse = BOOKMARKS_SUMMARY
     
     // validate GPT response
-    const validationResult = GeneratedSummarySchema.safeParse(gptResponse);
+    const validatedRes = validateResponse(GeneratedSummarySchema, gptResponse)
 
-    if (!validationResult.success) {
-      return res.status(400).json({
-        message: "Invalid response format from GPT API",
-        errors: validationResult.error.errors,
-      });
-    }
-
-    res.json(validationResult.data);
+    res.json(validatedRes);
   } catch (error) {
     console.error("Error fetching bookmarks:", error);
     res.status(500).json({ message: error.message });
@@ -102,24 +98,25 @@ router.post("/save", async (req, res) => {
       });
     }
 
+    // Extract and deduplicate authors from bookmarks
+    const uniqueAuthors = Array.from(
+      new Map(
+        validationResult.data.bookmarks.map((bookmark) => [bookmark.author.authorId, bookmark.author])
+      ).values()
+    );
+
     const savedBookmarksSummary = await createBookmarksSummary({
-      userId, 
+      userId: userId,
+      authors: uniqueAuthors,
       ...validationResult.data
     });
 
     // Validate the response
-    const resValidation = SavedSummarySchema.safeParse(savedBookmarksSummary);
+    const validatedRes = validateResponse(SavedSummarySchema, savedBookmarksSummary)
 
-    if (!resValidation.success) {
-      return res.status(400).json({
-        message: "Invalid response",
-        errors: resValidation.error.errors,
-      });
-    }
-
-    res.json(resValidation.data);
+    res.json(validatedRes);
   } catch (error) {
-    console.error("Error getting agent status:", error);
+    console.error("Error saving summary:", error);
     res.status(500).json({ message: error.message });
   }
 });
