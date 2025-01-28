@@ -9,6 +9,7 @@ export const LOGOUT_ENDPOINT = `${basePath}/auth/logout`
 export const BOOKMARKS_ENDPOINT = `${basePath}/bookmarks/`
 export const BOOKMARKS_SUMMARY_ENDPOINT = `${basePath}/bookmarks/analyze-bookmarks`
 export const SAVE_BOOKMARKS_SUMMARY_ENDPOINT = `${basePath}/bookmarks/save`
+export const SUMMARIES_ENDPOINT = `${basePath}/bookmarks/summaries`
 
 // xer
 export const ASSISTANTS_ENDPOINT = `${basePath}/xer`

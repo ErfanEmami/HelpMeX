@@ -8,6 +8,7 @@ import { Loading } from "./components/Loading";
 import { AppSidebar } from "./components/sidebar/AppSidebar";
 import { useAuth } from "./hooks/useAuth";
 import { useEffect } from "react";
+import { GeneratedSummaries } from "./pages/BookmarksSummary/GeneratedSummaries/GeneratedSummaries";
 
 const DEFAULT_ROUTE = "/xer";
 
@@ -42,6 +43,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Navigate to={DEFAULT_ROUTE} replace />} />
         <Route path="/bookmarks-summary" element={<BookmarksSummary />} />
+        <Route path="/bookmarks-summary/generated-summaries" element={<GeneratedSummaries />} />
         <Route path="/xer" element={<Xer />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
