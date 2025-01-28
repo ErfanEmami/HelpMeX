@@ -64,7 +64,7 @@ export const NavAssistants = () => {
                   isActive={o.id === selectedAssistant?.id}
                   onClick={() => handleAssistantClick(o)}
                 >
-                  <div className="font-medium font-">{o.author}</div>
+                  <div className="font-medium font-">{o.name}</div>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}

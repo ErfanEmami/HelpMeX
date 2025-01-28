@@ -1,10 +1,13 @@
 import { z } from "zod";
 import {
-  SystemResponseSchema,
+  GeneratedSummarySchema,
   SummaryThemeSchema,
   CreateAssistantSchema,
   GeneratePostSchema,
   SaveGeneratedPostSchema,
+  BookmarkSchema,
+  SaveSummarySchema,
+  SavedSummarySchema,
 } from "shared";
 
 export type Author = {
@@ -14,19 +17,14 @@ export type Author = {
   profileImage: string;
 };
 
-export type Bookmark = {
-  id: string;
-  name: string;
-  username: string;
-  profileImage: string;
-  authorId: string;
-  createdAt: string;
-  text: string;
-};
+export type Bookmark = z.infer<typeof BookmarkSchema>;
 
 // Bookmarks GPT Summary
-export type BookmarksSummary = z.infer<typeof SystemResponseSchema>;
+export type BookmarksSummary = z.infer<typeof GeneratedSummarySchema>;
 export type SummaryTheme = z.infer<typeof SummaryThemeSchema>;
+
+export type SaveSummary = z.infer<typeof SaveSummarySchema>;
+export type SavedSummary = z.infer<typeof SavedSummarySchema>;
 
 export type Assistant = {
   id: string;

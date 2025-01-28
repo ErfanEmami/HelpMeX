@@ -3,7 +3,8 @@ import { TwitterApi } from "twitter-api-v2";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { BookmarksAnalyzer } from "../lib/openai/bookmarks_analyzer.js";
 import { BOOKMARKS, BOOKMARKS_SUMMARY } from "../test/test_data.js";
-import { SystemResponseSchema } from "shared";
+import { GeneratedSummarySchema, SavedSummarySchema, SaveSummarySchema } from "shared";
+import { createBookmarksSummary } from "../models/BookmarksSummary.js";
 
 const router = express.Router();
 
@@ -70,7 +71,7 @@ router.post("/analyze-bookmarks", async (req, res) => {
     const gptResponse = BOOKMARKS_SUMMARY
     
     // validate GPT response
-    const validationResult = SystemResponseSchema.safeParse(gptResponse);
+    const validationResult = GeneratedSummarySchema.safeParse(gptResponse);
 
     if (!validationResult.success) {
       return res.status(400).json({
@@ -82,6 +83,43 @@ router.post("/analyze-bookmarks", async (req, res) => {
     res.json(validationResult.data);
   } catch (error) {
     console.error("Error fetching bookmarks:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// store summary
+router.post("/save", async (req, res) => {
+  try {
+    const { id: userId } = req.user;
+
+    // Validate the input
+    const validationResult = SaveSummarySchema.safeParse(req.body);
+    
+    if (!validationResult.success) {
+      return res.status(400).json({
+        message: "Invalid input",
+        errors: validationResult.error.errors,
+      });
+    }
+
+    const savedBookmarksSummary = await createBookmarksSummary({
+      userId, 
+      ...validationResult.data
+    });
+
+    // Validate the response
+    const resValidation = SavedSummarySchema.safeParse(savedBookmarksSummary);
+
+    if (!resValidation.success) {
+      return res.status(400).json({
+        message: "Invalid response",
+        errors: resValidation.error.errors,
+      });
+    }
+
+    res.json(resValidation.data);
+  } catch (error) {
+    console.error("Error getting agent status:", error);
     res.status(500).json({ message: error.message });
   }
 });

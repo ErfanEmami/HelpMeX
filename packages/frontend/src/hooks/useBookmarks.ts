@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-import { BOOKMARKS_ENDPOINT, BOOKMARKS_SUMMARY_ENDPOINT } from "../lib/endpoints";
-import { Author, Bookmark, BookmarksSummary } from "@/lib/types";
+import { BOOKMARKS_ENDPOINT, BOOKMARKS_SUMMARY_ENDPOINT, SAVE_BOOKMARKS_SUMMARY_ENDPOINT } from "../lib/endpoints";
+import { Author, Bookmark, BookmarksSummary, SavedSummary } from "@/lib/types";
 
 export const useBookmarks = () => {
   const [isLoadingBookmarks, setIsLoadingBookmarks] = useState<boolean>(true);
   const [isLoadingSummary, setIsLoadingSummary] = useState<boolean>(false);
+  const [awaitingAccept, setAwaitingAccept] = useState<boolean>(false);
 
   const [authors, setAuthors] = useState<Author[]>([]);
   const [filteredAuthors, setFilteredAuthors] = useState<Author["id"][]>([]);
@@ -64,8 +65,28 @@ export const useBookmarks = () => {
       );
       
       setBookmarksSummary(data)
+      setAwaitingAccept(true)
     } catch (error) {
       console.error("fetchBookmarksSummary error:", error);
+    } finally {
+      setIsLoadingSummary(false);
+    }
+  }
+
+  const saveBookmarksSummary = async () => {
+    setIsLoadingSummary(true);
+
+    try {
+      const { data }: { data: SavedSummary } = await axios.post(
+        SAVE_BOOKMARKS_SUMMARY_ENDPOINT,
+        { bookmarks: filteredBookmarks, summary: bookmarksSummary },
+        { withCredentials: true }
+      );
+      setAwaitingAccept(false)
+      return {savedBookmark: data, error: null}
+    } catch (error) {
+      console.error("fetchBookmarksSummary error:", error);
+      return {savedBookmark: null, error: `fetchBookmarksSummary error:e${error}`}
     } finally {
       setIsLoadingSummary(false);
     }
@@ -74,6 +95,7 @@ export const useBookmarks = () => {
   return {
     isLoadingBookmarks,
     isLoadingSummary,
+    awaitingAccept,
     authors,
     filteredAuthors,
     bookmarks: filteredBookmarks,
@@ -81,5 +103,7 @@ export const useBookmarks = () => {
     setFilteredAuthors,
     fetchBookmarks,
     fetchBookmarksSummary,
+    saveBookmarksSummary,
+    setAwaitingAccept,
   };
 };

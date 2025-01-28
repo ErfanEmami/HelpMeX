@@ -11,12 +11,15 @@ export const BookmarksSummary = () => {
   const {
     isLoadingBookmarks,
     isLoadingSummary,
+    awaitingAccept,
     bookmarks,
     authors,
     filteredAuthors,
     setFilteredAuthors,
     fetchBookmarksSummary,
     bookmarksSummary,
+    saveBookmarksSummary,
+    setAwaitingAccept,
   } = useBookmarks();
 
   const handlePillClick = (id: string) => {
@@ -56,13 +59,28 @@ export const BookmarksSummary = () => {
             ) : null}
           </Content>
           <Control>
-            <Button
-              size="full"
-              disabled={isLoadingSummary}
-              onClick={fetchBookmarksSummary}
-            >
-              Get Summary
-            </Button>
+            {awaitingAccept ? (
+              <div className="flex w-full gap-2">
+                <Button
+                  onClick={() => setAwaitingAccept(false)}
+                  size="full"
+                  variant="destructive"
+                >
+                  Discard
+                </Button>
+                <Button onClick={saveBookmarksSummary} size="full" variant="accept">
+                  Save Summary
+                </Button>
+              </div>
+            ) : (
+              <Button
+                size="full"
+                disabled={isLoadingSummary}
+                onClick={fetchBookmarksSummary}
+              >
+                Generate Summary
+              </Button>
+            )}
           </Control>
         </ControlPanel>
       </div>
