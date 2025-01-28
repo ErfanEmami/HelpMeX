@@ -33,11 +33,11 @@ export const GeneratedPostCard = ({
         <div className="flex flex-col gap-1 border-t">
           <div className="mt-2">
             <b className="text-xs text-gray-500">Prompt</b>
-            <p className="leading-tight">{prompt}</p>
+            <p>{prompt}</p>
           </div>
           <div>
             <b className="text-xs text-gray-500">Generated Post</b>
-            <p className="leading-tight">{text}</p>
+            <p className="whitespace-pre-wrap">{text}</p>
           </div>
         </div>
       )}
