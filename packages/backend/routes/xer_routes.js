@@ -4,8 +4,12 @@ import authMiddleware from "../middleware/authMiddleware.js";
 import { USER_POSTS } from "../test/test_data.js";
 import { createAgent, getAgentByAuthor, getAgents } from "../models/Agent.js";
 import { AgentTrainer } from "../lib/openai/agent_trainer.js";
-import { SaveGeneratedPostSchema, GeneratePostSchema } from "shared";
+import { SaveGeneratedPostSchema, GeneratePostSchema, GeneratedPostSchema, GeneratedPostsSchema, agentSchema, agentsSchema } from "shared";
 import { createGeneratedPost, getGeneratedPosts } from "../models/GeneratedPost.js";
+import { validateResponse } from "../lib/utils.js";
+import { z } from "zod";
+
+const textSchema = z.string()
 
 const router = express.Router();
 
@@ -17,7 +21,11 @@ router.get("/", async (req, res) => {
   try {
     const { id: userId } = req.user;
     const agents = await getAgents(userId);
-    res.json(agents);
+
+    // validate response
+    const validatedRes = validateResponse(agentsSchema, agents)
+    
+    res.json(validatedRes);    
   } catch (error) {
     console.error("Error getting agent status:", error);
     res.status(500).json({ message: error.message });
@@ -74,7 +82,10 @@ router.post("/create/:author", async (req, res) => {
       name,
     });
 
-    res.json(agent);
+    // validate response
+    const validatedRes = validateResponse(agentSchema, agent)
+    
+    res.json(validatedRes);
   } catch (error) {
     console.error("Error creating agent:", error);
     res.status(500).json({ message: error.message });
@@ -98,7 +109,10 @@ router.get("/create/:author/status", async (req, res) => {
     const agentTrainer = new AgentTrainer();
     const { status } = await agentTrainer.getFineTunedState(jobId);
 
-    res.json(status);
+    // validate response
+    const validatedRes = validateResponse(textSchema, status)
+    
+    res.json(validatedRes);
   } catch (error) {
     console.error("Error getting agent status:", error);
     res.status(500).json({ message: error.message });
@@ -113,16 +127,16 @@ router.post("/:author/generate-post", async (req, res) => {
     const { prompt } = req.body
 
     // Validate the input using Zod
-    const validationResult = GeneratePostSchema.safeParse({ author, prompt });
+    const validatedInput = GeneratePostSchema.safeParse({ author, prompt });
     
-    if (!validationResult.success) {
+    if (!validatedInput.success) {
       return res.status(400).json({
         message: "Invalid input",
-        errors: validationResult.error.errors,
+        errors: validatedInput.error.errors,
       });
     }
 
-    const { author: validatedAuthor, prompt: validatedPrompt } = validationResult.data;
+    const { author: validatedAuthor, prompt: validatedPrompt } = validatedInput.data;
 
     // check if there already is an agent for this author
     const agent = await getAgentByAuthor(userId, validatedAuthor);
@@ -141,13 +155,16 @@ router.post("/:author/generate-post", async (req, res) => {
       return res.status(400).json({ message: `Fine-tuned Model is not ready.` });
     }
 
-    const resp = await agentTrainer.promptFineTunedModel(
+    const generatedText = await agentTrainer.promptFineTunedModel(
       ftState.fine_tuned_model,
       validatedPrompt,
       author,
     );
 
-    res.json(resp);
+    // validate response
+    const validatedRes = validateResponse(textSchema, generatedText)
+    
+    res.json(validatedRes);
   } catch (error) {
     console.error("Error getting agent status:", error);
     res.status(500).json({ message: error.message });
@@ -161,16 +178,16 @@ router.post("/:author/generate-post/save", async (req, res) => {
     const { id: userId } = req.user;
 
     // Validate the input using Zod
-    const validationResult = SaveGeneratedPostSchema.safeParse(req.body);
+    const validatedInput = SaveGeneratedPostSchema.safeParse(req.body);
     
-    if (!validationResult.success) {
+    if (!validatedInput.success) {
       return res.status(400).json({
         message: "Invalid input",
-        errors: validationResult.error.errors,
+        errors: validatedInput.error.errors,
       });
     }
 
-    const validatedGeneratedPost = validationResult.data;
+    const validatedGeneratedPost = validatedInput.data;
 
     // check if there already is an agent for this author
     const agent = await getAgentByAuthor(userId, validatedGeneratedPost.author);
@@ -182,7 +199,10 @@ router.post("/:author/generate-post/save", async (req, res) => {
 
     const generatedPost = await createGeneratedPost(validatedGeneratedPost);
 
-    res.json(generatedPost);
+    // validate response
+    const validatedRes = validateResponse(GeneratedPostSchema, generatedPost)
+    
+    res.json(validatedRes);
   } catch (error) {
     console.error("Error getting agent status:", error);
     res.status(500).json({ message: error.message });
@@ -195,7 +215,11 @@ router.get("/:author/generate-post/all", async (req, res) => {
     const { id: userId } = req.user;
     const { author } = req.params;
     const generatedPosts = await getGeneratedPosts(userId, author);
-    res.json(generatedPosts);
+
+    // validate response
+    const validatedRes = validateResponse(GeneratedPostsSchema, generatedPosts)
+    
+    res.json(validatedRes);
   } catch (error) {
     console.error("Error getting agent status:", error);
     res.status(500).json({ message: error.message });

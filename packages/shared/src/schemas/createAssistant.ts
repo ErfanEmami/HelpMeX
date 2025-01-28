@@ -29,3 +29,28 @@ export const SaveGeneratedPostSchema = z.object({
   prompt: z.string().nonempty("prompt is required"),
   text: z.string().nonempty("text is required"),
 });
+
+// db record
+export const agentSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  jobId: z.string(),
+  trainingFileId: z.string(),
+  author: z.string(),
+  name: z.string(),
+  createdAt: z.date(),
+})
+export const agentsSchema = z.array(agentSchema);
+
+// db record
+export const GeneratedPostSchema = z.object({
+  id: z.string(),
+  jobId: z.string(),
+  author: z.string(),
+  userId: z.string(),
+  prompt: z.string(),
+  text: z.string(),
+  createdAt: z.date(),
+})
+export const GeneratedPostsSchema = z.array(GeneratedPostSchema);
+

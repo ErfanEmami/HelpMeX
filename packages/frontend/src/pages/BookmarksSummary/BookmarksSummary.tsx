@@ -37,16 +37,16 @@ export const BookmarksSummary = () => {
               {authors.map((author) => (
                 <AuthorPill
                   {...author}
-                  key={author.id}
-                  selected={filteredAuthors.includes(author.id)}
-                  onClick={() => handlePillClick(author.id)}
+                  key={author.authorId}
+                  selected={filteredAuthors.includes(author.authorId)}
+                  onClick={() => handlePillClick(author.authorId)}
                 />
               ))}
             </div>
           </Control>
           <Content>
             {bookmarks.map((bookmark) => (
-              <BookmarkCard key={bookmark.id} {...bookmark} />
+              <BookmarkCard key={bookmark.bookmarkId} {...bookmark} />
             ))}
           </Content>
         </ControlPanel>

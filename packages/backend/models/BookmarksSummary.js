@@ -1,33 +1,34 @@
 import mongoose from "mongoose";
 
-// Bookmark schema
-const BookmarkSchema = new mongoose.Schema({
-  id: { type: String, required: true },
+const AuthorSchema = new mongoose.Schema({
+  authorId: { type: String, required: true }, // from Twitter API
   name: { type: String, required: true },
   username: { type: String, required: true },
   profileImage: { type: String, required: true },
-  authorId: { type: String, required: true },
-  createdAt: { type: String, required: true },
+});
+
+const BookmarkSchema = new mongoose.Schema({
+  author: { type: AuthorSchema, required: true },
+  bookmarkId: { type: String, required: true }, // from Twitter API
+  postedAt: { type: String, required: true }, 
   text: { type: String, required: true },
 });
 
-// Summary Theme schema
 const SummaryThemeSchema = new mongoose.Schema({
   themeTitle: { type: String, required: true },
   keyInsights: { type: [String], required: true },
   actionableItems: { type: [String], required: true },
-  bookmarkRefs: { type: [String], required: true }, // Could also be [Number] if needed
+  bookmarkRefs: { type: [String], required: true },
 });
 
-// System Response schema
 const GeneratedSummarySchema = new mongoose.Schema({
   themes: { type: [SummaryThemeSchema], required: true },
 });
 
-// BookmarksSummary schema
 const BookmarksSummarySchema = new mongoose.Schema({
   userId: { type: String, required: true },
   bookmarks: { type: [BookmarkSchema], required: true },
+  authors: { type: [AuthorSchema], required: true }, // duplicate data (from bookmarks field), included here for lookup convenience 
   summary: { type: GeneratedSummarySchema, required: true },
   createdAt: { type: Date, default: Date.now },
 });
@@ -41,8 +42,8 @@ BookmarksSummarySchema.set('toObject', { virtuals: true });
 BookmarksSummarySchema.set('toJSON', { virtuals: true });
 
 
-export const createBookmarksSummary = async ({ userId, bookmarks, summary }) => {
-  const newBS = new BookmarksSummary({ userId, bookmarks, summary });
+export const createBookmarksSummary = async ({ userId, bookmarks, summary, authors }) => {
+  const newBS = new BookmarksSummary({ userId, bookmarks, summary, authors });
   return await newBS.save();
 }
 
