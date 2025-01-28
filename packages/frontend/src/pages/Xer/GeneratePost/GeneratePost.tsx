@@ -100,7 +100,7 @@ export const GeneratePost = ({
     <div className="flex flex-1 overflow-y-hidden">
       <ControlPanel half title="Generate Post" isLoading={isLoading}>
         <Content>
-          <div className="w-full font-mono text-gray-700">
+          <div className="w-full font-mono text-gray-700 whitespace-pre-wrap">
             {generatedPost ?? "What is your post idea?"}
           </div>
         </Content>
