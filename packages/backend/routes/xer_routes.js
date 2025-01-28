@@ -144,9 +144,10 @@ router.post("/:author/generate-post", async (req, res) => {
     const resp = await agentTrainer.promptFineTunedModel(
       ftState.fine_tuned_model,
       validatedPrompt,
+      author,
     );
 
-    res.json(resp.choices[0].text);
+    res.json(resp);
   } catch (error) {
     console.error("Error getting agent status:", error);
     res.status(500).json({ message: error.message });
