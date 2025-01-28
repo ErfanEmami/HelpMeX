@@ -14,11 +14,11 @@ export const GeneratedPostCard = ({
   const [open, setOpen] = useState(false);
 
   return (
-    <div
-      onClick={() => setOpen((prev) => !prev)}
-      className="flex flex-col  gap-2 w-full p-4 bg-white rounded-lg shadow-sm border border-gray-200"
-    >
-      <div className="flex w-full items-center justify-between">
+    <div className="flex flex-col  gap-2 w-full p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+      <div
+        onClick={() => setOpen((prev) => !prev)}
+        className="flex w-full items-center justify-between"
+      >
         <div className="text-sm text-gray-500 text-end">
           {formatDate(createdAt)}
         </div>
