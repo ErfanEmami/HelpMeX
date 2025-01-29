@@ -1,4 +1,11 @@
-import { BookA, LifeBuoy, type LucideIcon, Send } from "lucide-react";
+import {
+  BookA,
+  LifeBuoy,
+  type LucideIcon,
+  CalendarDays,
+  BookText,
+  Send,
+} from "lucide-react";
 
 import XLogo from "@/assets/logo-white.png";
 
@@ -51,10 +58,17 @@ export const TOOLS_DEF: NavToolDef = [
           {
             name: "Generated Summaries",
             url: "/bookmarks-summary/generated-summaries",
+            icon: BookText,
           },
         ],
       },
     ],
+  },
+  {
+    name: "Post Scheduler",
+    url: "/post-scheduler",
+    description: "Plan and Schedule Your Posts",
+    icon: CalendarDays,
   },
 ];
 

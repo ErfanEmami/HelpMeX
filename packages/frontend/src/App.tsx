@@ -9,6 +9,7 @@ import { AppSidebar } from "./components/sidebar/AppSidebar";
 import { useAuth } from "./hooks/useAuth";
 import { useEffect } from "react";
 import { GeneratedSummaries } from "./pages/BookmarksSummary/GeneratedSummaries/GeneratedSummaries";
+import { PostScheduler } from "./pages/PostScheduler/PostScheduler";
 
 const DEFAULT_ROUTE = "/xer";
 
@@ -45,6 +46,7 @@ const App = () => {
         <Route path="/bookmarks-summary" element={<BookmarksSummary />} />
         <Route path="/bookmarks-summary/generated-summaries" element={<GeneratedSummaries />} />
         <Route path="/xer" element={<Xer />} />
+        <Route path="/post-scheduler" element={<PostScheduler />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AppSidebar>
