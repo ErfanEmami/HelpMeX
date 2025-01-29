@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  SidebarGroupLabel,
+  // SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -17,12 +17,18 @@ import {
 import { ChevronsUpDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { type NavToolDef } from "./NavItems";
-import { cn, getSelectedTool } from "@/lib/utils";
+import {
+  // cn,
+  getSelectedTool,
+} from "@/lib/utils";
 
 export function ToolSwitcher({ def }: { def: NavToolDef }) {
-  const { isMobile, state } = useSidebarContext();
+  const {
+    isMobile,
+    // state
+  } = useSidebarContext();
 
-  const selectedTool = getSelectedTool()
+  const selectedTool = getSelectedTool();
 
   return (
     <SidebarMenu>

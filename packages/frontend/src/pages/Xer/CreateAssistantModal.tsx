@@ -10,10 +10,7 @@ import {
 } from "@/components/ui/form";
 import Modal from "@/components/Modal";
 import {
-  Card,
-  CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { CreateAssistant } from "@/lib/types";
