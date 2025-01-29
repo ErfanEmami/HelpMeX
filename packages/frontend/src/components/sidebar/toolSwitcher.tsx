@@ -28,11 +28,11 @@ export function ToolSwitcher({ def }: { def: NavToolDef }) {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <SidebarGroupLabel
+          {/* <SidebarGroupLabel
             className={cn(state === "collapsed" ? "hidden" : null)}
           >
             X Tools
-          </SidebarGroupLabel>
+          </SidebarGroupLabel> */}
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"

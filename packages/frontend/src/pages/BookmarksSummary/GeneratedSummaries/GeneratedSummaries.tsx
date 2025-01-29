@@ -59,7 +59,7 @@ export const GeneratedSummaries = () => {
   return (
     <Page title={{ text: "Generated Summaries" }}>
       {handleShowModal()}
-      <div className="p-2 w-full mt-5">
+      <div className="p-2 w-full">
         <Table>
           <TableHeader>
             <TableRow>
