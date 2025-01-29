@@ -30,3 +30,10 @@ export type Assistant = z.infer<typeof agentSchema>;
 export type GeneratePost = z.infer<typeof GeneratePostSchema>;
 export type SaveGeneratedPost = z.infer<typeof SaveGeneratedPostSchema>;
 export type GeneratedPost = z.infer<typeof GeneratedPostSchema>;
+
+// scheduling posts
+export type CalendarEvent = {
+  title: string;
+  start: Date;
+  end: Date;
+};

@@ -16,7 +16,7 @@ export const GeneratedSummaryModal = ({
         onAccept: { text: "Close", onClick: onClose },
       }}
     >
-      <div className="flex flex-col gap-4 p-2">
+      <div className="flex flex-col gap-4">
         {bookmarksSummary.themes.map((theme) => (
           <SummaryCard {...theme} />
         ))}
