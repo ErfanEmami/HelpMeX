@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useSummaries } from "./useSummaries";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Page } from "@/components/page";
 import { Loading } from "@/components/Loading";
 import { SavedSummary } from "@/lib/types";

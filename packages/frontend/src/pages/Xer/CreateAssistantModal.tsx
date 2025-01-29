@@ -57,21 +57,19 @@ export const CreateAssistantModal = ({ onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <Modal width="fit" isLoading={isLoading} error={error}>
-      <Card className="w-[350px]">
-        <CardHeader>
+    <Modal width="sm" isLoading={isLoading} error={error}>
+        <div className="flex flex-col gap-2 mb-4">
           <CardTitle>Create Assistant</CardTitle>
           <CardDescription>
             Have an assistant help with your posts.
           </CardDescription>
-        </CardHeader>
-        <CardContent>
+        </div>
+        <div>
           <CreateAssistantForm
             onClose={assistants.length ? onClose : null}
             onCreate={handleCreateAssistant}
           />
-        </CardContent>
-      </Card>
+        </div>
     </Modal>
   );
 };

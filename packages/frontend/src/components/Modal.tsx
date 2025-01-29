@@ -4,6 +4,7 @@ import { Loading } from "./Loading";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const modalVariants = cva(
   "flex flex-col bg-white rounded-lg shadow-lg z-[1001] max-h-[80vh] overflow-hidden", // Base styles
@@ -11,10 +12,10 @@ const modalVariants = cva(
     variants: {
       width: {
         fit: "w-fit",
-        sm: "w-1/4",
-        md: "w-1/2",
-        lg: "w-3/4",
-        xl: "w-full max-w-4xl",
+        sm: "w-[350px]",
+        md: "w-[600px]",
+        lg: "w-[800px]",
+        xl: "w-full",
       },
     },
     defaultVariants: {
@@ -42,10 +43,11 @@ const Modal = ({
   control,
   title,
 }: ModalProps) => {
+  const isMobile = useIsMobile();
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex justify-center items-center z-[1000] bg-black bg-opacity-50">
       <div
-        className={cn(modalVariants({ width }))}
+        className={cn(modalVariants({ width }), "mx-4", isMobile && "w-full")}
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
@@ -57,7 +59,7 @@ const Modal = ({
         {isLoading && <Loading />}
         {error && <div className="text-red-700 text-center pb-2">{error}</div>}
 
-        <div className="flex-1 overflow-auto">{children}</div>
+        <div className="flex-1 overflow-auto p-4">{children}</div>
 
         {control && (
           <div className="flex gap-2 justify-end items-center border-t p-3 bg-gray-50">
