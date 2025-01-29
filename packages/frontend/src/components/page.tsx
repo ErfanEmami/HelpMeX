@@ -26,7 +26,11 @@ export const Page = ({
     )}
   >
     {overlay && <Overlay>{overlay}</Overlay>}
-    {title && <Title isTyped={title.isTyped}>{title.text}</Title>}
+    {title && (
+      <div className="mb-4">
+        <Title isTyped={title.isTyped}>{title.text}</Title>
+      </div>
+    )}
     {children}
   </div>
 );
