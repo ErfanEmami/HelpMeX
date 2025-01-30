@@ -12,6 +12,7 @@ import {
   BookmarksAuthorsSchema,
   GeneratedPostSchema,
   agentSchema,
+  SchedulePostSchema,
 } from "shared";
 
 export type Author = z.infer<typeof AuthorSchema>;
@@ -32,6 +33,7 @@ export type SaveGeneratedPost = z.infer<typeof SaveGeneratedPostSchema>;
 export type GeneratedPost = z.infer<typeof GeneratedPostSchema>;
 
 // scheduling posts
+export type SchedulePost = z.infer<typeof SchedulePostSchema>;
 export type CalendarEvent = {
   title: string;
   start: Date;
