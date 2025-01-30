@@ -114,7 +114,7 @@ export const BigCalendar = ({ events }: { events: CalendarEvent[] }) => {
         toolbar: ToolBar,
       }}
       className="
-        w-full [&_.rbc-day-slot_.rbc-time-slot]:border-none [&_.rbc-today]:bg-gray-100
+        w-full [&_.rbc-day-slot_.rbc-time-slot]:border-none [&_.rbc-today]:bg-gray-100 overflow-auto
         [&_.rbc-event]:bg-black [&_.rbc-selected]:bg-black 
         [&_.rbc-timeslot-group]:border-gray-100 [&_.rbc-day-slot.rbc-today_.rbc-timeslot-group]:border-gray-200
         [&_.rbc-time-slot]:text-xs [&_.rbc-time-slot]:font-light [&_.rbc-time-slot]:text-gray-600 [&_.rbc-time-slot]:p-2 [&_.rbc-time-slot]:pb-0

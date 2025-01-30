@@ -54,7 +54,7 @@ const SchedulePostForm = ({
       <form
         id={formId}
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex gap-6 flex-col"
+        className="flex gap-2 flex-col"
       >
         {form.formState.errors.root && (
           <div className="text-destructive text-sm">
