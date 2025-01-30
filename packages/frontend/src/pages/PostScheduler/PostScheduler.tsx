@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 import { SchedulePostModal } from "./SchedulePostModal";
 import { BigCalendar } from "@/components/BigCalendar";
-import { CalendarEvent } from "@/lib/types";
+import { CalendarEvent, SchedulePost } from "@/lib/types";
 
 // Example events
 const TEST_EVENTS: CalendarEvent[] = [
@@ -28,12 +28,16 @@ const TEST_EVENTS: CalendarEvent[] = [
 export const PostScheduler = () => {
   const [showModal, setShowModal] = useState(false);
 
+  const handleSubmit = (value: SchedulePost) => {
+    console.log(value)
+  }
+
   const renderModal = () => {
     if (!showModal) return;
 
     return (
       <SchedulePostModal
-        onAccept={() => null}
+        onSubmit={handleSubmit}
         onClose={() => setShowModal(false)}
       />
     );

@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const modalVariants = cva(
-  "flex flex-col bg-white rounded-lg shadow-lg z-[1001] max-h-[80vh] overflow-hidden", // Base styles
+  "flex flex-col bg-white rounded-lg shadow-lg max-h-[80vh] overflow-hidden", // Base styles
   {
     variants: {
       width: {
@@ -30,8 +30,9 @@ interface ModalProps extends VariantProps<typeof modalVariants> {
   children: React.ReactNode;
   title?: string;
   control?: {
-    onCancel?: { text: string; onClick: () => void };
-    onAccept?: { text: string; onClick: () => void };
+    onCancel?: { text: string; onClick: () => void, disabled?: boolean, };
+    onAccept?: { text: string; onClick: () => void, disabled?: boolean, };
+    onFormSubmit?: { formId: string; text: string, disabled?: boolean, };
   };
 }
 
@@ -45,9 +46,9 @@ const Modal = ({
 }: ModalProps) => {
   const isMobile = useIsMobile();
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 flex justify-center items-center z-[1000] bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex justify-center items-center z-[50] bg-black bg-opacity-50">
       <div
-        className={cn(modalVariants({ width }), "mx-4", isMobile && "w-full")}
+        className={cn(modalVariants({ width }), "mx-4", isMobile && "w-full max-w-[400px]")}
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
@@ -66,7 +67,7 @@ const Modal = ({
             {control.onCancel && (
               <Button
                 variant="outline"
-                disabled={!control.onCancel.onClick}
+                disabled={!control.onCancel.onClick || control.onCancel.disabled}
                 onClick={control.onCancel.onClick}
               >
                 {control.onCancel.text}
@@ -74,10 +75,19 @@ const Modal = ({
             )}
             {control.onAccept && (
               <Button
-                disabled={!control.onAccept.onClick}
+                disabled={!control.onAccept.onClick || control.onAccept.disabled}
                 onClick={control.onAccept.onClick}
               >
                 {control.onAccept.text}
+              </Button>
+            )}
+            {control.onFormSubmit && (
+              <Button 
+                type="submit" 
+                disabled={control.onFormSubmit.disabled}
+                form={control.onFormSubmit.formId}
+              >
+                {control.onFormSubmit.text}
               </Button>
             )}
           </div>
