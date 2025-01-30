@@ -29,8 +29,8 @@ export const PostScheduler = () => {
   const [showModal, setShowModal] = useState(false);
 
   const handleSubmit = (value: SchedulePost) => {
-    console.log(value)
-  }
+    console.log(value);
+  };
 
   const renderModal = () => {
     if (!showModal) return;
@@ -46,7 +46,7 @@ export const PostScheduler = () => {
   return (
     <Page title={{ text: "Scheduled Posts" }}>
       {renderModal()}
-      <div className="flex flex-col flex-1 px-4 gap-4 items-center w-full">
+      <div className="flex flex-col flex-1 px-4 gap-4 items-center w-full overflow-y-hidden">
         <Button size="full" variant="accept" onClick={() => setShowModal(true)}>
           Schedule New Post
         </Button>
