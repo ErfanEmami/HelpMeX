@@ -1,4 +1,6 @@
 import { cn } from "../lib/utils";
+import { Loading } from "./Loading";
+import Modal from "./Modal";
 import { Overlay } from "./Overlay";
 import Title from "./Title";
 
@@ -9,6 +11,8 @@ export const Page = ({
   title,
   overlay,
   children,
+  error,
+  isLoading,
 }: {
   center?: boolean;
   hcenter?: boolean;
@@ -16,6 +20,8 @@ export const Page = ({
   title?: { text: string; isTyped?: boolean };
   overlay?: React.ReactNode | null;
   children: React.ReactNode;
+  error?: { text: string; onClick: () => void } | null;
+  isLoading?: boolean;
 }) => (
   <div
     className={cn(
@@ -25,12 +31,30 @@ export const Page = ({
       center && "items-center justify-center"
     )}
   >
-    {overlay && <Overlay>{overlay}</Overlay>}
-    {title && (
-      <div className="mb-4">
-        <Title isTyped={title.isTyped}>{title.text}</Title>
-      </div>
+    {isLoading ? (
+      <Loading />
+    ) : (
+      <>
+        {overlay && <Overlay>{overlay}</Overlay>}
+
+        {error && (
+          <Modal
+            title="Error"
+            width="sm"
+            control={{ onAccept: { text: "Close", onClick: error.onClick } }}
+          >
+            <div className="text-destructive text-center">{error.text}</div>
+          </Modal>
+        )}
+
+        {title && (
+          <div className="mb-4">
+            <Title isTyped={title.isTyped}>{title.text}</Title>
+          </div>
+        )}
+
+        {children}
+      </>
     )}
-    {children}
   </div>
 );

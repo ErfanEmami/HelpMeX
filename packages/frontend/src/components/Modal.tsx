@@ -58,7 +58,7 @@ const Modal = ({
         )}
 
         {isLoading && <Loading />}
-        {error && <div className="text-red-700 text-center pb-2">{error}</div>}
+        {error && <div className="text-destructive text-center pt-4">{error}</div>}
 
         <div className="flex-1 overflow-auto p-4">{children}</div>
 

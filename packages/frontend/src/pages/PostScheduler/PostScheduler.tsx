@@ -1,56 +1,104 @@
 import { Page } from "@/components/page";
-import { useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 
 import { SchedulePostModal } from "./SchedulePostModal";
 import { BigCalendar } from "@/components/BigCalendar";
-import { CalendarEvent, SchedulePost } from "@/lib/types";
+import {
+  ScheduledPost,
+  type CalendarEvent,
+  type SchedulePostForm,
+} from "@/lib/types";
+import { combineDateAndTime } from "@/lib/utils";
+import { useSchedulePosts } from "@/hooks/useSchedulePosts";
 
-// Example events
-const TEST_EVENTS: CalendarEvent[] = [
-  {
-    title: "Leetcode",
-    start: new Date(2025, 0, 28, 9, 0), // Jan 28, 2025, 9:00 AM
-    end: new Date(2025, 0, 28, 11, 0), // Jan 28, 2025, 11:00 AM
-  },
-  {
-    title: "Coding Project",
-    start: new Date(2025, 0, 28, 12, 0), // Jan 28, 2025, 12:00 PM
-    end: new Date(2025, 0, 28, 15, 0), // Jan 28, 2025, 3:00 PM
-  },
-  {
-    title: "Gym",
-    start: new Date(2025, 0, 28, 19, 0), // Jan 28, 2025, 7:00 PM
-    end: new Date(2025, 0, 28, 21, 0), // Jan 28, 2025, 9:00 PM
-  },
-];
+const spToCalendarEvent = (sp: ScheduledPost): CalendarEvent => ({
+  start: new Date(sp.scheduledFor),
+  end: new Date(new Date(sp.scheduledFor).getTime() + 60 * 60 * 1000), // 1 hour ahead
+});
+
+const convertScheduledPostsToCalendarEvents = (
+  scheduledPosts: ScheduledPost[]
+): CalendarEvent[] => scheduledPosts.map((o) => spToCalendarEvent(o));
 
 export const PostScheduler = () => {
   const [showModal, setShowModal] = useState(false);
+  const [isFetchingPosts, setIsFetchingPosts] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fetchError, setFetchError] = useState<null | string>(null);
+  const [submitError, setSubmitError] = useState<null | string>(null);
+  const [scheduledPosts, setScheduledPosts] = useState<ScheduledPost[]>([]);
 
-  const handleSubmit = (value: SchedulePost) => {
-    console.log(value);
+  const { createScheduledPost, fetchScheduledPosts } = useSchedulePosts();
+
+  useEffect(() => {
+    loadScheduledPosts();
+  }, []);
+
+  const loadScheduledPosts = async () => {
+    setIsFetchingPosts(true);
+    const res = await fetchScheduledPosts();
+    setIsFetchingPosts(false);
+
+    if (res.error) {
+      setFetchError(res.error);
+    } else {
+      setScheduledPosts(res.scheduledPosts || []);
+      setFetchError(null);
+    }
   };
 
-  const renderModal = () => {
-    if (!showModal) return;
+  const handleSubmit = async (value: SchedulePostForm) => {
+    setSubmitError(null);
+    setIsSubmitting(true);
 
-    return (
-      <SchedulePostModal
-        onSubmit={handleSubmit}
-        onClose={() => setShowModal(false)}
-      />
-    );
+    const res = await createScheduledPost({
+      text: value.text,
+      scheduledFor: combineDateAndTime(value.date, value.time),
+    });
+
+    if (res.error) {
+      setSubmitError(res.error);
+    } else {
+      setScheduledPosts((prev) => [...prev, res.scheduledPost!]);
+      setShowModal(false);
+    }
+
+    setIsSubmitting(false);
   };
+
+  const calendarEvents = useMemo(
+    () => convertScheduledPostsToCalendarEvents(scheduledPosts),
+    [scheduledPosts]
+  );
 
   return (
-    <Page title={{ text: "Scheduled Posts" }}>
-      {renderModal()}
+    <Page
+      title={{ text: "Scheduled Posts" }}
+      isLoading={isFetchingPosts}
+      error={
+        fetchError
+          ? { text: fetchError, onClick: () => loadScheduledPosts() }
+          : null
+      }
+    >
+      {showModal && (
+        <SchedulePostModal
+          error={submitError}
+          isLoading={isSubmitting}
+          onSubmit={handleSubmit}
+          onClose={() => {
+            setShowModal(false);
+            setSubmitError(null);
+          }}
+        />
+      )}
+
       <div className="flex flex-col flex-1 px-4 gap-4 items-center w-full overflow-y-hidden">
         <Button size="full" variant="accept" onClick={() => setShowModal(true)}>
           Schedule New Post
         </Button>
-        <BigCalendar events={TEST_EVENTS} />
+        <BigCalendar events={calendarEvents} />
       </div>
     </Page>
   );
