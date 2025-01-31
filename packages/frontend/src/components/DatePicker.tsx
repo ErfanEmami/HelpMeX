@@ -9,13 +9,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Matcher } from "react-day-picker";
 
 export type DatePickerProps = {
   value?: Date;
   onChange: (date: Date | undefined) => void;
+  disabled?: Matcher | Matcher[]
 };
 
-export const DatePicker = ({ value, onChange }: DatePickerProps) => {
+export const DatePicker = ({ value, onChange, disabled }: DatePickerProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -37,6 +39,8 @@ export const DatePicker = ({ value, onChange }: DatePickerProps) => {
           selected={value}
           onSelect={onChange}
           initialFocus
+          disabled={disabled}
+          showOutsideDays={false}
         />
       </PopoverContent>
     </Popover>

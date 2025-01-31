@@ -2,6 +2,7 @@ import Modal from "@/components/Modal";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Form,
   FormControl,
@@ -9,23 +10,30 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { SchedulePost } from "@/lib/types";
-import { SchedulePostSchema } from "shared";
+import { type SchedulePostForm } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DatePicker } from "@/components/DatePicker";
+import { SchedulePostFormSchema } from "shared";
+import { isBefore } from "date-fns";
 
 export const SchedulePostModal = ({
+  isLoading,
+  error,
   onSubmit,
   onClose,
 }: {
-  onSubmit: (values: SchedulePost) => void;
+  isLoading: boolean;
+  error: string | null;
+  onSubmit: (values: SchedulePostForm) => void;
   onClose: () => void;
 }) => {
   const formId = "SchedulePostForm";
 
   return (
     <Modal
+      error={error}
+      isLoading={isLoading}
       title="Schedule Post"
       width="sm"
       control={{
@@ -43,10 +51,10 @@ const SchedulePostForm = ({
   onSubmit,
 }: {
   formId: string;
-  onSubmit: (values: SchedulePost) => void;
+  onSubmit: (values: SchedulePostForm) => void;
 }) => {
-  const form = useForm<SchedulePost>({
-    resolver: zodResolver(SchedulePostSchema),
+  const form = useForm<SchedulePostForm>({
+    resolver: zodResolver(SchedulePostFormSchema),
   });
 
   return (
@@ -68,10 +76,7 @@ const SchedulePostForm = ({
             <FormItem>
               <Label>Post Content</Label>
               <FormControl>
-                <Textarea
-                  {...field}
-                  placeholder="The contents of the post..."
-                />
+                <Textarea {...field} placeholder="Post content" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -84,7 +89,10 @@ const SchedulePostForm = ({
             <FormItem>
               <Label>Date</Label>
               <FormControl>
-                <DatePicker {...field} />
+                <DatePicker
+                  disabled={(date) => isBefore(date, new Date())}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
