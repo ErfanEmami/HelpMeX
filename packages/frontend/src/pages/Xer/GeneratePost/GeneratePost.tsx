@@ -108,7 +108,10 @@ export const GeneratePost = ({
           {awaitingAccept ? (
             <div className="flex w-full gap-2">
               <Button
-                onClick={() => setAwaitingAccept(false)}
+                onClick={() => {
+                  setGeneratedPost(null)
+                  setAwaitingAccept(false)
+                }} 
                 size="full"
                 variant="destructive"
               >
