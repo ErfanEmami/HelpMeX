@@ -20,6 +20,7 @@ export const BookmarksSummary = () => {
     bookmarksSummary,
     saveBookmarksSummary,
     setAwaitingAccept,
+    setBookmarksSummary,
   } = useBookmarks();
 
   const handlePillClick = (id: string) => {
@@ -62,7 +63,10 @@ export const BookmarksSummary = () => {
             {awaitingAccept ? (
               <div className="flex w-full gap-2">
                 <Button
-                  onClick={() => setAwaitingAccept(false)}
+                  onClick={() => {
+                    setBookmarksSummary(null)
+                    setAwaitingAccept(false)}
+                  }
                   size="full"
                   variant="destructive"
                 >
