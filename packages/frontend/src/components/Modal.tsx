@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const modalVariants = cva(
-  "flex flex-col bg-white rounded-lg shadow-lg max-h-[80vh] overflow-hidden", // Base styles
+  "flex flex-col bg-background border rounded-lg shadow-lg max-h-[80vh] overflow-hidden", // Base styles
   {
     variants: {
       width: {
@@ -46,13 +46,13 @@ const Modal = ({
 }: ModalProps) => {
   const isMobile = useIsMobile();
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 flex justify-center items-center z-[50] bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex justify-center items-center z-[50] bg-black/50 dark:bg-black/80">
       <div
         className={cn(modalVariants({ width }), "mx-4", isMobile && "w-full max-w-[400px]")}
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
-          <div className="flex gap-2 items-center justify-center border-b p-3 bg-gray-50">
+          <div className="flex gap-2 items-center justify-center border-b border-border p-3 bg-primary-foreground">
             <h2 className="font-semibold">{title}</h2>
           </div>
         )}
@@ -63,7 +63,7 @@ const Modal = ({
         <div className="flex-1 overflow-auto p-4">{children}</div>
 
         {control && (
-          <div className="flex gap-2 justify-end items-center border-t p-3 bg-gray-50">
+          <div className="flex gap-2 justify-end items-center border-t border-border p-3 bg-primary-foreground">
             {control.onCancel && (
               <Button
                 variant="outline"

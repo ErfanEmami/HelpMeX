@@ -51,7 +51,7 @@ export const BigCalendar = ({ events }: { events: CalendarEvent[] }) => {
     return (
       <div
         className={cn(
-          "flex justify-between items-center mb-4 gap-4",
+          "flex justify-between items-center mb-4 pt-1 px-1 gap-4",
           isMobile ? "flex-col text-center" : "flex-row"
         )}
       >
@@ -114,12 +114,12 @@ export const BigCalendar = ({ events }: { events: CalendarEvent[] }) => {
         toolbar: ToolBar,
       }}
       className="
-        w-full [&_.rbc-day-slot_.rbc-time-slot]:border-none [&_.rbc-today]:bg-gray-100 overflow-auto
-        [&_.rbc-event]:bg-black [&_.rbc-selected]:bg-black 
-        [&_.rbc-timeslot-group]:border-gray-100 [&_.rbc-day-slot.rbc-today_.rbc-timeslot-group]:border-gray-200
-        [&_.rbc-time-slot]:text-xs [&_.rbc-time-slot]:font-light [&_.rbc-time-slot]:text-gray-600 [&_.rbc-time-slot]:p-2 [&_.rbc-time-slot]:pb-0
-        [&_.rbc-time-view]:rounded-lg
-        [&_.rbc-header]:p-4 [&_.rbc-header]:flex [&_.rbc-header]:flex-col [&_.rbc-header]:justify-center [&_.rbc-header]:font-medium [&_.rbc-header]:text-gray-600
+        w-full [&_.rbc-day-slot_.rbc-time-slot]:border-none [&_.rbc-today]:bg-secondary overflow-auto 
+        [&_.rbc-event]:bg-foreground [&_.rbc-selected]:bg-foreground [&_.rbc-event-label]:text-background
+        [&_.rbc-timeslot-group]:border-secondary [&_.rbc-day-slot.rbc-today_.rbc-timeslot-group]:border-border
+        [&_.rbc-time-slot]:text-xs [&_.rbc-time-slot]:font-light [&_.rbc-time-slot]:text-muted-foreground [&_.rbc-time-slot]:p-2 [&_.rbc-time-slot]:pb-0
+        [&_.rbc-time-view]:rounded-lg [&_.rbc-time-view]:overflow-hidden 
+        [&_.rbc-header]:p-4 [&_.rbc-header]:flex [&_.rbc-header]:flex-col [&_.rbc-header]:justify-center [&_.rbc-header]:font-light [&_.rbc-header]:text-muted-foreground
         [&_.rbc-time-content]:border-t
         [&_.rbc-allday-cell]:hidden
         [&_.rbc-header]:border-b-0
