@@ -105,5 +105,6 @@ export const useBookmarks = () => {
     fetchBookmarksSummary,
     saveBookmarksSummary,
     setAwaitingAccept,
+    setBookmarksSummary,
   };
 };
