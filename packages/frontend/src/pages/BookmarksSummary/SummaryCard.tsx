@@ -20,8 +20,8 @@ const SummarySection = ({ title, items }: SummarySectionProps) => (
 );
 
 export const SummaryCard = (theme: SummaryTheme) => (
-  <div className="flex flex-col w-full p-4 gap-3 bg-white rounded-lg shadow-sm border border-gray-200">
-    <h2 className="font-semibold mb-4">
+  <div className="flex flex-col w-full p-4 gap-3 bg-background rounded-lg shadow-sm border border-border">
+    <h2 className="font-semibold">
       {theme.themeTitle}
     </h2>
 

@@ -62,12 +62,12 @@ export default function ChatInput({
 
   return (
     <div
-      className="flex cursor-text flex-col gap-3 rounded-lg border bg-gray-100 p-3 shadow-sm"
+      className="flex cursor-text flex-col gap-3 rounded-lg border border-border bg-primary-foreground p-3 shadow-sm"
       onClick={focusTextarea} // Trigger focus on click
     >
       <textarea
         ref={textareaRef}
-        className="w-full resize-none overflow-y-auto border-none bg-transparent text-sm placeholder-gray-500 outline-none"
+        className="w-full resize-none overflow-y-auto border-none bg-transparent text-sm placeholder:text-muted-foreground outline-none"
         placeholder={placeholder}
         rows={1}
         value={input}

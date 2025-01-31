@@ -25,7 +25,7 @@ const ControlPanel = ({
 );
 
 const Content = ({ children }: { children: React.ReactNode }) => (
-  <div className="border border-gray-200  bg-gray-50 p-4 flex flex-col gap-4 overflow-y-auto items-center flex-1">
+  <div className="border border-border  bg-primary-foreground p-4 flex flex-col gap-4 overflow-y-auto items-center flex-1">
     {children}
   </div>
 );

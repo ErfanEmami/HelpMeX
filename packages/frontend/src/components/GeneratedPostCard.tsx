@@ -14,12 +14,12 @@ export const GeneratedPostCard = ({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex flex-col  gap-2 w-full p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+    <div className="flex flex-col  gap-2 w-full p-4 bg-background rounded-lg shadow-sm border border-border">
       <div
         onClick={() => setOpen((prev) => !prev)}
         className="flex w-full items-center justify-between"
       >
-        <div className="text-sm text-gray-500 text-end">
+        <div className="text-sm text-muted-foreground text-end">
           {formatDate(createdAt)}
         </div>
         <ChevronRight
@@ -32,11 +32,11 @@ export const GeneratedPostCard = ({
       {open && (
         <div className="flex flex-col gap-1 border-t">
           <div className="mt-2">
-            <b className="text-xs text-gray-500">Prompt</b>
+            <b className="text-xs text-muted-foreground">Prompt</b>
             <p>{prompt}</p>
           </div>
           <div>
-            <b className="text-xs text-gray-500">Generated Post</b>
+            <b className="text-xs text-muted-foreground">Generated Post</b>
             <p className="whitespace-pre-wrap">{text}</p>
           </div>
         </div>

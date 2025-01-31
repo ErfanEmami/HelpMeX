@@ -15,6 +15,7 @@ import {
 import { HELP_DEF, TOOLS_DEF } from "./NavItems";
 import { ToolSwitcher } from "./toolSwitcher";
 import { ToolBody } from "./ToolBody";
+import { ThemeToggle } from "@/context/theme_context/themeToggle";
 
 export function AppSidebar({ children, ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -33,9 +34,10 @@ export function AppSidebar({ children, ...props }: React.ComponentProps<typeof S
         <SidebarRail />
       </Sidebar>
       <SidebarInset className="h-screen overflow-auto">
-        <div className="flex border-b items-center justify-center h-[65px] bg-[hsl(var(--sidebar-background))]">
-          <SidebarTrigger className="absolute left-2" />
+        <div className="px-2 flex border-b items-center justify-between h-[65px] bg-[hsl(var(--sidebar-background))]">
+          <SidebarTrigger  />
           <h2 className="font-semibold">Xer™</h2>
+          <ThemeToggle/>
         </div>
         
         {/* <div className="p-2">
