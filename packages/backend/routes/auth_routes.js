@@ -7,7 +7,7 @@ const router = express.Router();
 router.get(
   "/twitter",
   passport.authenticate("twitter", {
-    scope: ["tweet.read", "bookmark.read", "users.read"],
+    scope: ["tweet.read", "bookmark.read", "users.read", "offline.access"],
   })
 );
 

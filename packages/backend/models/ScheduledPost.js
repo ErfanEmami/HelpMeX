@@ -4,7 +4,9 @@ const scheduledPostSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   text: { type: String, required: true },
   scheduledFor: { type: String, required: true }, // having issues with storing UTC Date object and converting to local on UI, but works when UTC string
+  status: { type: String, enum: ["pending", "sent", "failed"], default: "pending" },
   createdAt: { type: Date, default: Date.now },
+  errorMessage: { type: String },
 });
 
 // Ensure virtuals (like .id) are included when logged or in API response
@@ -20,7 +22,7 @@ export const createScheduledPost = async ({ userId, text, scheduledFor }) => {
 };
 
 export const getScheduledPost = async (id) => {
-  const scheduledPost = await ScheduledPost.findOne({ id });
+  const scheduledPost = await ScheduledPost.findOne({ _id: id });
   return scheduledPost;
 };
 

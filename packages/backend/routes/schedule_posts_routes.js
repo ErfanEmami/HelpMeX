@@ -10,6 +10,7 @@ import {
   ScheduledPostsSchema,
   SchedulePostSchema,
 } from "shared";
+import { postQueue } from "../lib/post_scheduler/queue.js";
 
 const router = express.Router();
 
@@ -54,6 +55,10 @@ router.post("/create", async (req, res) => {
       ...validatedInput,
     });
 
+    // // Schedule job in BullMQ
+    const delay = new Date(validatedInput.scheduledFor).getTime() - Date.now();
+    await postQueue.add("sendPost", { postId: scheduledPost._id }, { delay });
+
     // validate response
     const validatedRes = validateResponse(ScheduledPostSchema, scheduledPost);
 
@@ -62,6 +67,15 @@ router.post("/create", async (req, res) => {
     console.error("Error scheduling post:", error);
     res.status(500).json({ message: error.message });
   }
+});
+
+router.get("/queue-status", async (req, res) => {
+  const waiting = await postQueue.getWaiting();
+  const active = await postQueue.getActive();
+  const completed = await postQueue.getCompleted();
+  const failed = await postQueue.getFailed();
+
+  res.json({ waiting, active, completed, failed });
 });
 
 export default router;

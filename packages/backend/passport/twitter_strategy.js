@@ -15,6 +15,7 @@ passport.use(
       try {
         // Check if user exists
         let user = await User.findOne({ twitterId: profile.id });
+        const expiresAt = Date.now() + 7200 * 1000 // twitter token expires after 2 hours
 
         // Create a new user if not found
         if (!user) {
@@ -23,15 +24,18 @@ passport.use(
             displayName: profile.displayName,
             username: profile.username,
             photos: profile.photos.map((photo) => photo.value),
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            expiresAt: expiresAt,
           });
-          await user.save();
+        } else {
+          // Update access token on re-login
+          user.accessToken = accessToken;
+          user.refreshToken = refreshToken;
+          user.expiresAt = expiresAt;
         }
 
-        // Add tokens to session (not stored in DB)
-        user.accessToken = accessToken;
-        user.refreshToken = refreshToken;
-        
-        // can maybe just pass profile instead of user
+        await user.save();
         done(null, user);
       } catch (error) {
         console.error('Error during authentication:', error);
