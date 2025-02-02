@@ -22,7 +22,7 @@ export const createGeneratedPost = async ({ jobId, userId, text, author, prompt 
 };
 
 export const getGeneratedPost = async (id) => {
-  const generatedPost = await GeneratedPost.findOne({ id });
+  const generatedPost = await GeneratedPost.findOne({ _id: id });
   return generatedPost;
 };
 

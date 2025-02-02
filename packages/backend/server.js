@@ -1,9 +1,6 @@
-import './config.js'
-import connectDB from './db.js';
-import app from './app.js';
+import "./config.js";
 
-// Connect to the database
-connectDB();
+import app from "./app.js";
 
 // Start the server and listen on the defined port
 const PORT = process.env.PORT || 3001;

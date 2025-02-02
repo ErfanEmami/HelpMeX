@@ -42,7 +42,7 @@ export type NavMutedDef = {
 
 export const TOOLS_DEF: NavToolDef = [
   {
-    name: "Xer™",
+    name: "Posting Assistant",
     url: "/xer",
     description: "Your Posting Assistant",
     icon: () => <img src={XLogo} alt="X Logo" className="w-5 h-5" />,
