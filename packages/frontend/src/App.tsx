@@ -1,5 +1,4 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Xer } from "./pages/Xer/Xer";
 import { BookmarksSummary } from "./pages/BookmarksSummary/BookmarksSummary";
 import { NotFound } from "./pages/NotFound";
 import { useAppContext } from "./context/app_context/AppContext";
@@ -11,6 +10,7 @@ import { useEffect } from "react";
 import { GeneratedSummaries } from "./pages/BookmarksSummary/GeneratedSummaries/GeneratedSummaries";
 import { PostScheduler } from "./pages/PostScheduler/PostScheduler";
 import { GenerateThread } from "./pages/Xer/GenerateThread/GenerateThread";
+import { GeneratePost } from "./pages/Xer/GeneratePost/GeneratePost";
 
 const DEFAULT_ROUTE = "/xer/generate-post";
 
@@ -52,7 +52,7 @@ const App = () => {
         </Route>
 
         <Route path="/xer">
-          <Route path="generate-post" element={<Xer />} />
+          <Route path="generate-post" element={<GeneratePost />} />
           <Route path="generate-thread" element={<GenerateThread />} />
         </Route>
 
