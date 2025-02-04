@@ -73,7 +73,7 @@ export function ToolSwitcher({ def }: { def: NavToolDef }) {
               X Tools
             </DropdownMenuLabel>
             {def.map((tool, index) => (
-              <Link to={tool.url}>
+              <Link to={`${tool.baseUrl}${tool.defaultPath}`}>
                 <DropdownMenuItem className="gap-2 p-2">
                   <ToolLogo logo={tool.icon} />
                   <div className="grid flex-1 leading-tight">

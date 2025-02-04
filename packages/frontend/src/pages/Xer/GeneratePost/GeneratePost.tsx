@@ -131,7 +131,7 @@ export const GeneratePost = ({
           )}
         </Control>
       </ControlPanel>
-      <ControlPanel half title="History" isLoading={isLoadingPosts}>
+      <ControlPanel half title="Saved Posts" isLoading={isLoadingPosts}>
         <Content>
           <div className="w-full flex flex-col gap-2">
             {generatedPosts.map(o => (
