@@ -68,3 +68,18 @@ export const decrypt = (text) => {
   decrypted = Buffer.concat([decrypted, decipher.final()]);
   return decrypted.toString();
 }
+
+export const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+export const safeTweet = async (client, text, options = {}) => {
+  try {
+    return await client.v2.tweet(text, options);
+  } catch (error) {
+    if (error.response?.status === 429) {
+      console.log("Rate limit exceeded. Retrying in 15 minutes...");
+      await sleep(15 * 60 * 1000); // Wait 15 minutes before retrying
+      return await client.v2.tweet(text, options);
+    }
+    throw error;
+  }
+}

@@ -1,45 +1,43 @@
 import express from "express";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { validateResponse } from "../lib/utils.js";
+
 import {
-  createScheduledPost,
-  getScheduledPosts,
-} from "../models/ScheduledPost.js";
-import {
-  ScheduledPostSchema,
-  ScheduledPostsSchema,
-  SchedulePostSchema,
+  ScheduledThreadSchema,
+  ScheduledThreadsSchema,
+  ScheduleThreadSchema,
 } from "shared";
-import { postQueue, enqueuePost } from "../lib/post_scheduler/queue.js";
+import { createScheduledThread, getScheduledThreads } from "../models/ScheduledThread.js";
+import { enqueueThread, threadQueue } from "../lib/thread_scheduler/queue.js";
 
 const router = express.Router();
 
 // Apply the authMiddleware to all routes in this router
 router.use(authMiddleware);
 
-// get all scheduled posts
+// get all scheduled threads
 router.get("/", async (req, res) => {
   try {
     const { id: userId } = req.user;
-    const scheduledPosts = await getScheduledPosts(userId);
+    const scheduledThreads = await getScheduledThreads(userId);
 
     // validate response
-    const validatedRes = validateResponse(ScheduledPostsSchema, scheduledPosts);
+    const validatedRes = validateResponse(ScheduledThreadsSchema, scheduledThreads);
 
     res.json(validatedRes);
   } catch (error) {
-    console.error("Error getting scheduled posts:", error);
+    console.error("Error getting scheduled threads:", error);
     res.status(500).json({ message: error.message });
   }
 });
 
-// create scheduled post
+// create scheduled thread
 router.post("/create", async (req, res) => {
   try {
     const { id: userId } = req.user;
 
     // Validate the input using Zod
-    const validateInput = SchedulePostSchema.safeParse(req.body);
+    const validateInput = ScheduleThreadSchema.safeParse(req.body);
 
     if (!validateInput.success) {
       return res.status(400).json({
@@ -50,16 +48,16 @@ router.post("/create", async (req, res) => {
 
     const validatedInput = validateInput.data;
 
-    const scheduledPost = await createScheduledPost({
+    const scheduledThread = await createScheduledThread({
       userId,
       ...validatedInput,
     });
 
-    // // Schedule job in BullMQ
-    await enqueuePost(validatedInput.scheduledFor, scheduledPost._id)
+    // Schedule job in BullMQ
+    await enqueueThread(validatedInput.scheduledFor, scheduledThread._id)
 
     // validate response
-    const validatedRes = validateResponse(ScheduledPostSchema, scheduledPost);
+    const validatedRes = validateResponse(ScheduledThreadSchema, scheduledThread);
 
     res.json(validatedRes);
   } catch (error) {
@@ -69,10 +67,10 @@ router.post("/create", async (req, res) => {
 });
 
 router.get("/queue-status", async (req, res) => {
-  const waiting = await postQueue.getWaiting();
-  const active = await postQueue.getActive();
-  const completed = await postQueue.getCompleted();
-  const failed = await postQueue.getFailed();
+  const waiting = await threadQueue.getWaiting();
+  const active = await threadQueue.getActive();
+  const completed = await threadQueue.getCompleted();
+  const failed = await threadQueue.getFailed();
 
   res.json({ waiting, active, completed, failed });
 });

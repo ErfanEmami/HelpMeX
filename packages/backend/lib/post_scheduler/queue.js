@@ -1,12 +1,11 @@
 import { Queue } from "bullmq";
-import Redis from "ioredis";
-
-export const redisConnection = new Redis({
-  host: "127.0.0.1",
-  port: 6379,
-  maxRetriesPerRequest: null,
-});
+import { redisConnection } from "../../redis.js";
 
 export const postQueue = new Queue("postQueue", {
   connection: redisConnection,
 });
+
+export const enqueuePost = async (scheduledFor, postId) => {
+  const delay = new Date(scheduledFor).getTime() - Date.now();
+  await postQueue.add("sendPost", { postId }, { delay });
+};
