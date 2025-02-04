@@ -3,14 +3,14 @@ import { useAssistants } from "@/hooks/useAssistants";
 import { Content, Control, ControlPanel } from "@/components/ControlPanel";
 import ChatInput from "@/components/ChatInput";
 import { Button } from "@/components/ui/button";
-import { Assistant, GeneratedPost } from "@/lib/types";
+import { GeneratedPost } from "@/lib/types";
 import { GeneratedPostCard } from "@/components/GeneratedPostCard";
+import { withAssistants } from "../withAssistants";
+import { useXerContext } from "@/context/xer_context/XerContext";
 
-export const GeneratePost = ({
-  selectedAssistant,
-}: {
-  selectedAssistant: Assistant | null;
-}) => {
+export const GeneratePost = withAssistants(() => {
+  const { xerState: { selectedAssistant } } = useXerContext();
+
   const { 
     generatePost, 
     saveGeneratedPost, 
@@ -146,4 +146,4 @@ export const GeneratePost = ({
       </ControlPanel>
     </div>
   );
-};
+});
