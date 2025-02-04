@@ -4,7 +4,7 @@ import { Worker } from "bullmq";
 import { TwitterApi } from "twitter-api-v2";
 import { getUserById } from "../../models/User.js";
 import { redisConnection } from "./queue.js";
-import {getAccessToken} from "../utils.js";
+import {getAccessToken, safeTweet} from "../utils.js";
 import { getScheduledPost } from "../../models/ScheduledPost.js";
 
 new Worker(
@@ -40,7 +40,11 @@ new Worker(
         }
 
         const client = new TwitterApi(accessToken);
-        // await client.v2.tweet(post.text);
+        /*
+          TODO: handle rate limits
+          - reschedule post for 15 minutes later and add "rescheduled=true" db column
+        */
+        // await safeTweet(client, post.text);
         console.log(`Successfully sent post for postId: ${postId}`);
 
         post.status = "sent";
