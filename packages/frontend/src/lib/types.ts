@@ -16,6 +16,9 @@ import {
   ScheduledPostSchema,
   SchedulePostFormSchema,
 } from "shared";
+import { TOOLS_DEF } from "@/components/sidebar/NavItems";
+
+export type ToolBaseUrls = (typeof TOOLS_DEF)[number]["baseUrl"];
 
 export type Author = z.infer<typeof AuthorSchema>;
 export type Bookmark = z.infer<typeof BookmarkSchema>;

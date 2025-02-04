@@ -15,7 +15,7 @@ export function formatDate(dateString: string) {
 export function getSelectedTool() {
   const location = useLocation();
   const selectedTool = TOOLS_DEF.find((tool) =>
-    location.pathname.startsWith(tool.url)
+    location.pathname.startsWith(tool.baseUrl)
   );
   return selectedTool;
 }

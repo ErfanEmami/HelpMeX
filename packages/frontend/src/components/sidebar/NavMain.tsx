@@ -23,6 +23,10 @@ import { type NavMainDef } from "./NavItems";
 
 export function NavMain({ def }: { def: NavMainDef }) {
   const location = useLocation();
+  
+  const getLink = (item: NavMainDef["items"][number]) => (
+    item.url ?? `${def.baseUrl}${item.path}`
+  ) 
 
   return (
     <SidebarGroup>
@@ -38,10 +42,10 @@ export function NavMain({ def }: { def: NavMainDef }) {
             >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <Link to={item.url}>
+                  <Link to={getLink(item)}>
                     <SidebarMenuButton
                       tooltip={item.name}
-                      isActive={location.pathname === item.url}
+                      isActive={location.pathname === getLink(item)}
                     >
                       {item.icon && <item.icon />}
                       <span>{item.name}</span>
@@ -68,10 +72,10 @@ export function NavMain({ def }: { def: NavMainDef }) {
             </Collapsible>
           ) : (
             <SidebarMenuItem key={item.name}>
-              <Link to={item.url}>
+              <Link to={getLink(item)}>
                 <SidebarMenuButton
                   tooltip={item.name}
-                  isActive={location.pathname === item.url}
+                  isActive={location.pathname === getLink(item)}
                 >
                   {item.icon && <item.icon />}
                   <span>{item.name}</span>

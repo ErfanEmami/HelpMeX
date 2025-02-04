@@ -72,7 +72,18 @@ export const BookmarksSummary = () => {
                 >
                   Discard
                 </Button>
-                <Button onClick={saveBookmarksSummary} size="full" variant="accept">
+                <Button 
+                  onClick={async () => {
+                    const res = await saveBookmarksSummary()
+                    if (res.error) {
+                      // TODO handle error
+                    } else {
+                      setBookmarksSummary(null)
+                    }
+                  }}
+                  size="full" 
+                  variant="accept"
+                >
                   Save Summary
                 </Button>
               </div>

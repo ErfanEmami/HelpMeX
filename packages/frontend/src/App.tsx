@@ -10,8 +10,9 @@ import { useAuth } from "./hooks/useAuth";
 import { useEffect } from "react";
 import { GeneratedSummaries } from "./pages/BookmarksSummary/GeneratedSummaries/GeneratedSummaries";
 import { PostScheduler } from "./pages/PostScheduler/PostScheduler";
+import { GenerateThread } from "./pages/Xer/GenerateThread/GenerateThread";
 
-const DEFAULT_ROUTE = "/xer";
+const DEFAULT_ROUTE = "/xer/generate-post";
 
 const App = () => {
   const { getAuthStatus } = useAuth();
@@ -43,11 +44,21 @@ const App = () => {
     <AppSidebar>
       <Routes>
         <Route path="/" element={<Navigate to={DEFAULT_ROUTE} replace />} />
-        <Route path="/bookmarks-summary" element={<BookmarksSummary />} />
-        <Route path="/bookmarks-summary/generated-summaries" element={<GeneratedSummaries />} />
-        <Route path="/xer" element={<Xer />} />
-        <Route path="/post-scheduler" element={<PostScheduler />} />
         <Route path="*" element={<NotFound />} />
+
+        <Route path="/bookmarks-summary">
+          <Route path="generate-summary" element={<BookmarksSummary />} />
+          <Route path="generated-summaries" element={<GeneratedSummaries />} />
+        </Route>
+
+        <Route path="/xer">
+          <Route path="generate-post" element={<Xer />} />
+          <Route path="generate-thread" element={<GenerateThread />} />
+        </Route>
+
+        <Route path="/post-scheduler">
+          <Route path="" element={<PostScheduler />} />
+        </Route>
       </Routes>
     </AppSidebar>
   );
