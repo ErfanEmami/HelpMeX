@@ -7,9 +7,11 @@ import { withAssistants } from "../withAssistants";
 import { useXerContext } from "@/context/xer_context/XerContext";
 import { GenerateThreadModal } from "./newThreadModal";
 import { GeneratedThreadCard } from "@/components/ui/GeneratedThreadCard";
+import { useDispatchHelpers } from "@/context/app_context/useDispatchHelpers";
 
 export const GenerateThread = withAssistants(() => {
-  const {
+  const { setAppError } = useDispatchHelpers();
+  const { 
     xerState: { selectedAssistant },
   } = useXerContext();
 
@@ -36,11 +38,14 @@ export const GenerateThread = withAssistants(() => {
       setIsLoadingThreads(true);
       const res = await fetchGeneratedThreads(selectedAssistant.author);
       setIsLoadingThreads(false);
-
       if (res.error) {
-        // TODO: handle error
+        setAppError({
+          text: res.error,
+          onRetry: _fetchGeneratedThreads,
+        });
       } else {
         setGeneratedThreads(res.generatedThreads!);
+        setAppError(null);
       }
     };
 
@@ -55,24 +60,28 @@ export const GenerateThread = withAssistants(() => {
 
     setIsLoading(true);
     const res = await saveGeneratedThread(generatedThread);
-    if (res.error || !res.generatedThread) {
-      // TODO: handle error
+    if (res.error) {
+      setAppError({
+        text: res.error,
+        onRetry: handleSaveThread,
+      });
     } else {
       setGeneratedThread(null);
-      setGeneratedThreads((prev) => [...prev, res.generatedThread]);
+      setGeneratedThreads((prev) => [...prev, res.generatedThread!]);
+      setAppError(null);
     }
     setIsLoading(false);
   };
 
   return (
     <div className="flex flex-1 overflow-y-hidden">
-      {(showModal && selectedAssistant) && (
+      {showModal && selectedAssistant && (
         <GenerateThreadModal
           selectedAssistant={selectedAssistant}
           onClose={() => setShowModal(false)}
           onCreate={(generatedThread) => {
             setGeneratedThread(generatedThread)
-          } }
+          }}
         />
       )}
       <ControlPanel half title="Generate Thread" isLoading={isLoading}>

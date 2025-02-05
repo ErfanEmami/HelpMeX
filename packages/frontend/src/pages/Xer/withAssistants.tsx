@@ -4,6 +4,7 @@ import { useXerContext } from "@/context/xer_context/XerContext";
 import { useAssistants } from "@/hooks/useAssistants";
 import { Loading } from "@/components/Loading";
 import Title from "@/components/Title";
+import { useDispatchHelpers } from "@/context/app_context/useDispatchHelpers";
 
 export const withAssistants = <P extends object>(
   Component: React.ComponentType<P>
@@ -11,6 +12,7 @@ export const withAssistants = <P extends object>(
   return function WrappedComponent(props: P): React.ReactElement {
     const { fetchAssistants } = useAssistants();
     const { xerState, xerDispatch } = useXerContext();
+    const { setAppError } = useDispatchHelpers();
 
     const {
       selectedAssistant,
@@ -33,8 +35,12 @@ export const withAssistants = <P extends object>(
         });
 
         if (res.error) {
-          // TODO handle error
+          setAppError({
+            text: res.error,
+            onRetry: _fetchAssistants,
+          });
         } else {
+          setAppError(null);
           xerDispatch({
             type: "SET_ASSISTANTS",
             payload: res.assistants!,
@@ -43,7 +49,12 @@ export const withAssistants = <P extends object>(
       };
 
       _fetchAssistants();
-
+      
+      /**
+       *  TODO: state issue - GeneratePost and GenerateThread use this HOC and 
+       *  when switching between them, isLoadingAssistants != true initially causing a render
+       *  when expected behavior is to first have _fetchAssistants() finish then render wrapped component
+       */
       return () =>
         xerDispatch({
           type: "SET_LOADING",
