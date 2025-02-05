@@ -4,8 +4,9 @@ export const initialState: AppState = {
   user: null,
   loadingState: {
     appLoading: true, // by default true so loading is triggered when app is initially mounted
-    requestLoading: false
-  }
+    requestLoading: false,
+  },
+  error: null,
 };
 
 export const reducer = (state: AppState, action: Action): AppState => {
@@ -15,6 +16,9 @@ export const reducer = (state: AppState, action: Action): AppState => {
 
     case "SET_USER":
       return { ...state, user: action.payload };
+
+    case "SET_ERROR":
+      return { ...state, error: action.payload };
 
     default:
       console.warn("No action type found for reducer", action);

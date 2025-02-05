@@ -11,6 +11,7 @@ import {
 } from "@/lib/types";
 import { combineDateAndTime } from "@/lib/utils";
 import { useSchedulePosts } from "@/hooks/useSchedulePosts";
+import {  useDispatchHelpers } from "@/context/app_context/useDispatchHelpers";
 
 const spToCalendarEvent = (sp: ScheduledPost): CalendarEvent => ({
   start: new Date(sp.scheduledFor),
@@ -25,11 +26,11 @@ export const PostScheduler = () => {
   const [showModal, setShowModal] = useState(false);
   const [isFetchingPosts, setIsFetchingPosts] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [fetchError, setFetchError] = useState<null | string>(null);
   const [submitError, setSubmitError] = useState<null | string>(null);
   const [scheduledPosts, setScheduledPosts] = useState<ScheduledPost[]>([]);
 
   const { createScheduledPost, fetchScheduledPosts } = useSchedulePosts();
+  const { setAppError } = useDispatchHelpers()
 
   useEffect(() => {
     loadScheduledPosts();
@@ -41,10 +42,13 @@ export const PostScheduler = () => {
     setIsFetchingPosts(false);
 
     if (res.error) {
-      setFetchError(res.error);
+      setAppError({
+        text: res.error,
+        onRetry: loadScheduledPosts,
+      });
     } else {
       setScheduledPosts(res.scheduledPosts || []);
-      setFetchError(null);
+      setAppError(null);
     }
   };
 
@@ -73,15 +77,7 @@ export const PostScheduler = () => {
   );
 
   return (
-    <Page
-      title={{ text: "Scheduled Posts" }}
-      isLoading={isFetchingPosts}
-      error={
-        fetchError
-          ? { text: fetchError, onClick: () => loadScheduledPosts() }
-          : null
-      }
-    >
+    <Page title={{ text: "Scheduled Posts" }} isLoading={isFetchingPosts}>
       {showModal && (
         <SchedulePostModal
           error={submitError}

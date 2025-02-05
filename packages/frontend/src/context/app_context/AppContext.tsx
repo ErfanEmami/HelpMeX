@@ -7,6 +7,7 @@ import React, {
 
 import { initialState, reducer } from "./reducer";
 import type { AppContextProps } from "./types";
+import { ErrorModal } from "@/components/ui/ErrorModal";
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
 
@@ -28,5 +29,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     appDispatch,
   };
 
-  return <AppContext.Provider value={context}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={context}>
+      {appState.error && <ErrorModal {...appState.error} />}
+      {children}
+    </AppContext.Provider>
+  );
 };
