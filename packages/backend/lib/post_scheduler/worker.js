@@ -3,7 +3,7 @@ import "../../config.js";
 import { Worker } from "bullmq";
 import { TwitterApi } from "twitter-api-v2";
 import { getUserById } from "../../models/User.js";
-import { redisConnection } from "./queue.js";
+import { redisConnection } from "../../redis.js";
 import {getAccessToken, safeTweet} from "../utils.js";
 import { getScheduledPost } from "../../models/ScheduledPost.js";
 

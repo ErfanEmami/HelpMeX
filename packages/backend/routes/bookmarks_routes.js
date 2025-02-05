@@ -67,8 +67,8 @@ router.post("/analyze-bookmarks", async (req, res) => {
   try {
     // const { bookmarks } = req.body
     // const bookmarksAnalyzer = new BookmarksAnalyzer();
-    // const { response } = await bookmarksAnalyzer.analyzeBookmarks(bookmarks);
-    // const gptResponse = JSON.parse(response.choices[0].message.content)
+    // const gptResponseRaw = await bookmarksAnalyzer.analyzeBookmarks(bookmarks);
+    // const gptResponse = JSON.parse(gptResponseRaw)
 
     /*** Not making real API call due to rate limits ***/
     const gptResponse = BOOKMARKS_SUMMARY

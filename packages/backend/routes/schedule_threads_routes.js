@@ -7,7 +7,7 @@ import {
   ScheduledThreadsSchema,
   ScheduleThreadSchema,
 } from "shared";
-import { createScheduledThread, getScheduledThreads } from "../models/ScheduledThread.js";
+import { getScheduledThreads, setThreadSchedule } from "../models/GeneratedThread.js";
 import { enqueueThread, threadQueue } from "../lib/thread_scheduler/queue.js";
 
 const router = express.Router();
@@ -31,11 +31,9 @@ router.get("/", async (req, res) => {
   }
 });
 
-// create scheduled thread
-router.post("/create", async (req, res) => {
+// schedule a thread
+router.post("/new", async (req, res) => {
   try {
-    const { id: userId } = req.user;
-
     // Validate the input using Zod
     const validateInput = ScheduleThreadSchema.safeParse(req.body);
 
@@ -48,16 +46,13 @@ router.post("/create", async (req, res) => {
 
     const validatedInput = validateInput.data;
 
-    const scheduledThread = await createScheduledThread({
-      userId,
-      ...validatedInput,
-    });
-
-    // Schedule job in BullMQ
-    await enqueueThread(validatedInput.scheduledFor, scheduledThread._id)
+    const scheduledThread = await setThreadSchedule(validatedInput);
 
     // validate response
     const validatedRes = validateResponse(ScheduledThreadSchema, scheduledThread);
+
+    // Schedule job in BullMQ
+    await enqueueThread(validatedInput.scheduledFor, scheduledThread._id)
 
     res.json(validatedRes);
   } catch (error) {

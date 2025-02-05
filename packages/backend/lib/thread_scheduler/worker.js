@@ -3,9 +3,9 @@ import "../../config.js";
 import { Worker } from "bullmq";
 import { TwitterApi } from "twitter-api-v2";
 import { getUserById } from "../../models/User.js";
-import { redisConnection } from "./queue.js";
+import { redisConnection } from "../../redis.js";
 import { getAccessToken, safeTweet, sleep } from "../utils.js";
-import ScheduledThread from "../../models/ScheduledThread.js";
+import { getScheduledThread } from "../../models/GeneratedThread.js";
 
 new Worker(
   "threadQueue",
@@ -16,7 +16,7 @@ new Worker(
       console.log(`Attempting job for threadId: ${threadId}`);
 
       // Fetch the scheduled thread
-      const thread = await ScheduledThread.findById(threadId);
+      const thread = await getScheduledThread(threadId);
       if (!thread || thread.status !== "pending") {
         console.log(`Thread ${threadId} is not pending or does not exist.`);
         return;

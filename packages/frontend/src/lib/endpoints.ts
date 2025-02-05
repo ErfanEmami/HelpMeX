@@ -22,6 +22,13 @@ export const saveGeneratedPostEP = (author: string) =>
 export const generatedPostsEP = (author: string) => 
   `${basePath}/xer/${author}/generate-post/all`
 
+export const generateThreadEP = (author: string) => 
+  `${basePath}/xer/${author}/generate-thread`
+export const saveGeneratedThreadEP = (author: string) => 
+  `${basePath}/xer/${author}/generate-thread/save`
+export const generatedThreadsEP = (author: string) => 
+  `${basePath}/xer/${author}/generate-thread/all`
+
 // schedule posts
 export const GET_SCHEDULED_POSTS = `${basePath}/schedule-posts`
-export const SCHEDULE_POST = `${basePath}/schedule-posts/create`
+export const SCHEDULE_POST = `${basePath}/schedule-posts/new`

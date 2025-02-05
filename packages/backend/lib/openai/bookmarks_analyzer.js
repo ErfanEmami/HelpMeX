@@ -88,10 +88,9 @@ export class BookmarksAnalyzer extends OpenAIClient {
       max_tokens: 2000,
     });
 
-    return {
-      systemMessage,
-      userMessage,
-      response,
-    };
+    return response.choices[0].message.content
+      .trim()
+      .replace(/^```json/, "")
+      .replace(/```$/, "");
   };
 }

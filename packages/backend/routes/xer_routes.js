@@ -1,13 +1,15 @@
 import express from "express";
 import { TwitterApi } from "twitter-api-v2";
 import authMiddleware from "../middleware/authMiddleware.js";
-import { USER_POSTS } from "../test/test_data.js";
+import { GPT_RESPONSE_GENERATED_THREAD, USER_POSTS } from "../test/test_data.js";
 import { createAgent, getAgentByAuthor, getAgents } from "../models/Agent.js";
 import { AgentTrainer } from "../lib/openai/agent_trainer.js";
-import { SaveGeneratedPostSchema, GeneratePostSchema, GeneratedPostSchema, GeneratedPostsSchema, agentSchema, agentsSchema } from "shared";
+import { SaveGeneratedPostSchema, GeneratePostSchema, GeneratedPostSchema, GeneratedPostsSchema, agentSchema, agentsSchema, ThreadConstraintsSchema, GeneratedThreadSchema, SaveGeneratedThreadSchema, SavedGeneratedThreadSchema, SavedGeneratedThreadsSchema } from "shared";
 import { createGeneratedPost, getGeneratedPosts } from "../models/GeneratedPost.js";
 import { validateResponse } from "../lib/utils.js";
 import { z } from "zod";
+import { ThreadGenerator } from "../lib/openai/thread_generator.js";
+import { createGeneratedThread, getGeneratedThreads } from "../models/GeneratedThread.js";
 
 const textSchema = z.string()
 
@@ -222,6 +224,116 @@ router.get("/:author/generate-post/all", async (req, res) => {
     res.json(validatedRes);
   } catch (error) {
     console.error("Error getting agent status:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// generate thread
+router.post("/:author/generate-thread", async (req, res) => {
+  try {
+    const { author } = req.params;
+    const { id: userId } = req.user;
+
+    // Validate the input using Zod
+    const validatedInput = ThreadConstraintsSchema.safeParse(req.body);
+    
+    if (!validatedInput.success) {
+      return res.status(400).json({
+        message: "Invalid input",
+        errors: validatedInput.error.errors,
+      });
+    }
+
+    const validatedThreadConstraints = validatedInput.data;
+
+    // check if there already is an agent for this author
+    const agent = await getAgentByAuthor(userId, author);
+    if (!agent) {
+      return res
+        .status(400)
+        .json({ message: `Agent doesn't exist for ${author}` });
+    }
+
+    const threadGenerator = new ThreadGenerator();
+
+    // check fine-tune status
+    const ftState = await threadGenerator.getFineTunedState(agent.jobId);
+
+    if (ftState.status !== "succeeded") {
+      return res.status(400).json({ message: `Fine-tuned Model is not ready.` });
+    }
+
+    const gptResponse = await threadGenerator.generateThread(
+      validatedThreadConstraints,
+      ftState.fine_tuned_model,
+    );
+
+    // validate GPT response
+    // TODO: if validation failed, try again for x number of times
+    const validatedRes = validateResponse(GeneratedThreadSchema, JSON.parse(gptResponse))
+    
+    res.json(validatedRes);
+  } catch (error) {
+    console.error("Error getting agent status:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// store thread
+router.post("/:author/generate-thread/save", async (req, res) => {
+  try {
+    const { author } = req.params;
+    const { id: userId } = req.user;
+
+    // Validate the input using Zod
+    const validatedInput = SaveGeneratedThreadSchema.safeParse(req.body);
+    
+    if (!validatedInput.success) {
+      return res.status(400).json({
+        message: "Invalid input",
+        errors: validatedInput.error.errors,
+      });
+    }
+
+    const validatedGeneratedThread = validatedInput.data;
+
+    // check if there already is an agent for this author
+    const agent = await getAgentByAuthor(userId, validatedGeneratedThread.author);
+    if (!agent) {
+      return res
+        .status(400)
+        .json({ message: `Agent doesn't exist for ${author}` });
+    }
+
+    const generatedThread = await createGeneratedThread({
+      ...validatedGeneratedThread,
+      userId: userId,
+      jobId: agent.jobId,
+    });
+
+    // validate response
+    const validatedRes = validateResponse(SavedGeneratedThreadSchema, generatedThread)
+    
+    res.json(validatedRes);
+  } catch (error) {
+    console.error("Error saving thread:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// get all of generated threads created by assistant
+router.get("/:author/generate-thread/all", async (req, res) => {
+  try {
+    const { id: userId } = req.user;
+    const { author } = req.params;
+    const generatedThreads = await getGeneratedThreads(userId, author);
+
+    // validate response
+    const validatedRes = validateResponse(SavedGeneratedThreadsSchema, generatedThreads)
+    
+    res.json(validatedRes);
+  } catch (error) {
+    console.error("Error getting threads:", error);
     res.status(500).json({ message: error.message });
   }
 });
