@@ -1894,3 +1894,62 @@ export const FINE_TUNED_STATE = {
     },
   },
 };
+
+export const GPT_RESPONSE_GENERATED_THREAD = {
+  "posts": [
+      {
+          "text": "So you want to grow your following on X, huh? Let's talk about how to do that."
+      },
+      {
+          "text": "First, you need to understand your audience. Who are they? What do they care about? How can you provide value to them?"
+      },
+      {
+          "text": "Next, be consistent. Consistency is key. Whether it's posting, engaging, or networking, consistency breeds trust and familiarity."
+      },
+      {
+          "text": "Engage with others. Don't just post and ghost. Respond to comments, share others' work, and be an active part of the community."
+      },
+      {
+          "text": "Experiment with different types of content. Not everything will work, and that's okay. Learn from what doesn't and double down on what does."
+      },
+      {
+          "text": "Collaborate with others in your niche. Cross-promotion can introduce you to new audiences and provide valuable social proof."
+      },
+      {
+          "text": "And finally, be patient. Rome wasn't built in a day, and neither is a thriving personal brand. Keep at it and stay positive."
+      }
+  ]
+}
+
+export const SAVED_GENERATED_THREAD = {
+  author: "dankoe",
+  posts: [
+    {
+      text: "So you want to grow your following on X, huh? Let's talk about how to do that.",
+    },
+    {
+      text: "First, you need to understand your audience. Who are they? What do they care about? How can you provide value to them?",
+    },
+    {
+      text: "Next, be consistent. Consistency is key. Whether it's posting, engaging, or networking, consistency breeds trust and familiarity.",
+    },
+    {
+      text: "Engage with others. Don't just post and ghost. Respond to comments, share others' work, and be an active part of the community.",
+    },
+    {
+      text: "Experiment with different types of content. Not everything will work, and that's okay. Learn from what doesn't and double down on what does.",
+    },
+    {
+      text: "Collaborate with others in your niche. Cross-promotion can introduce you to new audiences and provide valuable social proof.",
+    },
+    {
+      text: "And finally, be patient. Rome wasn't built in a day, and neither is a thriving personal brand. Keep at it and stay positive.",
+    },
+  ],
+  constraints: {
+    topic: "How to grow your following on X",
+    targetAudience: "Users aspiring to grow their personal brand.",
+    tone: "casual",
+    length: "around 7 posts",
+  },
+};

@@ -3,9 +3,12 @@ import { useCallback } from "react";
 import {
   ASSISTANTS_ENDPOINT,
   generatedPostsEP,
+  generatedThreadsEP,
   generatePostEP,
+  generateThreadEP,
   getCreateAssistantEP,
   saveGeneratedPostEP,
+  saveGeneratedThreadEP,
 } from "../lib/endpoints";
 import {
   Assistant,
@@ -13,6 +16,10 @@ import {
   SaveGeneratedPost,
   GeneratePost,
   GeneratedPost,
+  ThreadConstraints,
+  GeneratedThread,
+  SaveGeneratedThread,
+  SavedGeneratedThread,
 } from "@/lib/types";
 
 export const useAssistants = () => {
@@ -110,11 +117,76 @@ export const useAssistants = () => {
     }
   }, []);
 
+  // generate thread with AI
+  const generateThread = useCallback(
+    async (author: string, constraints: ThreadConstraints) => {
+      try {
+        const { data }: { data: GeneratedThread } = await axios.post(
+          generateThreadEP(author),
+          constraints,
+          { withCredentials: true }
+        );
+
+        return { generatedThread: data, error: null };
+      } catch (err) {
+        console.error("generateThread error:", err);
+        return {
+          generatedThread: null,
+          error: "Unable to generate thread.",
+        };
+      }
+    },
+    []
+  );
+
+  const saveGeneratedThread = useCallback(
+    async (generatedThread: SaveGeneratedThread) => {
+      try {
+        const { data }: { data: SavedGeneratedThread } = await axios.post(
+          saveGeneratedThreadEP(generatedThread.author),
+          generatedThread,
+          { withCredentials: true }
+        );
+
+        return { generatedThread: data, error: null };
+      } catch (err) {
+        console.error("saveGeneratedThread error:", err);
+        return {
+          generatedThread: null,
+          error: "Unable to save generated thread.",
+        };
+      }
+    },
+    []
+  );
+
+  const fetchGeneratedThreads = useCallback(async (author: string) => {
+    try {
+      const { data }: { data: SavedGeneratedThread[] } = await axios.get(
+        generatedThreadsEP(author),
+        { withCredentials: true }
+      );
+
+      return { generatedThreads: data, error: null };
+    } catch (err) {
+      console.error("fetchGeneratedThreads error:", err);
+      return {
+        generatedThreads: null,
+        error: "Unable to fetch generated threads.",
+      };
+    }
+  }, []);
+
   return {
     createAssistant,
     fetchAssistants,
+
     generatePost,
     saveGeneratedPost,
     fetchGeneratedPosts,
+
+    generateThread,
+    saveGeneratedThread,
+    fetchGeneratedThreads,
   };
 };
