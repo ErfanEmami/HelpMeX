@@ -8,9 +8,8 @@ import {
   BookCopy,
   Send,
   FilePlus,
+  BotMessageSquare
 } from "lucide-react";
-
-import XLogo from "@/assets/logo-white.png";
 
 export type NavToolDef = {
   name: string;
@@ -52,7 +51,7 @@ export const TOOLS_DEF: NavToolDef = [
     baseUrl: "/content-assistant",
     defaultPath: "/generate-post",
     description: "Your Content Assistant",
-    icon: () => <img src={XLogo} alt="X Logo" className="w-5 h-5" />,
+    icon: BotMessageSquare,
     navItems: [
       {
         baseUrl: "/content-assistant",
