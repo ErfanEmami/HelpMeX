@@ -2,7 +2,7 @@ import { Page } from "@/components/page";
 import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 
-import { SchedulePostModal } from "./SchedulePostModal";
+import { SchedulePostModal } from "./components/SchedulePostModal";
 import { BigCalendar } from "@/components/BigCalendar";
 import {
   ScheduledPost,
@@ -11,7 +11,8 @@ import {
 } from "@/lib/types";
 import { combineDateAndTime } from "@/lib/utils";
 import { useSchedulePosts } from "@/hooks/useSchedulePosts";
-import {  useDispatchHelpers } from "@/context/app_context/useDispatchHelpers";
+import { useDispatchHelpers } from "@/context/app_context/useDispatchHelpers";
+import { PlusIcon } from "lucide-react";
 
 const spToCalendarEvent = (sp: ScheduledPost): CalendarEvent => ({
   start: new Date(sp.scheduledFor),
@@ -30,7 +31,7 @@ export const PostScheduler = () => {
   const [scheduledPosts, setScheduledPosts] = useState<ScheduledPost[]>([]);
 
   const { createScheduledPost, fetchScheduledPosts } = useSchedulePosts();
-  const { setAppError } = useDispatchHelpers()
+  const { setAppError } = useDispatchHelpers();
 
   useEffect(() => {
     loadScheduledPosts();
@@ -91,9 +92,17 @@ export const PostScheduler = () => {
       )}
 
       <div className="flex flex-col flex-1 px-4 gap-4 items-center w-full overflow-y-hidden">
-        <Button size="full" variant="accept" onClick={() => setShowModal(true)}>
-          Schedule New Post
-        </Button>
+        <div className="flex gap-4 w-full justify-center">
+          <Button size="full" onClick={() => setShowModal(true)}>
+            <PlusIcon /> Post
+          </Button>
+          <Button size="full" onClick={() => setShowModal(true)}>
+            <PlusIcon /> Thread
+          </Button>
+          <Button size="full" onClick={() => setShowModal(true)}>
+            <PlusIcon /> Campaign
+          </Button>
+        </div>
         <BigCalendar events={calendarEvents} />
       </div>
     </Page>

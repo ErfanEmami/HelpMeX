@@ -17,15 +17,19 @@ import { ToolSwitcher } from "./toolSwitcher";
 import { ToolBody } from "./ToolBody";
 import { ThemeToggle } from "@/context/theme_context/themeToggle";
 
-export function AppSidebar({ children, ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  children,
+  BodyComponent,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & { BodyComponent?: React.ReactNode }) {
   return (
     <SidebarProvider defaultOpen={true}>
       <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <ToolSwitcher def={TOOLS_DEF} />
-      </SidebarHeader>
+        <SidebarHeader>
+          <ToolSwitcher def={TOOLS_DEF} />
+        </SidebarHeader>
         <SidebarContent>
-          <ToolBody />
+          <ToolBody BodyComponent={BodyComponent} />
           <NavMuted def={HELP_DEF} className="mt-auto" />
         </SidebarContent>
         <SidebarFooter>
@@ -35,14 +39,10 @@ export function AppSidebar({ children, ...props }: React.ComponentProps<typeof S
       </Sidebar>
       <SidebarInset className="h-screen overflow-auto">
         <div className="px-2 flex border-b items-center justify-between h-[65px] bg-[hsl(var(--sidebar-background))]">
-          <SidebarTrigger  />
-          <h2 className="font-semibold">XER</h2>
-          <ThemeToggle/>
-        </div>
-        
-        {/* <div className="p-2">
           <SidebarTrigger />
-        </div> */}
+          <h2 className="font-semibold">XER</h2>
+          <ThemeToggle />
+        </div>
         {children}
       </SidebarInset>
     </SidebarProvider>

@@ -37,7 +37,7 @@ export type SavedSummary = z.infer<typeof SavedSummarySchema>;
 export type CreateAssistant = z.infer<typeof CreateAssistantSchema>;
 export type Assistant = z.infer<typeof agentSchema>;
 
-// posting assistant
+// content assistant
 export type GeneratePost = z.infer<typeof GeneratePostSchema>;
 export type SaveGeneratedPost = z.infer<typeof SaveGeneratedPostSchema>;
 export type GeneratedPost = z.infer<typeof GeneratedPostSchema>;

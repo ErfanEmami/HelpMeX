@@ -8,7 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useXerContext } from "@/context/xer_context/XerContext";
+import { useXerContext } from "@/pages/ContentAssistant/context/XerContext";
 import { useCallback, useState } from "react";
 import { CreateAssistantModal } from "./CreateAssistantModal";
 import {
@@ -17,7 +17,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
-export const NavAssistants = () => {
+export const AssistantsSidebarBody = () => {
   const [showModal, setShowModal] = useState(false);
 
   const { xerState, xerDispatch } = useXerContext();

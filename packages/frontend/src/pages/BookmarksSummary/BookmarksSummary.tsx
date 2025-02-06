@@ -5,7 +5,7 @@ import { useBookmarks } from "@/hooks/useBookmarks";
 import { Loading } from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 import { Content, Control, ControlPanel } from "@/components/ControlPanel";
-import { SummaryCard } from "./SummaryCard";
+import { SummaryCard } from "./components/SummaryCard";
 
 export const BookmarksSummary = () => {
   const {
@@ -64,24 +64,24 @@ export const BookmarksSummary = () => {
               <div className="flex w-full gap-2">
                 <Button
                   onClick={() => {
-                    setBookmarksSummary(null)
-                    setAwaitingAccept(false)}
-                  }
+                    setBookmarksSummary(null);
+                    setAwaitingAccept(false);
+                  }}
                   size="full"
                   variant="destructive"
                 >
                   Discard
                 </Button>
-                <Button 
+                <Button
                   onClick={async () => {
-                    const res = await saveBookmarksSummary()
+                    const res = await saveBookmarksSummary();
                     if (res.error) {
                       // TODO handle error
                     } else {
-                      setBookmarksSummary(null)
+                      setBookmarksSummary(null);
                     }
                   }}
-                  size="full" 
+                  size="full"
                   variant="accept"
                 >
                   Save Summary
