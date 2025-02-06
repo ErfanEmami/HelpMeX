@@ -4,7 +4,7 @@ import { Content, Control, ControlPanel } from "@/components/ControlPanel";
 import { Button } from "@/components/ui/button";
 import { SavedGeneratedThread, SaveGeneratedThread } from "@/lib/types";
 import { withAssistants } from "../components/withAssistants";
-import { useXerContext } from "@/pages/ContentAssistant/context/XerContext";
+import { useContentAssistantContext } from "@/pages/ContentAssistant/context/ContentAssistantContext";
 import { GenerateThreadModal } from "./newThreadModal";
 import { GeneratedThreadCard } from "@/components/ui/GeneratedThreadCard";
 import { useDispatchHelpers } from "@/context/app_context/useDispatchHelpers";
@@ -12,8 +12,8 @@ import { useDispatchHelpers } from "@/context/app_context/useDispatchHelpers";
 export const GenerateThread = withAssistants(() => {
   const { setAppError } = useDispatchHelpers();
   const {
-    xerState: { selectedAssistant },
-  } = useXerContext();
+    contentAssistantState: { selectedAssistant },
+  } = useContentAssistantContext();
 
   const { saveGeneratedThread, fetchGeneratedThreads } = useAssistants();
 

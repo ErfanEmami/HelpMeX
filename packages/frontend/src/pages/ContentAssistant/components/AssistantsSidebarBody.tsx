@@ -8,7 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useXerContext } from "@/pages/ContentAssistant/context/XerContext";
+import { useContentAssistantContext } from "@/pages/ContentAssistant/context/ContentAssistantContext";
 import { useCallback, useState } from "react";
 import { CreateAssistantModal } from "./CreateAssistantModal";
 import {
@@ -20,15 +20,18 @@ import {
 export const AssistantsSidebarBody = () => {
   const [showModal, setShowModal] = useState(false);
 
-  const { xerState, xerDispatch } = useXerContext();
+  const {
+    contentAssistantState,
+    contentAssistantDispatch,
+  } = useContentAssistantContext();
   const {
     selectedAssistant,
     assistants,
     loadingState: { isLoadingAssistants },
-  } = xerState;
+  } = contentAssistantState;
 
   const handleAssistantClick = useCallback((assistant: Assistant) => {
-    xerDispatch({
+    contentAssistantDispatch({
       type: "SELECT_ASSISTANT",
       payload: assistant,
     });

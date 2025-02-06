@@ -11,23 +11,23 @@ export const BOOKMARKS_SUMMARY_ENDPOINT = `${basePath}/bookmarks/analyze-bookmar
 export const SAVE_BOOKMARKS_SUMMARY_ENDPOINT = `${basePath}/bookmarks/save`
 export const SUMMARIES_ENDPOINT = `${basePath}/bookmarks/summaries`
 
-// xer
-export const ASSISTANTS_ENDPOINT = `${basePath}/xer`
+// content-assistant
+export const ASSISTANTS_ENDPOINT = `${basePath}/content-assistant`
 export const getCreateAssistantEP = (author: string) => 
-  `${basePath}/xer/create/${author}`
+  `${basePath}/content-assistant/create/${author}`
 export const generatePostEP = (author: string) => 
-  `${basePath}/xer/${author}/generate-post`
+  `${basePath}/content-assistant/${author}/generate-post`
 export const saveGeneratedPostEP = (author: string) => 
-  `${basePath}/xer/${author}/generate-post/save`
+  `${basePath}/content-assistant/${author}/generate-post/save`
 export const generatedPostsEP = (author: string) => 
-  `${basePath}/xer/${author}/generate-post/all`
+  `${basePath}/content-assistant/${author}/generate-post/all`
 
 export const generateThreadEP = (author: string) => 
-  `${basePath}/xer/${author}/generate-thread`
+  `${basePath}/content-assistant/${author}/generate-thread`
 export const saveGeneratedThreadEP = (author: string) => 
-  `${basePath}/xer/${author}/generate-thread/save`
+  `${basePath}/content-assistant/${author}/generate-thread/save`
 export const generatedThreadsEP = (author: string) => 
-  `${basePath}/xer/${author}/generate-thread/all`
+  `${basePath}/content-assistant/${author}/generate-thread/all`
 
 // schedule posts
 export const GET_SCHEDULED_POSTS = `${basePath}/schedule-posts`

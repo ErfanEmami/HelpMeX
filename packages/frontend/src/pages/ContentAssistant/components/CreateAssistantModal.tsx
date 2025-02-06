@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useAssistants } from "@/hooks/useAssistants";
 import { useState } from "react";
-import { useXerContext } from "@/pages/ContentAssistant/context/XerContext";
+import { useContentAssistantContext } from "@/pages/ContentAssistant/context/ContentAssistantContext";
 
 export const CreateAssistantModal = ({ onClose }: { onClose: () => void }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -26,9 +26,9 @@ export const CreateAssistantModal = ({ onClose }: { onClose: () => void }) => {
   const { createAssistant } = useAssistants();
 
   const {
-    xerState: { assistants },
-    xerDispatch,
-  } = useXerContext();
+    contentAssistantState: { assistants },
+    contentAssistantDispatch,
+  } = useContentAssistantContext();
 
   const handleCreateAssistant = async (values: CreateAssistant) => {
     setIsLoading(true);
@@ -38,11 +38,11 @@ export const CreateAssistantModal = ({ onClose }: { onClose: () => void }) => {
     if (res.error) {
       setError(res.error);
     } else {
-      xerDispatch({
+      contentAssistantDispatch({
         type: "ADD_ASSISTANT",
         payload: res.assistant!,
       });
-      xerDispatch({
+      contentAssistantDispatch({
         type: "SELECT_ASSISTANT",
         payload: res.assistant!,
       });

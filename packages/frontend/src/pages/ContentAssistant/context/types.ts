@@ -5,7 +5,7 @@ type Loading = {
   isLoadingCreateAssistant?: boolean;
 };
 
-export type XerState = {
+export type ContentAssistantState = {
   selectedAssistant: Assistant | null;
   assistants: Assistant[];
   loadingState: Loading;
@@ -17,10 +17,9 @@ export type Action =
   | { type: "SELECT_ASSISTANT"; payload: Assistant }
   | { type: "SET_LOADING"; payload: Loading };
 
-export type XerReducer = {
-  xerState: XerState;
-  xerDispatch: React.Dispatch<Action>;
+export type ContentAssistantReducer = {
+  contentAssistantState: ContentAssistantState;
+  contentAssistantDispatch: React.Dispatch<Action>;
 };
 
-
-export type XerContextProps = XerReducer;
+export type ContentAssistantContextProps = ContentAssistantReducer;

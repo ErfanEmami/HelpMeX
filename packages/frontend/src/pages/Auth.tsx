@@ -11,7 +11,7 @@ export const Auth = () => {
   return (
     <Page center>
       <div className="w-full flex flex-col justify-center items-center gap-4">
-        <Title isTyped>Welcome to Xer™</Title>
+        <Title isTyped>Welcome to Xer</Title>
         <Button onClick={login}>
           Login with <img src={XLogo} alt="X Logo" className="w-4 h-4" />
         </Button>
