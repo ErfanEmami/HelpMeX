@@ -1,5 +1,5 @@
 import { BookmarksSummary } from "@/lib/types";
-import { SummaryCard } from "../SummaryCard";
+import { SummaryCard } from "../components/SummaryCard";
 import Modal from "@/components/Modal";
 
 export const GeneratedSummaryModal = ({

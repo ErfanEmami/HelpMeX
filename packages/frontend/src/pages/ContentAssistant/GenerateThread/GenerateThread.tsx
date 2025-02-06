@@ -3,15 +3,15 @@ import { useAssistants } from "@/hooks/useAssistants";
 import { Content, Control, ControlPanel } from "@/components/ControlPanel";
 import { Button } from "@/components/ui/button";
 import { SavedGeneratedThread, SaveGeneratedThread } from "@/lib/types";
-import { withAssistants } from "../withAssistants";
-import { useXerContext } from "@/context/xer_context/XerContext";
+import { withAssistants } from "../components/withAssistants";
+import { useXerContext } from "@/pages/ContentAssistant/context/XerContext";
 import { GenerateThreadModal } from "./newThreadModal";
 import { GeneratedThreadCard } from "@/components/ui/GeneratedThreadCard";
 import { useDispatchHelpers } from "@/context/app_context/useDispatchHelpers";
 
 export const GenerateThread = withAssistants(() => {
   const { setAppError } = useDispatchHelpers();
-  const { 
+  const {
     xerState: { selectedAssistant },
   } = useXerContext();
 
@@ -20,8 +20,11 @@ export const GenerateThread = withAssistants(() => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingThreads, setIsLoadingThreads] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [generatedThread, setGeneratedThread] = useState<SaveGeneratedThread | null>(null);
-  const [generatedThreads, setGeneratedThreads] = useState<SavedGeneratedThread[]>([]);
+  const [generatedThread, setGeneratedThread] =
+    useState<SaveGeneratedThread | null>(null);
+  const [generatedThreads, setGeneratedThreads] = useState<
+    SavedGeneratedThread[]
+  >([]);
 
   const resetState = () => {
     setGeneratedThread(null);
@@ -80,14 +83,14 @@ export const GenerateThread = withAssistants(() => {
           selectedAssistant={selectedAssistant}
           onClose={() => setShowModal(false)}
           onCreate={(generatedThread) => {
-            setGeneratedThread(generatedThread)
+            setGeneratedThread(generatedThread);
           }}
         />
       )}
       <ControlPanel half title="Generate Thread" isLoading={isLoading}>
         <Content>
           <div className="w-full flex flex-col gap-4 font-mono whitespace-pre-wrap">
-            {generatedThread?.posts.map(o => (
+            {generatedThread?.posts.map((o) => (
               <div className="border border-border p-2">{o.text}</div>
             ))}
           </div>

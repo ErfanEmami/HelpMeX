@@ -9,10 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Modal from "@/components/Modal";
-import {
-  CardDescription,
-  CardTitle,
-} from "@/components/ui/card";
+import { CardDescription, CardTitle } from "@/components/ui/card";
 import { CreateAssistant } from "@/lib/types";
 import { CreateAssistantSchema } from "shared";
 import { Input } from "@/components/ui/input";
@@ -20,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useAssistants } from "@/hooks/useAssistants";
 import { useState } from "react";
-import { useXerContext } from "@/context/xer_context/XerContext";
+import { useXerContext } from "@/pages/ContentAssistant/context/XerContext";
 
 export const CreateAssistantModal = ({ onClose }: { onClose: () => void }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -55,18 +52,18 @@ export const CreateAssistantModal = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <Modal width="sm" isLoading={isLoading} error={error}>
-        <div className="flex flex-col gap-2 mb-4">
-          <CardTitle>Create Assistant</CardTitle>
-          <CardDescription>
-            Have an assistant help with your posts.
-          </CardDescription>
-        </div>
-        <div>
-          <CreateAssistantForm
-            onClose={assistants.length ? onClose : null}
-            onCreate={handleCreateAssistant}
-          />
-        </div>
+      <div className="flex flex-col gap-2 mb-4">
+        <CardTitle>Create Assistant</CardTitle>
+        <CardDescription>
+          Have an assistant help with your posts.
+        </CardDescription>
+      </div>
+      <div>
+        <CreateAssistantForm
+          onClose={assistants.length ? onClose : null}
+          onCreate={handleCreateAssistant}
+        />
+      </div>
     </Modal>
   );
 };
