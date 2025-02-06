@@ -13,8 +13,10 @@ import { Loading } from "@/components/Loading";
 import { SavedSummary } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 import { GeneratedSummaryModal } from "./GeneratedSummaryModal";
+import { useDispatchHelpers } from "@/context/app_context/useDispatchHelpers";
 
 export const GeneratedSummaries = () => {
+  const { setAppError } = useDispatchHelpers();
   const { fetchSummaries } = useSummaries();
   const [summaries, setSummaries] = useState<SavedSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +31,7 @@ export const GeneratedSummaries = () => {
       setIsLoading(false);
 
       if (res.error) {
-        // TODO handle error
+        setAppError({ text: res.error, onRetry: _fetchSummaries });
       } else {
         setSummaries(res.summaries!);
       }

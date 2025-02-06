@@ -6,8 +6,10 @@ import { Loading } from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 import { Content, Control, ControlPanel } from "@/components/ControlPanel";
 import { SummaryCard } from "./components/SummaryCard";
+import { useDispatchHelpers } from "@/context/app_context/useDispatchHelpers";
 
 export const BookmarksSummary = () => {
+  const { setAppError } = useDispatchHelpers();
   const {
     isLoadingBookmarks,
     isLoadingSummary,
@@ -27,6 +29,15 @@ export const BookmarksSummary = () => {
     setFilteredAuthors((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
+  };
+
+  const handleSaveSummary = async () => {
+    const res = await saveBookmarksSummary();
+    if (res.error) {
+      setAppError({ text: res.error, onRetry: handleSaveSummary });
+    } else {
+      setBookmarksSummary(null);
+    }
   };
 
   return (
@@ -73,14 +84,7 @@ export const BookmarksSummary = () => {
                   Discard
                 </Button>
                 <Button
-                  onClick={async () => {
-                    const res = await saveBookmarksSummary();
-                    if (res.error) {
-                      // TODO handle error
-                    } else {
-                      setBookmarksSummary(null);
-                    }
-                  }}
+                  onClick={handleSaveSummary}
                   size="full"
                   variant="accept"
                 >

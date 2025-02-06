@@ -7,8 +7,10 @@ import { GeneratedPost } from "@/lib/types";
 import { GeneratedPostCard } from "@/components/GeneratedPostCard";
 import { withAssistants } from "../components/withAssistants";
 import { useContentAssistantContext } from "@/pages/ContentAssistant/context/ContentAssistantContext";
+import { useDispatchHelpers } from "@/context/app_context/useDispatchHelpers";
 
 export const GeneratePost = withAssistants(() => {
+  const { setAppError } = useDispatchHelpers();
   const {
     contentAssistantState: { selectedAssistant },
   } = useContentAssistantContext();
@@ -42,7 +44,7 @@ export const GeneratePost = withAssistants(() => {
       setIsLoadingPosts(false);
 
       if (res.error) {
-        // TODO: handle error
+        setAppError({ text: res.error, onRetry: _fetchGeneratedPosts });
       } else {
         setGeneratedPosts(res.generatedPosts!);
       }
@@ -62,8 +64,8 @@ export const GeneratePost = withAssistants(() => {
       author: selectedAssistant.author,
       prompt: prompt,
     });
-    if (res.error || !res.generatedPost) {
-      // TODO: handle error
+    if (res.error) {
+      setAppError({ text: res.error, onRetry: handleGeneratePost });
     } else {
       setGeneratedPost(res.generatedPost);
       setAwaitingAccept(true);
@@ -84,12 +86,12 @@ export const GeneratePost = withAssistants(() => {
       text: generatedPost,
       prompt: prompt,
     });
-    if (res.error || !res.generatedPost) {
-      // TODO: handle error
+    if (res.error) {
+      setAppError({ text: res.error, onRetry: handleSavePost });
     } else {
       setPrompt("");
       setGeneratedPost(null);
-      setGeneratedPosts((prev) => [...prev, res.generatedPost]);
+      setGeneratedPosts((prev) => [...prev, res.generatedPost!]);
     }
     setAwaitingAccept(false);
     setIsLoading(false);

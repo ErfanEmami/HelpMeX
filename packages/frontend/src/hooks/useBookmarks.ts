@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 
 import { BOOKMARKS_ENDPOINT, BOOKMARKS_SUMMARY_ENDPOINT, SAVE_BOOKMARKS_SUMMARY_ENDPOINT } from "../lib/endpoints";
 import { Author, Bookmark, BookmarksAuthors, BookmarksSummary, SavedSummary } from "@/lib/types";
+import { useDispatchHelpers } from "@/context/app_context/useDispatchHelpers";
 
 export const useBookmarks = () => {
+  const { setAppError } = useDispatchHelpers();
+  
   const [isLoadingBookmarks, setIsLoadingBookmarks] = useState<boolean>(true);
   const [isLoadingSummary, setIsLoadingSummary] = useState<boolean>(false);
   const [awaitingAccept, setAwaitingAccept] = useState<boolean>(false);
@@ -67,7 +70,10 @@ export const useBookmarks = () => {
       setBookmarksSummary(data)
       setAwaitingAccept(true)
     } catch (error) {
-      console.error("fetchBookmarksSummary error:", error);
+      // TODO need to refactor this to just return the values and then error handle outside like the rest
+      const errorText = `fetchBookmarksSummary error: ${error}`
+      setAppError({ text: errorText, onRetry: fetchBookmarksSummary });
+      console.error(errorText);
     } finally {
       setIsLoadingSummary(false);
     }
