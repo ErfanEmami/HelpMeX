@@ -14,7 +14,7 @@ import { ContentAssistantLayout } from "./pages/ContentAssistant";
 import { BookmarksLayout } from "./pages/BookmarksSummary";
 import { PostSchedulerLayout } from "./pages/PostScheduler";
 
-const DEFAULT_ROUTE = "/xer/generate-post";
+const DEFAULT_ROUTE = "/content-assistant/generate-post";
 
 const App = () => {
   const { getAuthStatus } = useAuth();
@@ -52,7 +52,7 @@ const App = () => {
         <Route path="generated-summaries" element={<GeneratedSummaries />} />
       </Route>
 
-      <Route path="/xer" element={<ContentAssistantLayout />}>
+      <Route path="/content-assistant" element={<ContentAssistantLayout />}>
         <Route path="generate-post" element={<GeneratePost />} />
         <Route path="generate-thread" element={<GenerateThread />} />
       </Route>

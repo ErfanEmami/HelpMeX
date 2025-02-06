@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/button";
 import { GeneratedPost } from "@/lib/types";
 import { GeneratedPostCard } from "@/components/GeneratedPostCard";
 import { withAssistants } from "../components/withAssistants";
-import { useXerContext } from "@/pages/ContentAssistant/context/XerContext";
+import { useContentAssistantContext } from "@/pages/ContentAssistant/context/ContentAssistantContext";
 
 export const GeneratePost = withAssistants(() => {
   const {
-    xerState: { selectedAssistant },
-  } = useXerContext();
+    contentAssistantState: { selectedAssistant },
+  } = useContentAssistantContext();
 
   const { generatePost, saveGeneratedPost, fetchGeneratedPosts } =
     useAssistants();

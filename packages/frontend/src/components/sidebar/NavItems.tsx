@@ -49,13 +49,13 @@ export type NavMutedDef = {
 export const TOOLS_DEF: NavToolDef = [
   {
     name: "Content Assistant",
-    baseUrl: "/xer",
+    baseUrl: "/content-assistant",
     defaultPath: "/generate-post",
     description: "Your Content Assistant",
     icon: () => <img src={XLogo} alt="X Logo" className="w-5 h-5" />,
     navItems: [
       {
-        baseUrl: "/xer",
+        baseUrl: "/content-assistant",
         items: [
           {
             name: "Generate Post",

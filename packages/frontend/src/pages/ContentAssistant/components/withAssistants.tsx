@@ -1,17 +1,17 @@
 import { Page } from "@/components/page";
-import { useXerContext } from "@/pages/ContentAssistant/context/XerContext";
+import { useContentAssistantContext } from "@/pages/ContentAssistant/context/ContentAssistantContext";
 import Title from "@/components/Title";
 
 export const withAssistants = <P extends object>(
   Component: React.ComponentType<P>
 ) => {
   return function WrappedComponent(props: P): React.ReactElement {
-    const { xerState } = useXerContext();
+    const { contentAssistantState } = useContentAssistantContext();
 
     const {
       selectedAssistant,
       loadingState: { isLoadingAssistants },
-    } = xerState;
+    } = contentAssistantState;
 
     const renderOverlay = () => {
       if (selectedAssistant) return null;

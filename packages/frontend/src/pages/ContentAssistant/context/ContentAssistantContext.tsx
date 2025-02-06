@@ -7,24 +7,29 @@ import React, {
 } from "react";
 
 import { initialState, reducer } from "./reducer";
-import type { XerContextProps } from "./types";
+import type { ContentAssistantContextProps } from "./types";
 import { useAssistants } from "@/hooks/useAssistants";
 import { useDispatchHelpers } from "@/context/app_context/useDispatchHelpers";
 
-const XerContext = createContext<XerContextProps | undefined>(undefined);
+const ContentAssistantContext = createContext<
+  ContentAssistantContextProps | undefined
+>(undefined);
 
-export const useXerContext = () => {
-  const context = useContext(XerContext);
+export const useContentAssistantContext = () => {
+  const context = useContext(ContentAssistantContext);
   if (!context) {
-    throw new Error("useXerContext must be used within a <XerProvider>");
+    throw new Error("useContentAssistantContext must be used within a <ContentAssistantProvider>");
   }
   return context;
 };
 
-export const XerProvider: React.FC<{ children: ReactNode }> = ({
+export const ContentAssistantProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [xerState, xerDispatch] = useReducer(reducer, initialState);
+  const [contentAssistantState, contentAssistantDispatch] = useReducer(
+    reducer,
+    initialState
+  );
 
   const { fetchAssistants } = useAssistants();
   const { setAppError } = useDispatchHelpers();
@@ -32,14 +37,14 @@ export const XerProvider: React.FC<{ children: ReactNode }> = ({
   // load assistants
   useEffect(() => {
     const _fetchAssistants = async () => {
-      xerDispatch({
+      contentAssistantDispatch({
         type: "SET_LOADING",
         payload: { isLoadingAssistants: true },
       });
 
       const res = await fetchAssistants();
 
-      xerDispatch({
+      contentAssistantDispatch({
         type: "SET_LOADING",
         payload: { isLoadingAssistants: false },
       });
@@ -51,7 +56,7 @@ export const XerProvider: React.FC<{ children: ReactNode }> = ({
         });
       } else {
         setAppError(null);
-        xerDispatch({
+        contentAssistantDispatch({
           type: "SET_ASSISTANTS",
           payload: res.assistants!,
         });
@@ -62,9 +67,13 @@ export const XerProvider: React.FC<{ children: ReactNode }> = ({
   }, []);
 
   const context = {
-    xerState,
-    xerDispatch,
+    contentAssistantState,
+    contentAssistantDispatch,
   };
 
-  return <XerContext.Provider value={context}>{children}</XerContext.Provider>;
+  return (
+    <ContentAssistantContext.Provider value={context}>
+      {children}
+    </ContentAssistantContext.Provider>
+  );
 };

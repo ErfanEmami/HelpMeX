@@ -1,6 +1,6 @@
-import type { Action, XerState } from "./types";
+import type { Action, ContentAssistantState } from "./types";
 
-export const initialState: XerState = {
+export const initialState: ContentAssistantState = {
   selectedAssistant: null,
   assistants: [],
   loadingState: {
@@ -9,7 +9,10 @@ export const initialState: XerState = {
   },
 };
 
-export const reducer = (state: XerState, action: Action): XerState => {
+export const reducer = (
+  state: ContentAssistantState,
+  action: Action
+): ContentAssistantState => {
   switch (action.type) {
     case "SET_LOADING":
       return {
