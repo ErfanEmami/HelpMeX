@@ -1,13 +1,12 @@
 import express from "express";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { validateResponse } from "../lib/utils.js";
-
 import {
   ScheduledThreadSchema,
   ScheduledThreadsSchema,
   ScheduleThreadSchema,
 } from "shared";
-import { getScheduledThreads, setThreadSchedule } from "../models/GeneratedThread.js";
+import { getSchedulableThreads, getScheduledThreads, setThreadSchedule } from "../models/GeneratedThread.js";
 import { enqueueThread, threadQueue } from "../lib/thread_scheduler/queue.js";
 
 const router = express.Router();
@@ -57,6 +56,22 @@ router.post("/new", async (req, res) => {
     res.json(validatedRes);
   } catch (error) {
     console.error("Error scheduling post:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// get threads that can be scheduled
+router.get("/schedulable", async (req, res) => {
+  try {
+    const { id: userId } = req.user;
+    const generatedThreads = await getSchedulableThreads(userId);
+
+    // validate response
+    const validatedRes = validateResponse(SavedGeneratedThreadsSchema, generatedThreads)
+    
+    res.json(validatedRes);
+  } catch (error) {
+    console.error("Error getting schedulable threads:", error);
     res.status(500).json({ message: error.message });
   }
 });

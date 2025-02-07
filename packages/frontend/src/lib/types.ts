@@ -48,7 +48,7 @@ export type SaveGeneratedThread = z.infer<typeof SaveGeneratedThreadSchema>;
 export type SavedGeneratedThread = z.infer<typeof SavedGeneratedThreadSchema>;
 
 // scheduling posts
-export type SchedulePostForm = z.infer<typeof SchedulePostFormSchema>;
+export type SchedulePostFormProps = z.infer<typeof SchedulePostFormSchema>;
 export type SchedulePost = z.infer<typeof SchedulePostSchema>;
 export type ScheduledPost = z.infer<typeof ScheduledPostSchema>;
 

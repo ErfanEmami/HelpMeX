@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useCallback } from "react";
-import { GET_SCHEDULED_POSTS, SCHEDULE_POST } from "../lib/endpoints";
-import { type ScheduledPost, type SchedulePost } from "@/lib/types";
+import { GET_SCHEDULED_POSTS, SCHEDULE_POST, GET_SCHEDULABLE_POSTS } from "../lib/endpoints";
+import { GeneratedPost, type ScheduledPost, type SchedulePost } from "@/lib/types";
 
 export const useSchedulePosts = () => {
   const fetchScheduledPosts = useCallback(async () => {
@@ -21,7 +21,25 @@ export const useSchedulePosts = () => {
     }
   }, []);
 
-  const createScheduledPost = useCallback(async (body: SchedulePost) => {
+  // posts not scheduled yet
+  const fetchSchedulablePosts = useCallback(async () => {
+    try {
+      const { data }: { data: GeneratedPost[] } = await axios.get(
+        GET_SCHEDULABLE_POSTS,
+        { withCredentials: true }
+      );
+
+      return { schedulablePosts: data, error: null };
+    } catch (err) {
+      console.error("fetchSchedulablePosts error:", err);
+      return {
+        schedulable: null,
+        error: "Unable to fetch schedulable posts.",
+      };
+    }
+  }, []);
+
+  const setPostSchedule = useCallback(async (body: SchedulePost) => {
     try {
       const { data }: { data: ScheduledPost } = await axios.post(
         SCHEDULE_POST,
@@ -31,7 +49,7 @@ export const useSchedulePosts = () => {
 
       return { scheduledPost: data, error: null };
     } catch (err) {
-      console.error("createScheduledPost error:", err);
+      console.error("setPostSchedule error:", err);
       return {
         scheduledPost: null,
         error: "Unable to schedule post.",
@@ -41,6 +59,7 @@ export const useSchedulePosts = () => {
 
   return {
     fetchScheduledPosts,
-    createScheduledPost,
+    fetchSchedulablePosts,
+    setPostSchedule,
   };
 };

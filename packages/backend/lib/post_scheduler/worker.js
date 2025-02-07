@@ -5,7 +5,7 @@ import { TwitterApi } from "twitter-api-v2";
 import { getUserById } from "../../models/User.js";
 import { redisConnection } from "../../redis.js";
 import {getAccessToken, safeTweet} from "../utils.js";
-import { getScheduledPost } from "../../models/ScheduledPost.js";
+import GeneratedPost, { getScheduledPost } from "../../models/GeneratedPost.js";
 
 new Worker(
   "postQueue",
@@ -31,10 +31,12 @@ new Worker(
       }
 
       try {
-        const accessToken = await getAccessToken(user.twitterId);
+        const accessToken = await getAccessToken(user);
         if (!accessToken) {
-          console.error("Failed to retrieve access token");
+          const errorMessage = "Failed to retrieve access token"
+          console.error(errorMessage);
           post.status = "failed";
+          post.errorMessage = errorMessage
           await post.save();
           return;
         }
@@ -55,7 +57,7 @@ new Worker(
         // Handle revoked access
         if (error.response?.status === 401) {
           console.log(`Twitter access revoked. Marking all pending posts for userId ${post.userId} as failed.`);
-          await ScheduledTweet.updateMany(
+          await GeneratedPost.updateMany(
             { userId: post.userId, status: "pending" },
             { status: "failed", errorMessage: "Twitter access revoked" }
           );

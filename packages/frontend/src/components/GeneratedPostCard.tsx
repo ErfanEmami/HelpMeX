@@ -7,7 +7,7 @@ export const GeneratedPostCard = ({
   prompt,
   text,
 }: {
-  createdAt: string;
+  createdAt: Date;
   prompt: string;
   text: string;
 }) => {
@@ -20,7 +20,7 @@ export const GeneratedPostCard = ({
         className="flex w-full items-center justify-between"
       >
         <div className="text-sm text-muted-foreground text-end">
-          {formatDate(createdAt)}
+          {formatDate(createdAt.toString())}
         </div>
         <ChevronRight
           size={16}

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { LENGTH_VALUES, TONE_VALUES } from "shared";
 
-const STATUS_COLUMN = {
+export const STATUS_COLUMN = {
   type: String,
   enum: ["not_scheduled", "pending", "sent", "failed"],
   default: "not_scheduled",
@@ -48,9 +48,18 @@ export const getGeneratedThread = async (id) => {
   return generatedThread;
 };
 
-export const getGeneratedThreads = async (userId) => {
-  const generatedThreads = await GeneratedThread.find({ userId });
+export const getGeneratedThreads = async (userId, author) => {
+  const generatedThreads = await GeneratedThread.find({ userId, author });
   return generatedThreads;
+};
+
+export const getSchedulableThreads = async (userId) => {
+  const schedulableThreads = await GeneratedThread.find({ 
+    userId, 
+    status: { $in: ["not_scheduled", "failed"] } 
+  });
+
+  return schedulableThreads;
 };
 
 export const setThreadSchedule = async ({threadId, scheduledFor}) => {
@@ -59,6 +68,7 @@ export const setThreadSchedule = async ({threadId, scheduledFor}) => {
     { scheduledFor: scheduledFor, status: "pending" },
     { new: true }
   );
+
   return updatedThread
 }
 

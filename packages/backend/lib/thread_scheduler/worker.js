@@ -32,10 +32,12 @@ new Worker(
       }
 
       // Get the valid access token
-      const accessToken = await getAccessToken(user.twitterId);
+      const accessToken = await getAccessToken(user);
       if (!accessToken) {
-        console.error("Failed to retrieve access token");
+        const errorMessage = "Failed to retrieve access token"
+        console.error(errorMessage);
         thread.status = "failed";
+        thread.errorMessage = errorMessage;
         await thread.save();
         return;
       }
