@@ -17,9 +17,14 @@ const modalVariants = cva(
         lg: "w-[800px]",
         xl: "w-full",
       },
+      height: {
+        fit: "h-fit",
+        full: "h-full"
+      },
     },
     defaultVariants: {
       width: "md",
+      height: "fit",
     },
   }
 );
@@ -41,6 +46,7 @@ const Modal = ({
   isLoading,
   children,
   width,
+  height,
   control,
   title,
 }: ModalProps) => {
@@ -48,7 +54,7 @@ const Modal = ({
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex justify-center items-center z-[50] bg-black/50 dark:bg-black/80">
       <div
-        className={cn(modalVariants({ width }), "mx-4", isMobile && "w-full max-w-[400px]")}
+        className={cn(modalVariants({ width, height }), "mx-4", isMobile && "w-full max-w-[400px]")}
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
@@ -57,10 +63,11 @@ const Modal = ({
           </div>
         )}
 
-        {isLoading && <Loading />}
         {error && <div className="text-destructive text-center pt-4">{error}</div>}
 
-        <div className="flex-1 overflow-auto p-4">{children}</div>
+        <div className="flex-1 overflow-auto p-4">
+          {isLoading ?  <Loading /> : children}
+        </div>
 
         {control && (
           <div className="flex gap-2 justify-end items-center border-t border-border p-3 bg-primary-foreground">

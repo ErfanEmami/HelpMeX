@@ -223,7 +223,7 @@ router.get("/:author/generate-post/all", async (req, res) => {
     
     res.json(validatedRes);
   } catch (error) {
-    console.error("Error getting agent status:", error);
+    console.error("Error getting generated posts:", error);
     res.status(500).json({ message: error.message });
   }
 });

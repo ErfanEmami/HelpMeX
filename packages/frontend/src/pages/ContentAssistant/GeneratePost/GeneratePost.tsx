@@ -136,11 +136,7 @@ export const GeneratePost = withAssistants(() => {
         <Content>
           <div className="w-full flex flex-col gap-2">
             {generatedPosts.map((o) => (
-              <GeneratedPostCard
-                createdAt={o.createdAt.toString()}
-                prompt={o.prompt}
-                text={o.text}
-              />
+              <GeneratedPostCard {...o} />
             ))}
           </div>
         </Content>

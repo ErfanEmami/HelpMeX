@@ -32,3 +32,7 @@ export const generatedThreadsEP = (author: string) =>
 // schedule posts
 export const GET_SCHEDULED_POSTS = `${basePath}/schedule-posts`
 export const SCHEDULE_POST = `${basePath}/schedule-posts/new`
+export const GET_SCHEDULABLE_POSTS = `${basePath}/schedule-posts/schedulable`
+
+// schedule threads
+export const GET_SCHEDULABLE_THREADS = `${basePath}/schedule-posts/schedulable`

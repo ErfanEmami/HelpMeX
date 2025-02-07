@@ -2,15 +2,13 @@ import express from "express";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { validateResponse } from "../lib/utils.js";
 import {
-  createScheduledPost,
-  getScheduledPosts,
-} from "../models/ScheduledPost.js";
-import {
+  GeneratedPostsSchema,
   ScheduledPostSchema,
   ScheduledPostsSchema,
   SchedulePostSchema,
 } from "shared";
 import { postQueue, enqueuePost } from "../lib/post_scheduler/queue.js";
+import { getSchedulablePosts, getScheduledPosts, setPostSchedule } from "../models/GeneratedPost.js";
 
 const router = express.Router();
 
@@ -33,11 +31,9 @@ router.get("/", async (req, res) => {
   }
 });
 
-// create scheduled post
-router.post("/create", async (req, res) => {
+// schedule a thread
+router.post("/new", async (req, res) => {
   try {
-    const { id: userId } = req.user;
-
     // Validate the input using Zod
     const validateInput = SchedulePostSchema.safeParse(req.body);
 
@@ -50,20 +46,33 @@ router.post("/create", async (req, res) => {
 
     const validatedInput = validateInput.data;
 
-    const scheduledPost = await createScheduledPost({
-      userId,
-      ...validatedInput,
-    });
-
-    // // Schedule job in BullMQ
-    await enqueuePost(validatedInput.scheduledFor, scheduledPost._id)
+    const scheduledPost = await setPostSchedule(validatedInput);
 
     // validate response
     const validatedRes = validateResponse(ScheduledPostSchema, scheduledPost);
 
+    // // Schedule job in BullMQ
+    await enqueuePost(validatedInput.scheduledFor, scheduledPost._id)
+
     res.json(validatedRes);
   } catch (error) {
     console.error("Error scheduling post:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// get posts that can be scheduled
+router.get("/schedulable", async (req, res) => {
+  try {
+    const { id: userId } = req.user;
+    const generatedPosts = await getSchedulablePosts(userId);
+
+    // validate response
+    const validatedRes = validateResponse(GeneratedPostsSchema, generatedPosts)
+    
+    res.json(validatedRes);
+  } catch (error) {
+    console.error("Error getting schedulable posts:", error);
     res.status(500).json({ message: error.message });
   }
 });

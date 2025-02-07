@@ -8,7 +8,7 @@ const ControlPanel = ({
   isLoading,
   children,
 }: {
-  title: string;
+  title?: string;
   half?: boolean;
   isLoading?: boolean;
   children: React.ReactNode;
@@ -19,13 +19,13 @@ const ControlPanel = ({
       half ? "w-1/2" : "w-full"
     )}
   >
-    <Title>{title}</Title>
+    {title && <Title>{title}</Title>}
     {isLoading ? <Loading/> : children}
   </div>
 );
 
 const Content = ({ children }: { children: React.ReactNode }) => (
-  <div className="border border-border  bg-primary-foreground p-4 flex flex-col gap-4 overflow-y-auto items-center flex-1">
+  <div className="border border-border rounded-md bg-primary-foreground p-4 flex flex-col gap-4 overflow-y-auto items-center h-full">
     {children}
   </div>
 );
