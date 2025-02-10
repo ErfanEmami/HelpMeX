@@ -2,13 +2,14 @@ import express from "express";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { validateResponse } from "../lib/utils.js";
 import {
-  GeneratedPostsSchema,
-  ScheduledPostSchema,
-  ScheduledPostsSchema,
+  FlexiblePostsSchema,
+  ScheduledPostExtendedSchema,
+  ScheduledPostsExtendedSchema,
   SchedulePostSchema,
 } from "shared";
 import { postQueue, enqueuePost } from "../lib/post_scheduler/queue.js";
-import { getSchedulablePosts, getScheduledPosts, setPostSchedule } from "../models/GeneratedPost.js";
+import { createScheduledPost, getScheduledPosts } from "../models/ScheduledPost.js";
+import { getSchedulablePosts } from "../models/Post.js";
 
 const router = express.Router();
 
@@ -22,7 +23,7 @@ router.get("/", async (req, res) => {
     const scheduledPosts = await getScheduledPosts(userId);
 
     // validate response
-    const validatedRes = validateResponse(ScheduledPostsSchema, scheduledPosts);
+    const validatedRes = validateResponse(ScheduledPostsExtendedSchema, scheduledPosts);
 
     res.json(validatedRes);
   } catch (error) {
@@ -34,6 +35,8 @@ router.get("/", async (req, res) => {
 // schedule a thread
 router.post("/new", async (req, res) => {
   try {
+    const { id: userId } = req.user;
+
     // Validate the input using Zod
     const validateInput = SchedulePostSchema.safeParse(req.body);
 
@@ -46,10 +49,10 @@ router.post("/new", async (req, res) => {
 
     const validatedInput = validateInput.data;
 
-    const scheduledPost = await setPostSchedule(validatedInput);
+    const scheduledPost = await createScheduledPost({ ...validatedInput, userId });
 
     // validate response
-    const validatedRes = validateResponse(ScheduledPostSchema, scheduledPost);
+    const validatedRes = validateResponse(ScheduledPostExtendedSchema, scheduledPost);
 
     // // Schedule job in BullMQ
     await enqueuePost(validatedInput.scheduledFor, scheduledPost._id)
@@ -68,7 +71,7 @@ router.get("/schedulable", async (req, res) => {
     const generatedPosts = await getSchedulablePosts(userId);
 
     // validate response
-    const validatedRes = validateResponse(GeneratedPostsSchema, generatedPosts)
+    const validatedRes = validateResponse(FlexiblePostsSchema, generatedPosts)
     
     res.json(validatedRes);
   } catch (error) {

@@ -3,7 +3,7 @@ import { ScheduleThreadForm } from "./ScheduleThreadForm";
 
 import { useEffect, useState } from "react";
 
-import { GeneratedPost, type SchedulePostFormProps } from "@/lib/types";
+import { FlexiblePost, type SchedulePostFormProps } from "@/lib/types";
 import { combineDateAndTime } from "@/lib/utils";
 import { useSchedulePosts } from "@/hooks/useSchedulePosts";
 import { usePostSchedulerContext } from "../../context/PostSchedulerContext";
@@ -17,7 +17,7 @@ export const ScheduleThreadModal = ({ onClose }: { onClose: () => void }) => {
   const formId = "SchedulePostForm";
   const defaultPostType: keyof typeof postTypes = postTypes.existing;
 
-  const [schedulablePosts, setSchedulablePosts] = useState<GeneratedPost[]>([]);
+  const [schedulablePosts, setSchedulablePosts] = useState<FlexiblePost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [postType, setPostType] = useState<keyof typeof postTypes>(

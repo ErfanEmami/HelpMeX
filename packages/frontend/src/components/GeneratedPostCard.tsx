@@ -1,16 +1,13 @@
 import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { formatDate } from "@/lib/utils";
+import { GeneratedPost } from "@/lib/types";
 
 export const GeneratedPostCard = ({
   createdAt,
-  prompt,
+  genMetadata: { prompt },
   text,
-}: {
-  createdAt: Date;
-  prompt: string;
-  text: string;
-}) => {
+}:GeneratedPost) => {
   const [open, setOpen] = useState(false);
 
   return (

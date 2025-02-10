@@ -35,4 +35,4 @@ export const SCHEDULE_POST = `${basePath}/schedule-posts/new`
 export const GET_SCHEDULABLE_POSTS = `${basePath}/schedule-posts/schedulable`
 
 // schedule threads
-export const GET_SCHEDULABLE_THREADS = `${basePath}/schedule-posts/schedulable`
+export const GET_SCHEDULABLE_THREADS = `${basePath}/schedule-threads/schedulable`

@@ -1,3 +1,4 @@
+import { objectIdSchema } from "../util.js";
 import { z } from "zod";
 
 /* ------- generating ------- */
@@ -30,40 +31,47 @@ export const GeneratedThreadSchema = z.object({
 });
 
 // UI payload
-export const SaveGeneratedThreadSchema = z.object({
-  constraints: ThreadConstraintsSchema,
+export const SaveManualThreadSchema = z.object({
   posts: z.array(ThreadPostSchema),
-  author: z.string().nonempty("Required"),
 });
 
-// db record
-export const SavedGeneratedThreadSchema = z.object({
-  constraints: ThreadConstraintsSchema,
-  posts: z.array(ThreadPostSchema.extend({ status: z.string() })),
+// UI payload
+export const SaveGeneratedThreadSchema = z.object({
+  posts: z.array(ThreadPostSchema),
   author: z.string().nonempty("Required"),
+  constraints: ThreadConstraintsSchema.required(),
+});
 
-  id: z.string(),
-  userId: z.string(),
-  jobId: z.string().nullable().optional(),
-  status: z.string(),
-  scheduledFor: z.string().nullable().optional(),
-  errorMessage: z.string().nullable().optional(),
+const SavedThreadBaseSchema = z.object({
+  id: objectIdSchema,
+  userId: objectIdSchema,
+  posts: z.array(ThreadPostSchema.extend({ id: objectIdSchema })),
   createdAt: z.date(),
+})
+
+// db record
+export const SavedManualThreadSchema = SavedThreadBaseSchema.extend({
+  author: z.null(),
+  genMetadata: z.null(),
+})
+export const SavedManualThreadsSchema = z.array(SavedManualThreadSchema);
+
+// db record
+export const SavedGeneratedThreadSchema = SavedThreadBaseSchema.extend({
+  author: z.string(),
+  genMetadata: z.object({
+    jobId: z.string(),
+    constraints: ThreadConstraintsSchema,
+  }),
 });
 export const SavedGeneratedThreadsSchema = z.array(SavedGeneratedThreadSchema);
 
-/* ------- scheduling ------- */
-
-// UI payload
-export const ScheduleThreadSchema = z.object({
-  threadId: z.string().nonempty("Required"),
-  scheduledFor: z.string().nonempty("Required"),
-});
-
-// db record
-export const ScheduledThreadSchema = SavedGeneratedThreadSchema.extend({
-  scheduledFor: z.string().nonempty("Required"),
-});
-export const ScheduledThreadsSchema = z.array(ScheduledThreadSchema);
-
-
+// db record used for either manual or generated posts
+export const FlexibleThreadSchema = SavedThreadBaseSchema.extend({
+  author: z.string().nullable(),
+  genMetadata: z.object({
+    jobId: z.string(),
+    constraints: ThreadConstraintsSchema
+  }).nullable(),
+})
+export const FlexibleThreadsSchema = z.array(FlexibleThreadSchema);

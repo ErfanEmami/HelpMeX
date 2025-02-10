@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useCallback } from "react";
 import { GET_SCHEDULED_POSTS, SCHEDULE_POST, GET_SCHEDULABLE_POSTS } from "../lib/endpoints";
-import { GeneratedPost, type ScheduledPost, type SchedulePost } from "@/lib/types";
+import { FlexiblePost, ScheduledPostExtended, type SchedulePost } from "@/lib/types";
 
 export const useSchedulePosts = () => {
   const fetchScheduledPosts = useCallback(async () => {
     try {
-      const { data }: { data: ScheduledPost[] } = await axios.get(
+      const { data }: { data: ScheduledPostExtended[] } = await axios.get(
         GET_SCHEDULED_POSTS,
         { withCredentials: true }
       );
@@ -24,7 +24,7 @@ export const useSchedulePosts = () => {
   // posts not scheduled yet
   const fetchSchedulablePosts = useCallback(async () => {
     try {
-      const { data }: { data: GeneratedPost[] } = await axios.get(
+      const { data }: { data: FlexiblePost[] } = await axios.get(
         GET_SCHEDULABLE_POSTS,
         { withCredentials: true }
       );
@@ -41,7 +41,7 @@ export const useSchedulePosts = () => {
 
   const setPostSchedule = useCallback(async (body: SchedulePost) => {
     try {
-      const { data }: { data: ScheduledPost } = await axios.post(
+      const { data }: { data: ScheduledPostExtended } = await axios.post(
         SCHEDULE_POST,
         body,
         { withCredentials: true }

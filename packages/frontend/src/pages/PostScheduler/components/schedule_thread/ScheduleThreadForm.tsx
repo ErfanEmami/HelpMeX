@@ -9,7 +9,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { GeneratedPost, type SchedulePostFormProps } from "@/lib/types";
+import { FlexiblePost, type SchedulePostFormProps } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DatePicker } from "@/components/DatePicker";
@@ -28,7 +28,7 @@ export const ScheduleThreadForm = ({
   setPostType,
 }: {
   formId: string;
-  schedulablePosts: GeneratedPost[];
+  schedulablePosts: FlexiblePost[];
   defaultPostType: keyof typeof postTypes;
   onSubmit: (values: SchedulePostFormProps) => void;
   setPostType: (postType: keyof typeof postTypes) => void;

@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
 const agentSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   jobId: { type: String, required: true, unique: true }, // fine-tune id
   trainingFileId: { type: String, required: true, unique: true },
-  author: { type: String, required: true }, // twitter/x user the agent is trained on
-  userId: { type: String, required: true }, // user._id
-  name: { type: String, required: true },
+  author: { type: String, required: true }, // twitter username the agent is trained on
+  name: { type: String, required: true }, // display name
   createdAt: { type: Date, default: Date.now },
 });
 

@@ -5,7 +5,7 @@ import { TwitterApi } from "twitter-api-v2";
 import { getUserById } from "../../models/User.js";
 import { redisConnection } from "../../redis.js";
 import { getAccessToken, safeTweet, sleep } from "../utils.js";
-import { getScheduledThread } from "../../models/GeneratedThread.js";
+import { getScheduledThread } from "../../models/ScheduledThread.js";
 
 new Worker(
   "threadQueue",
@@ -15,7 +15,6 @@ new Worker(
     try {
       console.log(`Attempting job for threadId: ${threadId}`);
 
-      // Fetch the scheduled thread
       const thread = await getScheduledThread(threadId);
       if (!thread || thread.status !== "pending") {
         console.log(`Thread ${threadId} is not pending or does not exist.`);
@@ -54,6 +53,8 @@ new Worker(
           - reschedule thread for 15 minutes later and add "rescheduled=true" db column and store lastTweetId
         */
         try {
+          await sleep(5000) // 5 seconds between posts
+
           const response = await safeTweet(
             client,
             post.text,
@@ -73,8 +74,6 @@ new Worker(
           post.status = "failed";
           allPostsSuccessful = false;
         }
-        
-        await sleep(5000) // 5 seconds between posts
       }
 
       thread.status = allPostsSuccessful ? "sent" : "failed"

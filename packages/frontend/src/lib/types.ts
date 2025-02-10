@@ -20,6 +20,8 @@ import {
   SaveGeneratedThreadSchema,
   SavedGeneratedThreadSchema,
   ScheduleThreadSchema,
+  ScheduledPostExtendedSchema,
+  FlexiblePostSchema,
 } from "shared";
 import { TOOLS_DEF } from "@/components/sidebar/NavItems";
 
@@ -41,6 +43,7 @@ export type Assistant = z.infer<typeof agentSchema>;
 export type GeneratePost = z.infer<typeof GeneratePostSchema>;
 export type SaveGeneratedPost = z.infer<typeof SaveGeneratedPostSchema>;
 export type GeneratedPost = z.infer<typeof GeneratedPostSchema>;
+export type FlexiblePost = z.infer<typeof FlexiblePostSchema>;
 
 export type ThreadConstraints = z.infer<typeof ThreadConstraintsSchema>;
 export type GeneratedThread = z.infer<typeof GeneratedThreadSchema>;
@@ -50,8 +53,10 @@ export type SavedGeneratedThread = z.infer<typeof SavedGeneratedThreadSchema>;
 // scheduling posts
 export type SchedulePostFormProps = z.infer<typeof SchedulePostFormSchema>;
 export type SchedulePost = z.infer<typeof SchedulePostSchema>;
+export type ScheduledPostExtended = z.infer<typeof ScheduledPostExtendedSchema>;
 export type ScheduledPost = z.infer<typeof ScheduledPostSchema>;
 
+// scheduling threads
 export type ScheduleThread = z.infer<typeof ScheduleThreadSchema>;
 
 export type CalendarEvent = {

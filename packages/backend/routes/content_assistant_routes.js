@@ -5,11 +5,11 @@ import { GPT_RESPONSE_GENERATED_THREAD, USER_POSTS } from "../test/test_data.js"
 import { createAgent, getAgentByAuthor, getAgents } from "../models/Agent.js";
 import { AgentTrainer } from "../lib/openai/agent_trainer.js";
 import { SaveGeneratedPostSchema, GeneratePostSchema, GeneratedPostSchema, GeneratedPostsSchema, agentSchema, agentsSchema, ThreadConstraintsSchema, GeneratedThreadSchema, SaveGeneratedThreadSchema, SavedGeneratedThreadSchema, SavedGeneratedThreadsSchema } from "shared";
-import { createGeneratedPost, getGeneratedPosts } from "../models/GeneratedPost.js";
+import { createGeneratedPost, getGeneratedPosts } from "../models/Post.js";
 import { validateResponse } from "../lib/utils.js";
 import { z } from "zod";
 import { ThreadGenerator } from "../lib/openai/thread_generator.js";
-import { createGeneratedThread, getGeneratedThreads } from "../models/GeneratedThread.js";
+import { createGeneratedThread, getGeneratedThreads } from "../models/Thread.js";
 
 const textSchema = z.string()
 
@@ -199,7 +199,11 @@ router.post("/:author/generate-post/save", async (req, res) => {
         .json({ message: `Agent doesn't exist for ${author}` });
     }
 
-    const generatedPost = await createGeneratedPost(validatedGeneratedPost);
+    const generatedPost = await createGeneratedPost({
+      ...validatedGeneratedPost, 
+      userId: userId,
+      jobId: agent.jobId,
+    });
 
     // validate response
     const validatedRes = validateResponse(GeneratedPostSchema, generatedPost)
@@ -312,7 +316,7 @@ router.post("/:author/generate-thread/save", async (req, res) => {
     });
 
     // validate response
-    const validatedRes = validateResponse(SavedGeneratedThreadSchema, generatedThread)
+    const validatedRes = validateResponse(SavedGeneratedThreadSchema, generatedThread) // TODO schema
     
     res.json(validatedRes);
   } catch (error) {
@@ -329,7 +333,7 @@ router.get("/:author/generate-thread/all", async (req, res) => {
     const generatedThreads = await getGeneratedThreads(userId, author);
 
     // validate response
-    const validatedRes = validateResponse(SavedGeneratedThreadsSchema, generatedThreads)
+    const validatedRes = validateResponse(SavedGeneratedThreadsSchema, generatedThreads) // TODO update schema
     
     res.json(validatedRes);
   } catch (error) {
