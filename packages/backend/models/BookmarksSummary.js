@@ -26,7 +26,7 @@ const GeneratedSummarySchema = new mongoose.Schema({
 });
 
 const BookmarksSummarySchema = new mongoose.Schema({
-  userId: { type: String, required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   bookmarks: { type: [BookmarkSchema], required: true },
   authors: { type: [AuthorSchema], required: true }, // duplicate data (from bookmarks field), included here for lookup convenience 
   summary: { type: GeneratedSummarySchema, required: true },

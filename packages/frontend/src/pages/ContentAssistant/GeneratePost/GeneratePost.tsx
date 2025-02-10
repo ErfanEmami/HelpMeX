@@ -81,8 +81,6 @@ export const GeneratePost = withAssistants(() => {
     setIsLoading(true);
     const res = await saveGeneratedPost({
       author: selectedAssistant.author,
-      jobId: selectedAssistant.jobId,
-      userId: selectedAssistant.userId,
       text: generatedPost,
       prompt: prompt,
     });

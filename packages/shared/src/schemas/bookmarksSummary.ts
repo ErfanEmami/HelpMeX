@@ -1,3 +1,4 @@
+import { objectIdSchema } from '../util.js';
 import { z } from 'zod';
 
 export const SummaryThemeSchema = z.object({
@@ -37,8 +38,8 @@ export const SaveSummarySchema = z.object({
 
 // db record
 export const SavedSummarySchema = z.object({
-  id: z.string(),
-  userId: z.string(),
+  id: objectIdSchema,
+  userId: objectIdSchema,
   bookmarks: z.array(BookmarkSchema),
   summary: GeneratedSummarySchema,
   authors: z.array(AuthorSchema),

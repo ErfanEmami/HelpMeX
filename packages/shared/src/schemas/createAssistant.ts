@@ -1,3 +1,4 @@
+import { objectIdSchema } from '../util.js';
 import { z } from 'zod';
 
 export const CreateAssistantSchema = z.object({
@@ -14,8 +15,8 @@ export const CreateAssistantSchema = z.object({
 
 // db record
 export const agentSchema = z.object({
-  id: z.string(),
-  userId: z.string(),
+  id: objectIdSchema,
+  userId: objectIdSchema,
   jobId: z.string(),
   trainingFileId: z.string(),
   author: z.string(),

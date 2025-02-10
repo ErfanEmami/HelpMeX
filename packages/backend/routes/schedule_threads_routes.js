@@ -2,12 +2,14 @@ import express from "express";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { validateResponse } from "../lib/utils.js";
 import {
-  ScheduledThreadSchema,
-  ScheduledThreadsSchema,
+  FlexibleThreadsSchema,
+  ScheduledThreadExtendedSchema,
+  ScheduledThreadsExtendedSchema,
   ScheduleThreadSchema,
 } from "shared";
-import { getSchedulableThreads, getScheduledThreads, setThreadSchedule } from "../models/GeneratedThread.js";
 import { enqueueThread, threadQueue } from "../lib/thread_scheduler/queue.js";
+import { getSchedulableThreads } from "../models/Thread.js";
+import { createScheduledThread, getScheduledThreads } from "../models/ScheduledThread.js";
 
 const router = express.Router();
 
@@ -21,7 +23,7 @@ router.get("/", async (req, res) => {
     const scheduledThreads = await getScheduledThreads(userId);
 
     // validate response
-    const validatedRes = validateResponse(ScheduledThreadsSchema, scheduledThreads);
+    const validatedRes = validateResponse(ScheduledThreadsExtendedSchema, scheduledThreads);
 
     res.json(validatedRes);
   } catch (error) {
@@ -33,6 +35,8 @@ router.get("/", async (req, res) => {
 // schedule a thread
 router.post("/new", async (req, res) => {
   try {
+    const { id: userId } = req.user;
+
     // Validate the input using Zod
     const validateInput = ScheduleThreadSchema.safeParse(req.body);
 
@@ -45,10 +49,10 @@ router.post("/new", async (req, res) => {
 
     const validatedInput = validateInput.data;
 
-    const scheduledThread = await setThreadSchedule(validatedInput);
+    const scheduledThread = await createScheduledThread({ ...validatedInput, userId });
 
     // validate response
-    const validatedRes = validateResponse(ScheduledThreadSchema, scheduledThread);
+    const validatedRes = validateResponse(ScheduledThreadExtendedSchema, scheduledThread);
 
     // Schedule job in BullMQ
     await enqueueThread(validatedInput.scheduledFor, scheduledThread._id)
@@ -67,7 +71,7 @@ router.get("/schedulable", async (req, res) => {
     const generatedThreads = await getSchedulableThreads(userId);
 
     // validate response
-    const validatedRes = validateResponse(SavedGeneratedThreadsSchema, generatedThreads)
+    const validatedRes = validateResponse(FlexibleThreadsSchema, generatedThreads)
     
     res.json(validatedRes);
   } catch (error) {
