@@ -27,6 +27,9 @@ import {
   ScheduleThreadFormSchema,
   SaveManualPostSchema,
   ManualPostSchema,
+  ThreadPostSchema,
+  SaveManualThreadSchema,
+  SavedManualThreadSchema,
 } from "shared";
 import { TOOLS_DEF } from "@/components/sidebar/NavItems";
 
@@ -68,6 +71,9 @@ export type ManualPost = z.infer<typeof ManualPostSchema>;
 export type ScheduleThreadFormProps = z.infer<typeof ScheduleThreadFormSchema>;
 export type ScheduleThread = z.infer<typeof ScheduleThreadSchema>;
 export type ScheduledThreadExtended = z.infer<typeof ScheduledThreadExtendedSchema>;
+export type ManualThreadPost = z.infer<typeof ThreadPostSchema>;
+export type SaveManualThread = z.infer<typeof SaveManualThreadSchema>;
+export type ManualThread = z.infer<typeof SavedManualThreadSchema>;
 
 export type CalendarEvent = {
   title?: string;

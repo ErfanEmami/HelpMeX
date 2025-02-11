@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useCallback } from "react";
-import { GET_SCHEDULED_THREADS, SCHEDULE_THREAD, GET_SCHEDULABLE_THREADS } from "../lib/endpoints";
-import { FlexibleThread, ScheduledThreadExtended, ScheduleThread } from "@/lib/types";
+import { GET_SCHEDULED_THREADS, SCHEDULE_THREAD, GET_SCHEDULABLE_THREADS, CREATE_MANUAL_THREAD } from "../lib/endpoints";
+import { FlexibleThread, ManualThread, SaveManualThread, ScheduledThreadExtended, ScheduleThread } from "@/lib/types";
 
 export const useScheduleThreads = () => {
   const fetchScheduledThreads = useCallback(async () => {
@@ -57,9 +57,28 @@ export const useScheduleThreads = () => {
     }
   }, []);
 
+  const createManualThread = useCallback(async (body: SaveManualThread) => {
+    try {
+      const { data }: { data: ManualThread } = await axios.post(
+        CREATE_MANUAL_THREAD,
+        body,
+        { withCredentials: true }
+      );
+
+      return { manualPost: data, error: null };
+    } catch (err) {
+      console.error("createManualThread error:", err);
+      return {
+        manualPost: null,
+        error: "Unable to create manual thread.",
+      };
+    }
+  }, []);
+
   return {
     fetchScheduledThreads,
     fetchSchedulableThreads,
     setThreadSchedule,
+    createManualThread,
   };
 };

@@ -20,7 +20,7 @@ export const ScheduleThreadModal = ({ onClose }: { onClose: () => void }) => {
     contentTypes.existing
   );
 
-  const { setThreadSchedule, fetchSchedulableThreads } = useScheduleThreads();
+  const { setThreadSchedule, fetchSchedulableThreads, createManualThread } = useScheduleThreads();
   const { postSchedulerDispatch } = usePostSchedulerContext();
 
   useEffect(() => {
@@ -42,27 +42,43 @@ export const ScheduleThreadModal = ({ onClose }: { onClose: () => void }) => {
     loadGeneratedPosts();
   }, []);
 
-  const handleSubmit = async (value: ScheduleThreadFormProps) => {
-    setError(null);
-    setIsLoading(true);
-
-    const res = await setThreadSchedule({
-      threadId: value.threadId,
-      scheduledFor: combineDateAndTime(value.date, value.time),
-    });
-
-    setIsLoading(false);
-
-    if (res.error) {
-      setError(res.error);
-    } else {
-      postSchedulerDispatch({
-        type: "ADD_SCHEDULED_THREAD",
-        payload: res.scheduledThread!,
+    const handleSubmit = async (value: ScheduleThreadFormProps) => {
+      setError(null);
+      setIsLoading(true);
+  
+      let threadId: string
+  
+      if (value.contentType === "manual") {
+        const resCreate = await createManualThread({ posts: value.posts });
+    
+        if (resCreate.error) {
+          setError(resCreate.error);
+          setIsLoading(false);
+          return;
+        }
+  
+        threadId = resCreate.manualPost!.id
+      } else {
+        threadId = value.threadId
+      }
+  
+      const resSchedule = await setThreadSchedule({
+        threadId: threadId,
+        scheduledFor: combineDateAndTime(value.date, value.time),
       });
-      onClose();
-    }
-  };
+  
+      setIsLoading(false);
+    
+      if (resSchedule.error) {
+        setError(resSchedule.error);
+      } else {
+        postSchedulerDispatch({
+          type: "ADD_SCHEDULED_THREAD",
+          payload: resSchedule.scheduledThread!,
+        });
+        onClose();
+      }
+    };
 
   return (
     <Modal
@@ -84,7 +100,7 @@ export const ScheduleThreadModal = ({ onClose }: { onClose: () => void }) => {
       }}
     >
       <ScheduleThreadForm
-        defaultThreadType={defaultContentType}
+        defaultContentType={defaultContentType}
         setContentType={setContentType}
         schedulableThreads={schedulablePosts}
         formId={formId}

@@ -1,5 +1,4 @@
-import { Textarea } from "@/components/ui/textarea";
-import { useForm } from "react-hook-form";
+import { FieldError, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -17,24 +16,29 @@ import { ScheduleThreadFormSchema } from "shared";
 import { isBefore } from "date-fns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Content } from "@/components/ControlPanel";
-import { cn } from "@/lib/utils";
 import { contentTypes } from "../../context/types";
+import { ThreadButton } from "./ThreadButton";
+import { CreateManualThread } from "./CreateManualThread";
 
 export const ScheduleThreadForm = ({
   formId,
   schedulableThreads,
-  defaultThreadType,
+  defaultContentType,
   onSubmit,
   setContentType,
 }: {
   formId: string;
   schedulableThreads: FlexibleThread[];
-  defaultThreadType: keyof typeof contentTypes;
+  defaultContentType: keyof typeof contentTypes;
   onSubmit: (values: ScheduleThreadFormProps) => void;
   setContentType: (contentType: keyof typeof contentTypes) => void;
 }) => {
   const form = useForm<ScheduleThreadFormProps>({
     resolver: zodResolver(ScheduleThreadFormSchema),
+    defaultValues: {
+      contentType: defaultContentType,
+      posts: [{ text: "" }]
+    }
   });
 
   return (
@@ -79,89 +83,77 @@ export const ScheduleThreadForm = ({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="threadId"
-          render={({ field }) => (
-            <FormItem className="pt-1 flex flex-col flex-1 overflow-y-hidden ">
-              <Label>Content</Label>
-              <FormControl>
-                <Tabs
-                  className="flex flex-col overflow-auto h-full"
-                  defaultValue={defaultThreadType}
-                >
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger
-                      onMouseDown={() => setContentType(contentTypes.existing)}
-                      value={contentTypes.existing}
-                    >
-                      Select Existing
-                    </TabsTrigger>
-                    <TabsTrigger
-                      onMouseDown={() => setContentType(contentTypes.manual)}
-                      value={contentTypes.manual}
-                    >
-                      Manual Entry
-                    </TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="manual" className="h-full overflow-auto">
-                    {/* fix ring issue with textarea */}
-                    <Textarea
-                      {...field}
-                      className="h-full"
-                      placeholder="Manually enter post content... (this will create a new post)"
-                    />
-                  </TabsContent>
-                  <TabsContent
-                    value="existing"
-                    className="h-full overflow-auto"
-                  >
-                    <Content>
-                      {schedulableThreads.length ? (
-                        schedulableThreads.map((o) => (
-                          <ThreadButton
-                            posts={o.posts}
-                            selected={form.watch("threadId") === o.id}
-                            onClick={() => field.onChange(o.id)}
-                          />
-                        ))
+
+        <Tabs
+          className="flex flex-col overflow-auto h-full"
+          defaultValue={defaultContentType}
+          onValueChange={(value) => {
+            setContentType(value as keyof typeof contentTypes);
+            form.setValue("contentType", value as keyof typeof contentTypes);
+          }}
+        >
+          <Label className="mt-1 mb-2">Content</Label>
+
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value={contentTypes.existing}>Select Existing</TabsTrigger>
+            <TabsTrigger value={contentTypes.manual}>Manual Entry</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value={contentTypes.manual} className="h-full overflow-auto">
+            <FormField
+              control={form.control}
+              name="posts"
+              render={({ field, fieldState: { error } }) => (
+                <FormItem className="h-full flex flex-col flex-1">
+                  <FormControl>
+                  <CreateManualThread
+                    posts={form.watch("posts")} 
+                    setPosts={field.onChange}
+                  />
+                  </FormControl>
+                  <FormMessage>
+                    {
+                      Array.isArray(error) && error.length ? (
+                        error[error.length-1]?.text?.message
                       ) : (
-                        <div>No existing posts to schedule.</div>
-                      )}
+                        error?.message
+                      )
+                    }
+                  </FormMessage>
+                </FormItem> 
+              )}
+            />
+          </TabsContent>
+
+          <TabsContent value={contentTypes.existing} className="h-full overflow-auto">
+            <FormField
+              control={form.control}
+              name="threadId"
+              render={({ field }) => (
+                <FormItem className="h-full flex flex-col flex-1">
+                  <FormControl>
+                    <Content>
+                        {schedulableThreads.length ? (
+                          schedulableThreads.map((o) => (
+                            <ThreadButton
+                              posts={o.posts}
+                              selected={form.watch("threadId") === o.id}
+                              onClick={() => field.onChange(o.id)}
+                            />
+                          ))
+                        ) : (
+                          <div>No existing posts to schedule.</div>
+                        )}
                     </Content>
-                  </TabsContent>
-                </Tabs>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem> 
+              )}
+            />
+          </TabsContent>
+        </Tabs>
       </form>
     </Form>
   );
 };
 
-const ThreadButton = ({
-  posts,
-  selected,
-  onClick,
-}: {
-  posts: FlexibleThread["posts"];
-  selected: boolean;
-  onClick: () => void;
-}) => (
-  <div
-    onClick={onClick}
-    className={cn(
-      `w-full hover:bg-muted cursor-pointer transition-colors border rounded-lg 
-    bg-background border-border p-4 flex flex-col gap-4`,
-      selected && "bg-secondary border-secondary-foreground hover:bg-secondary"
-    )}
-  >
-    {posts.map(post => (
-      <div className="border border-border p-4 whitespace-pre-wrap rounded-lg ">
-        {post.text}
-      </div>
-    ))}
-  </div>
-);

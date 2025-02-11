@@ -5,14 +5,32 @@ import { objectIdSchema } from "../util.js";
 export const STATUS_VALUES = ["pending", "sent", "failed"] as const;
 export const statusSchema = z.enum(STATUS_VALUES);
 
-export const ScheduleThreadFormSchema = z.object({
-  threadId: z.string().nonempty("Required"),
-  date: z.date(),
-  time: z
-    .string()
-    .nonempty("Required")
-    .regex(/^(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/, "Required format: HH:MM AM/PM")
-});
+export const ScheduleThreadFormSchema = z.discriminatedUnion("contentType", [
+  z.object({
+    contentType: z.literal("existing"),
+    threadId: z.string().nonempty("You must select a post."),
+    date: z.date(),
+    time: z
+      .string()
+      .nonempty("Required")
+      .regex(/^(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/, "Required format: HH:MM AM/PM"),
+  }),
+  z.object({
+    contentType: z.literal("manual"),
+    posts: z
+      .array(
+        z.object({
+          text: z.string().nonempty("Post content cannot be empty."),
+        })
+      )
+      .nonempty("You must enter at least one post."),
+    date: z.date(),
+    time: z
+      .string()
+      .nonempty("Required")
+      .regex(/^(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/, "Required format: HH:MM AM/PM"),
+  }),
+]);
 
 // UI payload
 export const ScheduleThreadSchema = z.object({

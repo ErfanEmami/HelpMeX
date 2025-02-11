@@ -37,7 +37,7 @@ ThreadSchema.set("toJSON", { virtuals: true });
 const Thread = mongoose.model("Thread", ThreadSchema);
 export default Thread;
 
-export const createThread = async ({ userId, posts }) => {
+export const createManualThread = async ({ userId, posts }) => {
   const newThread = new Thread({ userId, posts });
   return await newThread.save();
 };

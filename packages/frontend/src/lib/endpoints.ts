@@ -41,3 +41,4 @@ export const GET_SCHEDULABLE_THREADS = `${basePath}/schedule-threads/schedulable
 
 // manual content
 export const CREATE_MANUAL_POST = `${basePath}/manual-content/create/post`
+export const CREATE_MANUAL_THREAD = `${basePath}/manual-content/create/thread`
