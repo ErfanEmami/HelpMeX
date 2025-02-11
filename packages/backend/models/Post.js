@@ -25,7 +25,7 @@ postSchema.set("toJSON", { virtuals: true });
 const Post = mongoose.model("Post", postSchema);
 export default Post;
 
-export const createPost = async ({ userId, text }) => {
+export const createManualPost = async ({ userId, text }) => {
   const newPost = new Post({ userId, text });
   return await newPost.save();
 };

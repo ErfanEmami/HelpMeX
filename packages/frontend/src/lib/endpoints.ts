@@ -38,3 +38,6 @@ export const GET_SCHEDULABLE_POSTS = `${basePath}/schedule-posts/schedulable`
 export const GET_SCHEDULED_THREADS = `${basePath}/schedule-threads`
 export const SCHEDULE_THREAD = `${basePath}/schedule-threads/new`
 export const GET_SCHEDULABLE_THREADS = `${basePath}/schedule-threads/schedulable`
+
+// manual content
+export const CREATE_MANUAL_POST = `${basePath}/manual-content/create/post`

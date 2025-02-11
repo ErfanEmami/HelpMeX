@@ -1,31 +1,32 @@
 import Modal from "@/components/Modal";
-import { ScheduleCampaignForm } from "./ScheduleCampaginForm";
+import { SchedulePostForm } from "./ScheduleCampaginForm";
 
 import { useEffect, useState } from "react";
 
-import { FlexiblePost, type SchedulePostFormProps } from "@/lib/types";
-import { combineDateAndTime } from "@/lib/utils";
+import { 
+  FlexiblePost, 
+  // ScheduleExistingPostFormProps, ScheduleManualPostFormProps, 
+  type SchedulePostFormProps 
+} from "@/lib/types";import { combineDateAndTime } from "@/lib/utils";
 import { useSchedulePosts } from "@/hooks/useSchedulePosts";
 import { usePostSchedulerContext } from "../../context/PostSchedulerContext";
+import { contentTypes } from "../../context/types";
 
-export const postTypes = {
-  existing: "existing",
-  manual: "manual",
-} as const;
-
-export const ScheduleCampaignModal = ({ onClose }: { onClose: () => void }) => {
+export const ScheduleCampaignModal = ({
+  onClose,
+}: {
+  onClose: () => void;
+}) => {
   const formId = "SchedulePostForm";
-  const defaultPostType: keyof typeof postTypes = postTypes.existing;
+  const defaultContentType: keyof typeof contentTypes = contentTypes.existing
 
   const [schedulablePosts, setSchedulablePosts] = useState<FlexiblePost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [postType, setPostType] = useState<keyof typeof postTypes>(
-    postTypes.existing
-  );
+  const [contentType, setContentType] = useState<keyof typeof contentTypes>(contentTypes.existing)
 
-  const { setPostSchedule, fetchSchedulablePosts } = useSchedulePosts();
-  const { postSchedulerDispatch } = usePostSchedulerContext();
+  const { setPostSchedule, fetchSchedulablePosts, createManualPost } = useSchedulePosts();
+  const { postSchedulerDispatch } = usePostSchedulerContext()
 
   useEffect(() => {
     const loadGeneratedPosts = async () => {
@@ -50,19 +51,36 @@ export const ScheduleCampaignModal = ({ onClose }: { onClose: () => void }) => {
     setError(null);
     setIsLoading(true);
 
-    const res = await setPostSchedule({
-      postId: value.postId,
+    let postId: string
+
+    // need to create post first if manual entry
+    if (value.contentType === "manual") {
+      const resCreate = await createManualPost({ text: value.text });
+  
+      if (resCreate.error) {
+        setError(resCreate.error);
+        setIsLoading(false);
+        return;
+      }
+
+      postId = resCreate.manualPost!.id
+    } else {
+      postId = value.postId
+    }
+
+    const resSchedule = await setPostSchedule({
+      postId: postId,
       scheduledFor: combineDateAndTime(value.date, value.time),
     });
 
     setIsLoading(false);
-
-    if (res.error) {
-      setError(res.error);
+  
+    if (resSchedule.error) {
+      setError(resSchedule.error);
     } else {
       postSchedulerDispatch({
         type: "ADD_SCHEDULED_POST",
-        payload: res.scheduledPost!,
+        payload: resSchedule.scheduledPost!,
       });
       onClose();
     }
@@ -72,23 +90,25 @@ export const ScheduleCampaignModal = ({ onClose }: { onClose: () => void }) => {
     <Modal
       error={error}
       isLoading={isLoading}
-      title="Schedule Campagin"
+      title="Schedule Post"
       width="md"
       height="full"
       control={{
         onCancel: { text: "Cancel", onClick: onClose },
         onFormSubmit: {
           formId: formId,
+          disabled: isLoading,
           text:
-            postType === postTypes.existing
+            contentType === contentTypes.existing
               ? "Schedule Existing Post"
               : "Schedule Manual Entry",
         },
       }}
     >
-      <ScheduleCampaignForm
-        defaultPostType={defaultPostType}
-        setPostType={setPostType}
+      <SchedulePostForm
+        defaultContentType={defaultContentType}
+        contentType={contentType}
+        setContentType={setContentType}
         schedulablePosts={schedulablePosts}
         formId={formId}
         onSubmit={handleSubmit}

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useCallback } from "react";
-import { GET_SCHEDULED_POSTS, SCHEDULE_POST, GET_SCHEDULABLE_POSTS } from "../lib/endpoints";
-import { FlexiblePost, ScheduledPostExtended, type SchedulePost } from "@/lib/types";
+import { GET_SCHEDULED_POSTS, SCHEDULE_POST, GET_SCHEDULABLE_POSTS, CREATE_MANUAL_POST } from "../lib/endpoints";
+import { FlexiblePost, ManualPost, SaveManualPost, ScheduledPostExtended, type SchedulePost } from "@/lib/types";
 
 export const useSchedulePosts = () => {
   const fetchScheduledPosts = useCallback(async () => {
@@ -57,9 +57,28 @@ export const useSchedulePosts = () => {
     }
   }, []);
 
+  const createManualPost = useCallback(async (body: SaveManualPost) => {
+    try {
+      const { data }: { data: ManualPost } = await axios.post(
+        CREATE_MANUAL_POST,
+        body,
+        { withCredentials: true }
+      );
+
+      return { manualPost: data, error: null };
+    } catch (err) {
+      console.error("createManualPost error:", err);
+      return {
+        manualPost: null,
+        error: "Unable to create manual post.",
+      };
+    }
+  }, []);
+
   return {
     fetchScheduledPosts,
     fetchSchedulablePosts,
     setPostSchedule,
+    createManualPost,
   };
 };

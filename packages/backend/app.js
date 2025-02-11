@@ -6,6 +6,7 @@ import bookmarkRoutes from './routes/bookmarks_routes.js';
 import contentAssistantRoutes from './routes/content_assistant_routes.js';
 import schedulePostsRoutes from './routes/schedule_posts_routes.js';
 import scheduleThreadsRoutes from './routes/schedule_threads_routes.js';
+import manualContentRoutes from './routes/manual_content_routes.js';
 import sessionMiddleware from './middleware/sessionMiddleware.js';
 import testMiddleware from './middleware/testMiddleware.js';
 import passport from "./passport/twitter_strategy.js"
@@ -40,5 +41,6 @@ app.use('/api/bookmarks', bookmarkRoutes);
 app.use('/api/content-assistant', contentAssistantRoutes);
 app.use('/api/schedule-posts', schedulePostsRoutes);
 app.use('/api/schedule-threads', scheduleThreadsRoutes);
+app.use('/api/manual-content', manualContentRoutes);
 
 export default app;

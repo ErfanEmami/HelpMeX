@@ -13,29 +13,32 @@ import { FlexiblePost, type SchedulePostFormProps } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DatePicker } from "@/components/DatePicker";
-import { SchedulePostFormSchema } from "shared";
+// import { ScheduleExistingPostSchema, ScheduleManualPostSchema } from "shared";
 import { isBefore } from "date-fns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Content } from "@/components/ControlPanel";
 import { cn } from "@/lib/utils";
-import { postTypes } from "./ScheduleCampaignModal";
+import { contentTypes } from "../../context/types";
+import { SchedulePostFormSchema } from "shared";
 
-export const ScheduleCampaignForm = ({
+export const SchedulePostForm = ({
   formId,
   schedulablePosts,
-  defaultPostType,
+  defaultContentType,
   onSubmit,
-  setPostType,
+  setContentType,
 }: {
   formId: string;
   schedulablePosts: FlexiblePost[];
-  defaultPostType: keyof typeof postTypes;
+  defaultContentType: keyof typeof contentTypes;
+  contentType: keyof typeof contentTypes;
   onSubmit: (values: SchedulePostFormProps) => void;
-  setPostType: (postType: keyof typeof postTypes) => void;
+  setContentType: (postType: keyof typeof contentTypes) => void;
 }) => {
-  const form = useForm<SchedulePostFormProps>({
-    resolver: zodResolver(SchedulePostFormSchema),
-  });
+
+const form = useForm<SchedulePostFormProps>({
+  resolver: zodResolver(SchedulePostFormSchema),
+});
 
   return (
     <Form {...form}>
@@ -49,6 +52,7 @@ export const ScheduleCampaignForm = ({
             {form.formState.errors.root.message}
           </div>
         )}
+
         <FormField
           control={form.control}
           name="date"
@@ -81,48 +85,45 @@ export const ScheduleCampaignForm = ({
         />
         <FormField
           control={form.control}
-          name="postId"
-          render={({ field }) => (
+          name="contentType"
+          render={() => (
             <FormItem className="pt-1 flex flex-col flex-1 overflow-y-hidden ">
               <Label>Content</Label>
               <FormControl>
                 <Tabs
                   className="flex flex-col overflow-auto h-full"
-                  defaultValue={defaultPostType}
+                  defaultValue={defaultContentType}
+                  onValueChange={(value) => {
+                    setContentType(value as keyof typeof contentTypes);
+                    form.setValue("contentType", value as keyof typeof contentTypes);
+                  }}
                 >
                   <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger
-                      onMouseDown={() => setPostType(postTypes.existing)}
-                      value={postTypes.existing}
-                    >
-                      Select Existing
-                    </TabsTrigger>
-                    <TabsTrigger
-                      onMouseDown={() => setPostType(postTypes.manual)}
-                      value={postTypes.manual}
-                    >
-                      Manual Entry
-                    </TabsTrigger>
+                    <TabsTrigger value={contentTypes.existing}>Select Existing</TabsTrigger>
+                    <TabsTrigger value={contentTypes.manual}>Manual Entry</TabsTrigger>
                   </TabsList>
-                  <TabsContent value="manual" className="h-full overflow-auto">
-                    {/* fix ring issue with textarea */}
-                    <Textarea
-                      {...field}
-                      className="h-full"
-                      placeholder="Manually enter post content... (this will create a new post)"
+
+                  {/* Manual Entry */}
+                  <TabsContent value={contentTypes.manual} className="h-full overflow-auto">
+                    <FormField
+                      control={form.control}
+                      name="text"
+                      render={({ field }) => (
+                        <Textarea {...field} className="h-full" placeholder="Enter your post content..." />
+                      )}
                     />
+                    <FormMessage />
                   </TabsContent>
-                  <TabsContent
-                    value="existing"
-                    className="h-full overflow-auto"
-                  >
+
+                  {/* Select Existing */}
+                  <TabsContent value={contentTypes.existing} className="h-full overflow-auto">
                     <Content>
                       {schedulablePosts.length ? (
                         schedulablePosts.map((o) => (
                           <PostButton
                             text={o.text}
                             selected={form.watch("postId") === o.id}
-                            onClick={() => field.onChange(o.id)}
+                            onClick={() => form.setValue("postId", o.id)}
                           />
                         ))
                       ) : (
@@ -142,22 +143,18 @@ export const ScheduleCampaignForm = ({
 };
 
 const PostButton = ({
-  text,
-  selected,
-  onClick,
+  text, selected, onClick
 }: {
-  text: string;
-  selected: boolean;
-  onClick: () => void;
+  text: string, selected: boolean, onClick: () => void
 }) => (
-  <div
-    onClick={onClick}
-    className={cn(
-      `w-full hover:bg-muted cursor-pointer transition-colors border rounded-lg 
+  <div 
+  onClick={onClick} 
+  className={cn(
+    `w-full hover:bg-muted cursor-pointer transition-colors border rounded-lg 
     bg-background border-border p-4 whitespace-pre-wrap`,
-      selected && "bg-secondary border-secondary-foreground hover:bg-secondary"
-    )}
+    selected && "bg-secondary border-secondary-foreground hover:bg-secondary"
+  )}
   >
     {text}
   </div>
-);
+)

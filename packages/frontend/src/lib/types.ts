@@ -25,6 +25,8 @@ import {
   FlexibleThreadSchema,
   ScheduledThreadExtendedSchema,
   ScheduleThreadFormSchema,
+  SaveManualPostSchema,
+  ManualPostSchema,
 } from "shared";
 import { TOOLS_DEF } from "@/components/sidebar/NavItems";
 
@@ -59,6 +61,8 @@ export type SchedulePostFormProps = z.infer<typeof SchedulePostFormSchema>;
 export type SchedulePost = z.infer<typeof SchedulePostSchema>;
 export type ScheduledPostExtended = z.infer<typeof ScheduledPostExtendedSchema>;
 export type ScheduledPost = z.infer<typeof ScheduledPostSchema>;
+export type SaveManualPost = z.infer<typeof SaveManualPostSchema>;
+export type ManualPost = z.infer<typeof ManualPostSchema>;
 
 // scheduling threads
 export type ScheduleThreadFormProps = z.infer<typeof ScheduleThreadFormSchema>;

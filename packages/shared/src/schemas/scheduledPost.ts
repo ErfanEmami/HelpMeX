@@ -3,14 +3,29 @@ import { FlexiblePostSchema } from "./post.js";
 import { statusSchema } from "./scheduledThread.js";
 import { objectIdSchema } from "../util.js";
 
-export const SchedulePostFormSchema = z.object({
-  postId: z.string().nonempty("Required"),
-  date: z.date(),
-  time: z
-    .string()
-    .nonempty("Required")
-    .regex(/^(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/, "Required format: HH:MM AM/PM")
-});
+export const CONTENT_TYPE_VALUES = ["existing", "manual"] as const;
+export const contentTypes = z.enum(CONTENT_TYPE_VALUES);
+
+export const SchedulePostFormSchema = z.discriminatedUnion("contentType", [
+  z.object({
+    contentType: z.literal("existing"),
+    postId: z.string().nonempty("You must select a post."),
+    date: z.date(),
+    time: z
+      .string()
+      .nonempty("Required")
+      .regex(/^(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/, "Required format: HH:MM AM/PM"),
+  }),
+  z.object({
+    contentType: z.literal("manual"),
+    text: z.string().nonempty("You must enter text for a manual post."),
+    date: z.date(),
+    time: z
+      .string()
+      .nonempty("Required")
+      .regex(/^(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/, "Required format: HH:MM AM/PM"),
+  }),
+]);
 
 // UI payload
 export const SchedulePostSchema = z.object({
@@ -38,4 +53,6 @@ export const ScheduledPostExtendedSchema = ScheduledPostSchema.omit({
     postId: FlexiblePostSchema,
   })
 );
-export const ScheduledPostsExtendedSchema = z.array(ScheduledPostExtendedSchema);
+export const ScheduledPostsExtendedSchema = z.array(
+  ScheduledPostExtendedSchema
+);

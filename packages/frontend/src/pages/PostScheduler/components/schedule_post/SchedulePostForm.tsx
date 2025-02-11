@@ -35,6 +35,9 @@ export const SchedulePostForm = ({
 }) => {
   const form = useForm<SchedulePostFormProps>({
     resolver: zodResolver(SchedulePostFormSchema),
+    defaultValues: {
+      contentType: defaultContentType,
+    }
   });
 
   return (
@@ -79,41 +82,50 @@ export const SchedulePostForm = ({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="postId"
-          render={({ field }) => (
-            <FormItem className="pt-1 flex flex-col flex-1 overflow-y-hidden ">
-              <Label>Content</Label>
-              <FormControl>
-                <Tabs
-                  className="flex flex-col overflow-auto h-full"
-                  defaultValue={defaultContentType}
-                >
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger 
-                      onMouseDown={() => setContentType(contentTypes.existing)} 
-                      value={contentTypes.existing}>
-                        Select Existing
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      onMouseDown={() => setContentType(contentTypes.manual)} 
-                      value={contentTypes.manual}>
-                        Manual Entry
-                    </TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="manual" className="h-full overflow-auto">
-                    {/* fix ring issue with textarea */}
-                    <Textarea
-                      {...field}
+        <Tabs
+          className="flex flex-col overflow-auto h-full"
+          defaultValue={defaultContentType}
+          onValueChange={(value) => {
+            setContentType(value as keyof typeof contentTypes);
+            form.setValue("contentType", value as keyof typeof contentTypes);
+          }}
+        >
+          <Label className="mt-1 mb-2">Content</Label>
+
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value={contentTypes.existing}>Select Existing</TabsTrigger>
+            <TabsTrigger value={contentTypes.manual}>Manual Entry</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value={contentTypes.manual} className="h-full overflow-auto">
+            <FormField
+              control={form.control}
+              name="text"
+              render={({ field }) => (
+                <FormItem className="h-full flex flex-col flex-1">
+                  <FormControl>
+                    <Textarea 
+                      {...field} 
                       className="h-full"
                       placeholder="Manually enter post content... (this will create a new post)"
                     />
-                  </TabsContent>
-                  <TabsContent value="existing" className="h-full overflow-auto">
+                  </FormControl>
+                  <FormMessage />
+                </FormItem> 
+              )}
+            />
+          </TabsContent>
+
+          <TabsContent value={contentTypes.existing} className="h-full overflow-auto">
+            <FormField
+              control={form.control}
+              name="postId"
+              render={({ field }) => (
+                <FormItem className="h-full flex flex-col flex-1">
+                  <FormControl>
                     <Content>
                       {schedulablePosts.length ? (
-                        schedulablePosts.map(o => (
+                        schedulablePosts.map((o) => (
                           <PostButton
                             text={o.text}
                             selected={form.watch("postId") === o.id}
@@ -124,13 +136,13 @@ export const SchedulePostForm = ({
                         <div>No existing posts to schedule.</div>
                       )}
                     </Content>
-                  </TabsContent>
-                </Tabs>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem> 
+              )}
+            />
+          </TabsContent>
+        </Tabs>
       </form>
     </Form>
   );

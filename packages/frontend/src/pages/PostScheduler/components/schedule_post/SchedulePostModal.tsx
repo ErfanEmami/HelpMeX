@@ -3,7 +3,7 @@ import { SchedulePostForm } from "./SchedulePostForm";
 
 import { useEffect, useState } from "react";
 
-import { FlexiblePost, GeneratedPost, type SchedulePostFormProps } from "@/lib/types";
+import { FlexiblePost, type SchedulePostFormProps } from "@/lib/types";
 import { combineDateAndTime } from "@/lib/utils";
 import { useSchedulePosts } from "@/hooks/useSchedulePosts";
 import { usePostSchedulerContext } from "../../context/PostSchedulerContext";
@@ -22,7 +22,7 @@ export const SchedulePostModal = ({
   const [error, setError] = useState<string | null>(null);
   const [contentType, setContentType] = useState<keyof typeof contentTypes>(contentTypes.existing)
 
-  const { setPostSchedule, fetchSchedulablePosts } = useSchedulePosts();
+  const { setPostSchedule, fetchSchedulablePosts, createManualPost } = useSchedulePosts();
   const { postSchedulerDispatch } = usePostSchedulerContext()
 
   useEffect(() => {
@@ -48,19 +48,35 @@ export const SchedulePostModal = ({
     setError(null);
     setIsLoading(true);
 
-    const res = await setPostSchedule({
-      postId: value.postId,
+    let postId: string
+
+    if (value.contentType === "manual") {
+      const resCreate = await createManualPost({ text: value.text });
+  
+      if (resCreate.error) {
+        setError(resCreate.error);
+        setIsLoading(false);
+        return;
+      }
+
+      postId = resCreate.manualPost!.id
+    } else {
+      postId = value.postId
+    }
+
+    const resSchedule = await setPostSchedule({
+      postId: postId,
       scheduledFor: combineDateAndTime(value.date, value.time),
     });
 
     setIsLoading(false);
-
-    if (res.error) {
-      setError(res.error);
+  
+    if (resSchedule.error) {
+      setError(resSchedule.error);
     } else {
       postSchedulerDispatch({
         type: "ADD_SCHEDULED_POST",
-        payload: res.scheduledPost!,
+        payload: resSchedule.scheduledPost!,
       });
       onClose();
     }
