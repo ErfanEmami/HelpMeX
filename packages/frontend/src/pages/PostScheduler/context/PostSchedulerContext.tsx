@@ -2,7 +2,8 @@ import { useDispatchHelpers } from "@/context/app_context/useDispatchHelpers";
 import { useSchedulePosts } from "@/hooks/useSchedulePosts";
 import React, { createContext, type ReactNode, useContext, useEffect, useReducer } from "react";
 import { initialState, reducer } from "./reducer";
-import { PostSchedulerContextProps } from "./types";
+import { PostSchedulerContextProps, ScheduledContent } from "./types";
+import { useScheduleThreads } from "@/hooks/useScheduleThreads";
 
 const PostSchedulerContext = createContext<
 PostSchedulerContextProps | undefined
@@ -27,37 +28,56 @@ export const PostSchedulerProvider: React.FC<{ children: ReactNode }> = ({
   );
 
   const { fetchScheduledPosts } = useSchedulePosts();
+  const { fetchScheduledThreads } = useScheduleThreads();
   const { setAppError } = useDispatchHelpers();
 
-  // load scheduled posts
+  // load scheduled content
   useEffect(() => {
-    const _fetchScheduledPosts = async () => {
+    const _fetchScheduledContent = async () => {
       postSchedulerDispatch({
         type: "SET_LOADING",
         payload: { isLoadingScheduledPosts: true },
       });
   
-      const res = await fetchScheduledPosts();
+      const [resPosts, resThreads] = await Promise.all([
+        fetchScheduledPosts(),
+        fetchScheduledThreads(),
+      ]);
   
       postSchedulerDispatch({
         type: "SET_LOADING",
         payload: { isLoadingScheduledPosts: false },
       });
   
-      if (res.error) {
+      if (resPosts.error || resThreads.error) {
         setAppError({
-          text: res.error,
-          onRetry: _fetchScheduledPosts,
+          text: (resPosts.error || resThreads.error) as string,
+          onRetry: _fetchScheduledContent,
         });
       } else {
+        const scheduledContent: ScheduledContent[] = [
+          ...resPosts.scheduledPosts!.map((post) => ({
+            id: post.id,
+            contentType: "post" as const,
+            scheduledFor: post.scheduledFor,
+            contentObject: post,
+          })),
+          ...resThreads.scheduledThreads!.map((thread) => ({
+            id: thread.id,
+            contentType: "thread" as const,
+            scheduledFor: thread.scheduledFor,
+            contentObject: thread,
+          })),
+        ];
+    
         postSchedulerDispatch({
-          type: "SET_SCHEDULED_POSTS",
-          payload: res.scheduledPosts!,
+          type: "SET_SCHEDULED_CONTENT",
+          payload: scheduledContent,
         });
       }
     };
-
-    _fetchScheduledPosts();
+  
+    _fetchScheduledContent();
   }, []);
 
   const context = {

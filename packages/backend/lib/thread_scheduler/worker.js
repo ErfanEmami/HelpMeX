@@ -53,22 +53,20 @@ new Worker(
           - reschedule thread for 15 minutes later and add "rescheduled=true" db column and store lastTweetId
         */
         try {
-          await sleep(5000) // 5 seconds between posts
-
-          const response = await safeTweet(
-            client,
-            post.text,
-            lastTweetId ? { reply: { in_reply_to_tweet_id: lastTweetId } } : {}
-          );
-
-          lastTweetId = response.data.id;
+          // await sleep(5000) // 5 seconds between posts
+          // const response = await safeTweet(
+          //   client,
+          //   post.text,
+          //   lastTweetId ? { reply: { in_reply_to_tweet_id: lastTweetId } } : {}
+          // );
+          // lastTweetId = response.data.id;
 
           post.status = "sent";
-          console.log(`Successfully posted tweet: ${post.text}`);
+          console.log(`Successfully sent post ${post.threadPostId} for threadId: ${threadId}`);
         } catch (error) {
           console.error(
             `Failed to post tweet: ${post.text}`,
-            error.response?.data || error
+            // error.response?.data || error
           );
 
           post.status = "failed";

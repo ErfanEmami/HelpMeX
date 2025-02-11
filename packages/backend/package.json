@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "dev:worker": "nodemon lib/post_scheduler/worker.js",
+    "dev:post-worker": "nodemon lib/post_scheduler/worker.js",
+    "dev:thread-worker": "nodemon lib/thread_scheduler/worker.js",
     "start": "node server.js"
   },
   "keywords": [],

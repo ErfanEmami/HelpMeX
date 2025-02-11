@@ -7,4 +7,4 @@ export const objectIdSchema = z
   .refine((val) => mongoose.isValidObjectId(val) || typeof val === "string", {
     message: "Invalid ObjectId",
   })
-  .transform((val) => (typeof val === "string" ? val : val.toString()));
+  .transform((val) => (typeof val === "string" ? val : val.toString())) as z.ZodType<string>;

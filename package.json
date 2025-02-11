@@ -3,8 +3,9 @@
   "scripts": {
     "dev:frontend": "npm --workspace=packages/frontend run dev",
     "dev:backend": "npm --workspace=packages/backend run dev",
-    "dev:worker": "npm --workspace=packages/backend run dev:worker",
-    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:worker\""
+    "dev:post-worker": "npm --workspace=packages/backend run dev:post-worker",
+    "dev:thread-worker": "npm --workspace=packages/backend run dev:thread-worker",
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:post-worker\" \"npm run dev:thread-worker\""
   },
   "private": true,
   "workspaces": [

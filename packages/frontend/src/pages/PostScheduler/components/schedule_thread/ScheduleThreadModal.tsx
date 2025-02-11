@@ -3,28 +3,24 @@ import { ScheduleThreadForm } from "./ScheduleThreadForm";
 
 import { useEffect, useState } from "react";
 
-import { FlexiblePost, type SchedulePostFormProps } from "@/lib/types";
+import {  FlexibleThread, ScheduleThreadFormProps } from "@/lib/types";
 import { combineDateAndTime } from "@/lib/utils";
-import { useSchedulePosts } from "@/hooks/useSchedulePosts";
 import { usePostSchedulerContext } from "../../context/PostSchedulerContext";
-
-export const postTypes = {
-  existing: "existing",
-  manual: "manual",
-} as const;
+import { useScheduleThreads } from "@/hooks/useScheduleThreads";
+import { contentTypes } from "../../context/types";
 
 export const ScheduleThreadModal = ({ onClose }: { onClose: () => void }) => {
-  const formId = "SchedulePostForm";
-  const defaultPostType: keyof typeof postTypes = postTypes.existing;
+  const formId = "ScheduleThreadForm";
+  const defaultContentType: keyof typeof contentTypes = contentTypes.existing;
 
-  const [schedulablePosts, setSchedulablePosts] = useState<FlexiblePost[]>([]);
+  const [schedulablePosts, setSchedulablePosts] = useState<FlexibleThread[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [postType, setPostType] = useState<keyof typeof postTypes>(
-    postTypes.existing
+  const [contentType, setContentType] = useState<keyof typeof contentTypes>(
+    contentTypes.existing
   );
 
-  const { setPostSchedule, fetchSchedulablePosts } = useSchedulePosts();
+  const { setThreadSchedule, fetchSchedulableThreads } = useScheduleThreads();
   const { postSchedulerDispatch } = usePostSchedulerContext();
 
   useEffect(() => {
@@ -32,26 +28,26 @@ export const ScheduleThreadModal = ({ onClose }: { onClose: () => void }) => {
       setError(null);
       setIsLoading(true);
 
-      const res = await fetchSchedulablePosts();
+      const res = await fetchSchedulableThreads();
 
       setIsLoading(false);
 
       if (res.error) {
         setError(res.error);
       } else {
-        setSchedulablePosts(res.schedulablePosts!);
+        setSchedulablePosts(res.schedulableThreads!);
       }
     };
 
     loadGeneratedPosts();
   }, []);
 
-  const handleSubmit = async (value: SchedulePostFormProps) => {
+  const handleSubmit = async (value: ScheduleThreadFormProps) => {
     setError(null);
     setIsLoading(true);
 
-    const res = await setPostSchedule({
-      postId: value.postId,
+    const res = await setThreadSchedule({
+      threadId: value.threadId,
       scheduledFor: combineDateAndTime(value.date, value.time),
     });
 
@@ -61,8 +57,8 @@ export const ScheduleThreadModal = ({ onClose }: { onClose: () => void }) => {
       setError(res.error);
     } else {
       postSchedulerDispatch({
-        type: "ADD_SCHEDULED_POST",
-        payload: res.scheduledPost!,
+        type: "ADD_SCHEDULED_THREAD",
+        payload: res.scheduledThread!,
       });
       onClose();
     }
@@ -79,17 +75,18 @@ export const ScheduleThreadModal = ({ onClose }: { onClose: () => void }) => {
         onCancel: { text: "Cancel", onClick: onClose },
         onFormSubmit: {
           formId: formId,
+          disabled: isLoading,
           text:
-            postType === postTypes.existing
-              ? "Schedule Existing Post"
+            contentType === contentTypes.existing
+              ? "Schedule Existing Thread"
               : "Schedule Manual Entry",
         },
       }}
     >
       <ScheduleThreadForm
-        defaultPostType={defaultPostType}
-        setPostType={setPostType}
-        schedulablePosts={schedulablePosts}
+        defaultThreadType={defaultContentType}
+        setContentType={setContentType}
+        schedulableThreads={schedulablePosts}
         formId={formId}
         onSubmit={handleSubmit}
       />

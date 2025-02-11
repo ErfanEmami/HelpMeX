@@ -9,32 +9,32 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { FlexiblePost, type SchedulePostFormProps } from "@/lib/types";
+import { FlexibleThread, ScheduleThreadFormProps } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DatePicker } from "@/components/DatePicker";
-import { SchedulePostFormSchema } from "shared";
+import { ScheduleThreadFormSchema } from "shared";
 import { isBefore } from "date-fns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Content } from "@/components/ControlPanel";
 import { cn } from "@/lib/utils";
-import { postTypes } from "./ScheduleThreadModal";
+import { contentTypes } from "../../context/types";
 
 export const ScheduleThreadForm = ({
   formId,
-  schedulablePosts,
-  defaultPostType,
+  schedulableThreads,
+  defaultThreadType,
   onSubmit,
-  setPostType,
+  setContentType,
 }: {
   formId: string;
-  schedulablePosts: FlexiblePost[];
-  defaultPostType: keyof typeof postTypes;
-  onSubmit: (values: SchedulePostFormProps) => void;
-  setPostType: (postType: keyof typeof postTypes) => void;
+  schedulableThreads: FlexibleThread[];
+  defaultThreadType: keyof typeof contentTypes;
+  onSubmit: (values: ScheduleThreadFormProps) => void;
+  setContentType: (contentType: keyof typeof contentTypes) => void;
 }) => {
-  const form = useForm<SchedulePostFormProps>({
-    resolver: zodResolver(SchedulePostFormSchema),
+  const form = useForm<ScheduleThreadFormProps>({
+    resolver: zodResolver(ScheduleThreadFormSchema),
   });
 
   return (
@@ -81,25 +81,25 @@ export const ScheduleThreadForm = ({
         />
         <FormField
           control={form.control}
-          name="postId"
+          name="threadId"
           render={({ field }) => (
             <FormItem className="pt-1 flex flex-col flex-1 overflow-y-hidden ">
               <Label>Content</Label>
               <FormControl>
                 <Tabs
                   className="flex flex-col overflow-auto h-full"
-                  defaultValue={defaultPostType}
+                  defaultValue={defaultThreadType}
                 >
                   <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger
-                      onMouseDown={() => setPostType(postTypes.existing)}
-                      value={postTypes.existing}
+                      onMouseDown={() => setContentType(contentTypes.existing)}
+                      value={contentTypes.existing}
                     >
                       Select Existing
                     </TabsTrigger>
                     <TabsTrigger
-                      onMouseDown={() => setPostType(postTypes.manual)}
-                      value={postTypes.manual}
+                      onMouseDown={() => setContentType(contentTypes.manual)}
+                      value={contentTypes.manual}
                     >
                       Manual Entry
                     </TabsTrigger>
@@ -117,11 +117,11 @@ export const ScheduleThreadForm = ({
                     className="h-full overflow-auto"
                   >
                     <Content>
-                      {schedulablePosts.length ? (
-                        schedulablePosts.map((o) => (
-                          <PostButton
-                            text={o.text}
-                            selected={form.watch("postId") === o.id}
+                      {schedulableThreads.length ? (
+                        schedulableThreads.map((o) => (
+                          <ThreadButton
+                            posts={o.posts}
+                            selected={form.watch("threadId") === o.id}
                             onClick={() => field.onChange(o.id)}
                           />
                         ))
@@ -141,12 +141,12 @@ export const ScheduleThreadForm = ({
   );
 };
 
-const PostButton = ({
-  text,
+const ThreadButton = ({
+  posts,
   selected,
   onClick,
 }: {
-  text: string;
+  posts: FlexibleThread["posts"];
   selected: boolean;
   onClick: () => void;
 }) => (
@@ -154,10 +154,14 @@ const PostButton = ({
     onClick={onClick}
     className={cn(
       `w-full hover:bg-muted cursor-pointer transition-colors border rounded-lg 
-    bg-background border-border p-4 whitespace-pre-wrap`,
+    bg-background border-border p-4 flex flex-col gap-4`,
       selected && "bg-secondary border-secondary-foreground hover:bg-secondary"
     )}
   >
-    {text}
+    {posts.map(post => (
+      <div className="border border-border p-4 whitespace-pre-wrap rounded-lg ">
+        {post.text}
+      </div>
+    ))}
   </div>
 );

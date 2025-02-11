@@ -18,20 +18,20 @@ import { isBefore } from "date-fns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Content } from "@/components/ControlPanel";
 import { cn } from "@/lib/utils";
-import { postTypes } from "./SchedulePostModal";
+import { contentTypes } from "../../context/types";
 
 export const SchedulePostForm = ({
   formId,
   schedulablePosts,
-  defaultPostType,
+  defaultContentType,
   onSubmit,
-  setPostType,
+  setContentType,
 }: {
   formId: string;
   schedulablePosts: FlexiblePost[];
-  defaultPostType: keyof typeof postTypes;
+  defaultContentType: keyof typeof contentTypes;
   onSubmit: (values: SchedulePostFormProps) => void;
-  setPostType: (postType: keyof typeof postTypes) => void
+  setContentType: (postType: keyof typeof contentTypes) => void
 }) => {
   const form = useForm<SchedulePostFormProps>({
     resolver: zodResolver(SchedulePostFormSchema),
@@ -88,11 +88,19 @@ export const SchedulePostForm = ({
               <FormControl>
                 <Tabs
                   className="flex flex-col overflow-auto h-full"
-                  defaultValue={defaultPostType}
+                  defaultValue={defaultContentType}
                 >
                   <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger onMouseDown={() => setPostType(postTypes.existing)} value={postTypes.existing}>Select Existing</TabsTrigger>
-                    <TabsTrigger onMouseDown={() => setPostType(postTypes.manual)} value={postTypes.manual}>Manual Entry</TabsTrigger>
+                    <TabsTrigger 
+                      onMouseDown={() => setContentType(contentTypes.existing)} 
+                      value={contentTypes.existing}>
+                        Select Existing
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      onMouseDown={() => setContentType(contentTypes.manual)} 
+                      value={contentTypes.manual}>
+                        Manual Entry
+                    </TabsTrigger>
                   </TabsList>
                   <TabsContent value="manual" className="h-full overflow-auto">
                     {/* fix ring issue with textarea */}
