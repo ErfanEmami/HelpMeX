@@ -15,18 +15,18 @@ new Worker(
     try {
       console.log(`Attempting job for threadId: ${threadId}`);
 
-      const thread = await getScheduledThread(threadId);
-      if (!thread || thread.status !== "pending") {
+      const scheduledThread = await getScheduledThread(threadId);
+      if (!scheduledThread || scheduledThread.status !== "pending") {
         console.log(`Thread ${threadId} is not pending or does not exist.`);
         return;
       }
 
-      const user = await getUserById(thread.userId);
+      const user = await getUserById(scheduledThread.userId);
       if (!user) {
-        thread.status = "failed";
-        thread.errorMessage = "User not found";
+        scheduledThread.status = "failed";
+        scheduledThread.errorMessage = "User not found";
         console.error("User not found");
-        await thread.save();
+        await scheduledThread.save();
         return;
       }
 
@@ -35,9 +35,9 @@ new Worker(
       if (!accessToken) {
         const errorMessage = "Failed to retrieve access token"
         console.error(errorMessage);
-        thread.status = "failed";
-        thread.errorMessage = errorMessage;
-        await thread.save();
+        scheduledThread.status = "failed";
+        scheduledThread.errorMessage = errorMessage;
+        await scheduledThread.save();
         return;
       }
 
@@ -46,38 +46,42 @@ new Worker(
       let allPostsSuccessful = true;
 
       // Post tweets sequentially
-      for (const post of thread.posts) {
-        if (post.status !== "pending") continue; // Skip already processed tweets
+      for (const scheduledPost of scheduledThread.posts) {
+        if (scheduledPost.status !== "pending") continue; // Skip already processed tweets
         /*
           TODO: handle rate limits
           - reschedule thread for 15 minutes later and add "rescheduled=true" db column and store lastTweetId
         */
         try {
+          const threadPost = scheduledThread.threadId.posts.find(o => o._id.toString() === scheduledPost.threadPostId.toString())
+          if (!threadPost) {
+            throw new Error(`threadPostId ${scheduledPost.threadPostId} has no corresponding post in thread ${scheduledThread.threadId?.id}`);
+          }
           // await sleep(5000) // 5 seconds between posts
           // const response = await safeTweet(
           //   client,
-          //   post.text,
+          //   threadPost.text,
           //   lastTweetId ? { reply: { in_reply_to_tweet_id: lastTweetId } } : {}
           // );
           // lastTweetId = response.data.id;
 
-          post.status = "sent";
-          console.log(`Successfully sent post ${post.threadPostId} for threadId: ${threadId}`);
+          scheduledPost.status = "sent";
+          console.log(`Successfully sent threadPostId ${threadPost._id} for threadId: ${threadId}`);
         } catch (error) {
           console.error(
-            `Failed to post tweet: ${post.text}`,
+            `Failed to post threadPostId: ${scheduledPost.threadPostId}`,
             // error.response?.data || error
           );
 
-          post.status = "failed";
+          scheduledPost.status = "failed";
           allPostsSuccessful = false;
         }
       }
 
-      thread.status = allPostsSuccessful ? "sent" : "failed"
+      scheduledThread.status = allPostsSuccessful ? "sent" : "failed"
 
-      await thread.save();
-      console.log(`Thread ${threadId} status updated to: ${thread.status}`);
+      await scheduledThread.save();
+      console.log(`Thread ${threadId} status updated to: ${scheduledThread.status}`);
     } catch (e) {
       console.error("threadQueue worker failed:", e.response?.data || e);
     }
