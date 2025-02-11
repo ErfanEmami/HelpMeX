@@ -7,11 +7,7 @@ import { FlexiblePost, GeneratedPost, type SchedulePostFormProps } from "@/lib/t
 import { combineDateAndTime } from "@/lib/utils";
 import { useSchedulePosts } from "@/hooks/useSchedulePosts";
 import { usePostSchedulerContext } from "../../context/PostSchedulerContext";
-
-export const postTypes = {
-  existing: "existing",
-  manual: "manual"  
-} as const
+import { contentTypes } from "../../context/types";
 
 export const SchedulePostModal = ({
   onClose,
@@ -19,12 +15,12 @@ export const SchedulePostModal = ({
   onClose: () => void;
 }) => {
   const formId = "SchedulePostForm";
-  const defaultPostType: keyof typeof postTypes = postTypes.existing
+  const defaultContentType: keyof typeof contentTypes = contentTypes.existing
 
   const [schedulablePosts, setSchedulablePosts] = useState<FlexiblePost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [postType, setPostType] = useState<keyof typeof postTypes>(postTypes.existing)
+  const [contentType, setContentType] = useState<keyof typeof contentTypes>(contentTypes.existing)
 
   const { setPostSchedule, fetchSchedulablePosts } = useSchedulePosts();
   const { postSchedulerDispatch } = usePostSchedulerContext()
@@ -81,16 +77,17 @@ export const SchedulePostModal = ({
         onCancel: { text: "Cancel", onClick: onClose },
         onFormSubmit: {
           formId: formId,
+          disabled: isLoading,
           text:
-            postType === postTypes.existing
+            contentType === contentTypes.existing
               ? "Schedule Existing Post"
               : "Schedule Manual Entry",
         },
       }}
     >
       <SchedulePostForm
-        defaultPostType={defaultPostType}
-        setPostType={setPostType}
+        defaultContentType={defaultContentType}
+        setContentType={setContentType}
         schedulablePosts={schedulablePosts}
         formId={formId}
         onSubmit={handleSubmit}

@@ -1,3 +1,5 @@
+import "./Post.js"; // Ensure it's registered for populate()
+
 import mongoose from "mongoose";
 import { STATUS_VALUES } from "shared";
 

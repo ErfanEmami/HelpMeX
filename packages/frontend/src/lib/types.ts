@@ -22,6 +22,9 @@ import {
   ScheduleThreadSchema,
   ScheduledPostExtendedSchema,
   FlexiblePostSchema,
+  FlexibleThreadSchema,
+  ScheduledThreadExtendedSchema,
+  ScheduleThreadFormSchema,
 } from "shared";
 import { TOOLS_DEF } from "@/components/sidebar/NavItems";
 
@@ -49,6 +52,7 @@ export type ThreadConstraints = z.infer<typeof ThreadConstraintsSchema>;
 export type GeneratedThread = z.infer<typeof GeneratedThreadSchema>;
 export type SaveGeneratedThread = z.infer<typeof SaveGeneratedThreadSchema>;
 export type SavedGeneratedThread = z.infer<typeof SavedGeneratedThreadSchema>;
+export type FlexibleThread = z.infer<typeof FlexibleThreadSchema>;
 
 // scheduling posts
 export type SchedulePostFormProps = z.infer<typeof SchedulePostFormSchema>;
@@ -57,7 +61,9 @@ export type ScheduledPostExtended = z.infer<typeof ScheduledPostExtendedSchema>;
 export type ScheduledPost = z.infer<typeof ScheduledPostSchema>;
 
 // scheduling threads
+export type ScheduleThreadFormProps = z.infer<typeof ScheduleThreadFormSchema>;
 export type ScheduleThread = z.infer<typeof ScheduleThreadSchema>;
+export type ScheduledThreadExtended = z.infer<typeof ScheduledThreadExtendedSchema>;
 
 export type CalendarEvent = {
   title?: string;

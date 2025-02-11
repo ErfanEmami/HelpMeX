@@ -8,7 +8,7 @@ import {
   ScheduleThreadSchema,
 } from "shared";
 import { enqueueThread, threadQueue } from "../lib/thread_scheduler/queue.js";
-import { getSchedulableThreads } from "../models/Thread.js";
+import { getSchedulableThreads, getThread } from "../models/Thread.js";
 import { createScheduledThread, getScheduledThreads } from "../models/ScheduledThread.js";
 
 const router = express.Router();
@@ -49,7 +49,12 @@ router.post("/new", async (req, res) => {
 
     const validatedInput = validateInput.data;
 
-    const scheduledThread = await createScheduledThread({ ...validatedInput, userId });
+    const { posts } = await getThread(validatedInput.threadId);
+    const scheduledThread = await createScheduledThread({ 
+      ...validatedInput, 
+      userId: userId, 
+      posts: posts.map(post => ({ threadPostId: post._id }))
+    });
 
     // validate response
     const validatedRes = validateResponse(ScheduledThreadExtendedSchema, scheduledThread);

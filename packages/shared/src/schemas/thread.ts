@@ -45,7 +45,7 @@ export const SaveGeneratedThreadSchema = z.object({
 const SavedThreadBaseSchema = z.object({
   id: objectIdSchema,
   userId: objectIdSchema,
-  posts: z.array(ThreadPostSchema.extend({ id: objectIdSchema })),
+  posts: z.array(ThreadPostSchema.extend({ _id: objectIdSchema })),
   createdAt: z.date(),
 })
 

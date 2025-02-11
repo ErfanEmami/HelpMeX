@@ -26,7 +26,7 @@ export const ScheduledThreadSchema = z.object({
   userId: objectIdSchema,
   threadId: objectIdSchema,
   scheduledFor: z.string(),
-  postStatuses: z.array(z.object({
+  posts: z.array(z.object({
     threadPostId: objectIdSchema,
     status: statusSchema
   })),
